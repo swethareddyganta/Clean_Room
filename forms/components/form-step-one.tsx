@@ -2,16 +2,16 @@
 
 import type React from "react"
 import type { FC } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from "../components/ui/button"
+import { Input } from "../components/ui/input"
+import { Label } from "../components/ui/label"
+import { Textarea } from "../components/ui/textarea"
 import { ArrowRight } from "lucide-react"
-import { PhoneInputField } from "@/components/ui/phone-input"
-import { LocationSelector } from "@/components/ui/location-selector"
-import { isValidEmail, isValidPhoneNumber } from "@/lib/validation"
-import { useToast } from "@/hooks/use-toast"
-import type { FormData } from "@/app/page"
+import { PhoneInputField } from "../components/ui/phone-input"
+import { LocationSelector } from "../components/ui/location-selector"
+import { isValidEmail, isValidPhoneNumber } from "../lib/validation"
+import { useToast } from "../hooks/use-toast"
+import type { FormData } from "../app/page"
 
 interface Props {
   formData: FormData

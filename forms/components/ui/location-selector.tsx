@@ -1,12 +1,12 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
+import { Input } from "./input"
+import { Button } from "./button"
+import { Label } from "./label"
 import { MapPin, Search, X, Map } from "lucide-react"
-import { MapPreview } from "@/components/ui/map-preview"
-import { cn } from "@/lib/utils"
+import { MapPreview } from "./map-preview"
+import { cn } from "../../lib/utils"
 
 interface AddressResult {
   display_name: string

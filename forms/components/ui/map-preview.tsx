@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import { MapPin } from "lucide-react"
+import { cn } from "../../lib/utils"
 
 interface Location {
   lat: number
