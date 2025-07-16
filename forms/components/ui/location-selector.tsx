@@ -45,7 +45,7 @@ export function LocationSelector({
   const [selectedAddress, setSelectedAddress] = useState("")
   const [showMap, setShowMap] = useState(false)
   const [isClient, setIsClient] = useState(false)
-  const searchTimeoutRef = useRef<NodeJS.Timeout>()
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -130,10 +130,12 @@ export function LocationSelector({
     onChange?.(location)
   }
 
-  const handleMapLocationSelect = (location: Location) => {
-    setSelectedAddress(location.address || `${location.lat}, ${location.lng}`)
-    setSearchTerm(location.address || `${location.lat}, ${location.lng}`)
-    onChange?.(location)
+  const handleMapLocationSelect = (location: Location | undefined) => {
+    if (location) {
+      setSelectedAddress(location.address || `${location.lat}, ${location.lng}`)
+      setSearchTerm(location.address || `${location.lat}, ${location.lng}`)
+      onChange?.(location)
+    }
   }
 
   const handleClear = () => {

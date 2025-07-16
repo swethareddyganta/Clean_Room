@@ -1,11 +1,11 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from "react"
-import { Input } from "../components/ui/input"
-import { Button } from "../components/ui/button"
-import { Label } from "../components/ui/label"
+import { Input } from "./input"
+import { Button } from "./button"
+import { Label } from "./label"
 import { MapPin, Search, X } from "lucide-react"
-import { cn } from "../lib/utils"
+import { cn } from "../../lib/utils"
 
 interface AddressResult {
   display_name: string
@@ -40,7 +40,7 @@ export function AddressAutocomplete({
   const [isLoading, setIsLoading] = useState(false)
   const [showResults, setShowResults] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState("")
-  const searchTimeoutRef = useRef<NodeJS.Timeout>()
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Initialize search term from value
   useEffect(() => {
