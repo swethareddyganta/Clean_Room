@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { FormStepOne } from "../../../../forms/components/form-step-one"
 import { FormStepTwo } from "../../../../forms/components/form-step-two"
 import { FormStepThree } from "../../../../forms/components/form-step-three"
@@ -55,6 +55,28 @@ function UserDashboardPage() {
   const updateFormData = (field: string, value: any) => {
     setFormData((prev: FormData) => ({ ...prev, [field]: value }))
   }
+
+  // Auto-generate unique ID when customer name and project name are filled
+  useEffect(() => {
+    if (formData.customerName && formData.projectName) {
+      const customerPrefix = formData.customerName
+        .split(' ')
+        .map(word => word.charAt(0))
+        .join('')
+        .toUpperCase()
+        .substring(0, 3)
+      
+      const projectPrefix = formData.projectName
+        .split(' ')
+        .map(word => word.charAt(0))
+        .join('')
+        .toUpperCase()
+        .substring(0, 3)
+      
+      const uniqueId = `${customerPrefix}${projectPrefix}${Date.now().toString().slice(-4)}`
+      updateFormData("uniqueId", uniqueId)
+    }
+  }, [formData.customerName, formData.projectName])
 
   return (
     <div>
