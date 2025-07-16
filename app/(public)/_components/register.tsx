@@ -17,8 +17,7 @@ import {
 } from "@/components/ui/form"
 import toast from 'react-hot-toast'
 import { registerUser } from '@/actions/users'
-
-
+import { Input } from "../../../forms/components/ui/input"
 
 
 
@@ -72,8 +71,8 @@ function RegisterForm() {
         <div className='w-full'>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
-                    <h1 className="text-gray-700 font-bold text-xl"> Register Your Account </h1>
-                    <hr className='border-gray-300' />
+                    <h1 className="text-primary font-bold text-xl"> Register Your Account </h1>
+                    <hr className='border-border' />
                     <FormField
                         
                         control={form.control}
@@ -82,7 +81,7 @@ function RegisterForm() {
                             <FormItem>
                                 <FormLabel>Username</FormLabel>
                                 <FormControl>
-                                    <input className='border border-gray-500 rounded-md p-2' placeholder="Enter Username" {...field} />
+                                    <Input placeholder="Enter Username" {...field} />
                                 </FormControl>
                               
                                 <FormMessage />
@@ -97,7 +96,7 @@ function RegisterForm() {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <input className='border border-gray-500 rounded-md p-2' placeholder="Enter Email..." {...field} />
+                                    <Input placeholder="Enter Email..." {...field} />
                                 </FormControl>
                                 
                                 <FormMessage />
@@ -113,7 +112,7 @@ function RegisterForm() {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <input className='border border-gray-500 rounded-md p-2 ' placeholder="Enter Password" {...field} />
+                                    <Input placeholder="Enter Password" type="password" {...field} />
                                 </FormControl>
                                 
                                 <FormMessage />
@@ -124,7 +123,7 @@ function RegisterForm() {
                     
                     <div className="flex justify-between items-center">
                         <h1 className="text-sm text-gray-700 font-semibold flex gap-5">
-                            Already have an account?{" "} <Link href="/?form=login" className='text-gray-700 underline font-semibold'> Login </Link>
+                            Already have an account?{" "} <Link href="/?form=login" className='text-primary underline font-semibold'> Login </Link>
                         </h1>
                 
 

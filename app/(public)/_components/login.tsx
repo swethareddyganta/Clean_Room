@@ -23,6 +23,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { loginUser } from '@/actions/users'
 import toast from 'react-hot-toast'
+import { Input } from "../../../forms/components/ui/input"
 
 
 const formSchema = z.object({
@@ -79,8 +80,8 @@ function LoginForm() {
     <div className='w-full'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
-          <h1 className="text-gray-700 font-bold text-xl"> Login Your Account </h1>
-          <hr className='border-gray-300' />
+          <h1 className="text-primary font-bold text-xl"> Login Your Account </h1>
+          <hr className='border-border' />
 
           <FormField
             control={form.control}
@@ -89,9 +90,8 @@ function LoginForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <input className='border border-gray-500 rounded-md p-2' placeholder="Enter Email..." {...field} />
+                  <Input placeholder="Enter Email..." {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -104,9 +104,8 @@ function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <input className='border border-gray-500 rounded-md p-2' placeholder="Enter Password" {...field} />
+                  <Input placeholder="Enter Password" type="password" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -145,7 +144,7 @@ function LoginForm() {
           />
           <div className="flex justify-between items-center">
             <h1 className="text-sm text-gray-700 font-semibold flex gap-5">
-              Don't have an Account? {" "} <Link href="/?form=register" className='text-gray-700 underline font-semibold '> Register </Link>
+              Don't have an Account? {" "} <Link href="/?form=register" className='text-primary underline font-semibold'> Register </Link>
             </h1>
 
 
