@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { FormStepOne } from "../../../../forms/components/form-step-one"
 import { FormStepTwo } from "../../../../forms/components/form-step-two"
 import { FormStepThree } from "../../../../forms/components/form-step-three"
+import { LogoutButton } from "@/components/ui/logout-button"
 import type { FormData } from "../../../../forms/app/page"
 
 const initialFormData: FormData = {
@@ -59,27 +60,43 @@ function UserDashboardPage() {
   // Auto-generate unique ID when customer name and project name are filled
   useEffect(() => {
     if (formData.customerName && formData.projectName) {
-      const customerPrefix = formData.customerName
-        .split(' ')
-        .map(word => word.charAt(0))
-        .join('')
-        .toUpperCase()
-        .substring(0, 3)
+      // Convert to camelCase and remove spaces
+      const toCamelCase = (str: string) => {
+        return str
+          .split(' ')
+          .map((word, index) => {
+            if (index === 0) {
+              return word.toLowerCase()
+            }
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          })
+          .join('')
+      }
       
-      const projectPrefix = formData.projectName
-        .split(' ')
-        .map(word => word.charAt(0))
-        .join('')
-        .toUpperCase()
-        .substring(0, 3)
+      const customerName = toCamelCase(formData.customerName)
+      const projectName = toCamelCase(formData.projectName)
       
-      const uniqueId = `${customerPrefix}${projectPrefix}${Date.now().toString().slice(-4)}`
+      // Generate random 6-digit number
+      const randomNumber = Math.floor(100000 + Math.random() * 900000)
+      
+      const uniqueId = `${customerName}_${projectName}_${randomNumber}`
       updateFormData("uniqueId", uniqueId)
     }
   }, [formData.customerName, formData.projectName])
 
   return (
     <div>
+      {/* Project Title Header */}
+      <div className="text-center py-6 border-b border-border mb-6 relative">
+        <h1 className="text-3xl font-bold text-primary">STERI Clean Air - HVAC Matrix</h1>
+        <p className="text-muted-foreground mt-2">Arrant Dynamics, a division of Arrant Tech IND, Pvt. Ltd.</p>
+        
+        {/* Logout Button - positioned in top right */}
+        <div className="absolute top-6 right-6">
+          <LogoutButton variant="outline" size="sm" />
+        </div>
+      </div>
+      
       {step === 1 && (
         <FormStepOne
           formData={formData}

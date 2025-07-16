@@ -102,3 +102,17 @@ export const loginUser = async (email: string, password: string, role: string) =
     }
 
 }
+
+export const logoutUser = async () => {
+    try {
+        return {
+            success: true,
+            message: "Logout successful",
+        }
+    } catch (error: any) {
+        return {
+            success: false,
+            message: error.message,
+        }
+    }
+}
