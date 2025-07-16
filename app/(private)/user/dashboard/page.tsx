@@ -58,7 +58,6 @@ function UserDashboardPage() {
 
   return (
     <div>
-      <h1>User Dashboard</h1>
       {step === 1 && (
         <FormStepOne
           formData={formData}
@@ -81,10 +80,6 @@ function UserDashboardPage() {
           onBack={() => setStep(2)}
         />
       )}
-      <div style={{ marginTop: 24 }}>
-        {step > 1 && <button onClick={() => setStep(step - 1)}>Back</button>}
-        {step < 3 && <button onClick={() => setStep(step + 1)} style={{ marginLeft: 8 }}>Next</button>}
-      </div>
     </div>
   )
 }
