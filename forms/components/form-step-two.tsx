@@ -4,20 +4,21 @@ import type React from "react"
 import { useMemo } from "react"
 import type { FC } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "../components/ui/button"
+import { Input } from "../components/ui/input"
+import { Label } from "../components/ui/label"
+import { Checkbox } from "../components/ui/checkbox"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table"
 import { ArrowLeft } from "lucide-react"
-import type { FormData, PressureDropItem } from "@/app/page"
-import { standardsData, filterOptions, ahuSpecOptions } from "@/lib/standards-data"
+import type { FormData, PressureDropItem } from "../app/page"
+import { standardsData, filterOptions, ahuSpecOptions } from "../lib/standards-data"
 
 interface Props {
   formData: FormData
   updateFormData: (field: keyof FormData, value: any) => void
   onBack: () => void
+  onNext: () => void
 }
 
 const FormSection: FC<{ title: string; children: React.ReactNode; stepNumber?: number }> = ({
@@ -38,7 +39,7 @@ const FormSection: FC<{ title: string; children: React.ReactNode; stepNumber?: n
   </div>
 )
 
-export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack }) => {
+export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNext }) => {
   const router = useRouter()
   
   const classificationOptions = useMemo(() => {
@@ -60,8 +61,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack }) => 
   }
 
   const handleNext = () => {
-    // Navigate to next step
-    router.push('/?step=3')
+    onNext();
   }
 
   return (
