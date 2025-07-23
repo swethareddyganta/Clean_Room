@@ -54,7 +54,7 @@ export const registerUser = async (payload: Partial<IUser>) => {
     
 }
 
-export const loginUser = async (email: string, password: string, role: string) =>{
+export const loginUser = async (email: string, password: string) =>{
     
     try {
         //step1 Check if user exists
@@ -69,9 +69,6 @@ export const loginUser = async (email: string, password: string, role: string) =
         }
 
         const user = users[0] as IUser;
-        if (user.role !== role) {
-            throw new Error("Invalid role for this user!")
-        }
 
         ///step2: compare password
         const isPasswordValid = await bcrypt.compare(password, user.password);

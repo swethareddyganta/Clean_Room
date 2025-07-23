@@ -157,17 +157,51 @@ export const FormStepOne: FC<Props> = ({ formData, updateFormData, onNext }) => 
                 updateFormData("locationData", location)
                 if (location) {
                   updateFormData("location", location.address || `${location.lat}, ${location.lng}`)
-                  // Fetch min/max temperature from Open-Meteo
+                  // Fetch historical min/max temperature extremes from Open-Meteo
                   try {
-                    const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lng}&daily=temperature_2m_min,temperature_2m_max&timezone=auto`)
+                    // Get all available historical data from earliest records to current date
+                    const endDate = new Date()
+                    const startDate = new Date(1940, 0, 1) 
+                    const startDateStr = startDate.toISOString().split('T')[0]
+                    const endDateStr = endDate.toISOString().split('T')[0]
+                    
+                    const response = await fetch(
+                      `https://archive-api.open-meteo.com/v1/archive?latitude=${location.lat}&longitude=${location.lng}&start_date=${startDateStr}&end_date=${endDateStr}&daily=temperature_2m_max,temperature_2m_min&timezone=auto`
+                    )
                     const data = await response.json()
+                    
                     if (data && data.daily && data.daily.temperature_2m_min && data.daily.temperature_2m_max) {
-                      // Use the first day's forecast as default
-                      updateFormData("minTemp", data.daily.temperature_2m_min[0].toString())
-                      updateFormData("maxTemp", data.daily.temperature_2m_max[0].toString())
+                      // Find the absolute maximum and minimum temperatures from all historical data
+                      const allMaxTemps = data.daily.temperature_2m_max.filter((temp: number) => temp !== null && !isNaN(temp))
+                      const allMinTemps = data.daily.temperature_2m_min.filter((temp: number) => temp !== null && !isNaN(temp))
+                      
+                      if (allMaxTemps.length > 0 && allMinTemps.length > 0) {
+                        const historicalMax = Math.max(...allMaxTemps)
+                        const historicalMin = Math.min(...allMinTemps)
+                        
+                        updateFormData("maxTemp", historicalMax.toFixed(1))
+                        updateFormData("minTemp", historicalMin.toFixed(1))
+                        
+                        const yearsOfData = endDate.getFullYear() - startDate.getFullYear()
+                        toast({
+                          title: "Historical Temperature Data Updated",
+                          description: `All-time temperature range (${yearsOfData}+ years): ${historicalMin.toFixed(1)}°C to ${historicalMax.toFixed(1)}°C`,
+                        })
+                      }
                     }
                   } catch (error) {
-                    console.error("Failed to fetch temperature data:", error)
+                    console.error("Failed to fetch historical temperature data:", error)
+                    // Fallback to current forecast if historical data fails
+                    try {
+                      const fallbackResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lng}&daily=temperature_2m_min,temperature_2m_max&timezone=auto`)
+                      const fallbackData = await fallbackResponse.json()
+                      if (fallbackData && fallbackData.daily && fallbackData.daily.temperature_2m_min && fallbackData.daily.temperature_2m_max) {
+                        updateFormData("minTemp", fallbackData.daily.temperature_2m_min[0].toString())
+                        updateFormData("maxTemp", fallbackData.daily.temperature_2m_max[0].toString())
+                      }
+                    } catch (fallbackError) {
+                      console.error("Failed to fetch fallback temperature data:", fallbackError)
+                    }
                   }
                 } else {
                   updateFormData("location", "")

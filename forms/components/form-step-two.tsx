@@ -198,9 +198,11 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
               value={formData.maxTemp}
               onChange={(e) => updateFormData("maxTemp", e.target.value)}
               className="mt-1"
-              placeholder="e.g., 24"
+              placeholder="All-time maximum"
               required
+              title="All-time highest temperature ever recorded for the selected location"
             />
+            <p className="text-xs text-gray-500 mt-1">All-time maximum for location</p>
           </div>
           <div>
             <Label>Min Temp (°C) *</Label>
@@ -208,9 +210,11 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
               value={formData.minTemp}
               onChange={(e) => updateFormData("minTemp", e.target.value)}
               className="mt-1"
-              placeholder="e.g., 20"
+              placeholder="All-time minimum"
               required
+              title="All-time lowest temperature ever recorded for the selected location"
             />
+            <p className="text-xs text-gray-500 mt-1">All-time minimum for location</p>
           </div>
           <div>
             <Label>Max RH% *</Label>

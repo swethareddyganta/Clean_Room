@@ -25,8 +25,8 @@ const initialFormData: FormData = {
   ventilationSystem: "",
   coolingMethod: "Chilled Water",
   ventilationType: "",
-  maxTemp: "24",
-  minTemp: "20",
+  maxTemp: "", // Will be populated from all-time historical data for location
+  minTemp: "", // Will be populated from all-time historical data for location
   maxRh: "60",
   minRh: "45",
   airChanges: "N/A",
