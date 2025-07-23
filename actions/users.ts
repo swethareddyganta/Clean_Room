@@ -4,6 +4,8 @@ import supabaseConfig from "@/config/supabase-config";
 import bcrypt from "bcryptjs"
 import { IUser } from "@/interfaces";
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
+
 
 export const registerUser = async (payload: Partial<IUser>) => {
 
@@ -101,4 +103,40 @@ export const loginUser = async (email: string, password: string, role: string) =
         
     }
 
+}
+
+
+export const getLoggedInUser = async () => {
+    try {
+        const cookiesStore = await cookies();
+        const token = cookiesStore.get("token")?.value;
+        if (!token) {
+            throw new Error("No token found, Please login again");
+        }
+
+        const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+        const { data: users, error } = await supabaseConfig
+            .from("user_profiles")
+            .select("*, id, name, email, role")
+            .eq("id", decoded.id);
+        
+        if (error || !users || users.length === 0) {
+            throw new Error("User not found.");
+        }
+
+        const user = users[0] as IUser;
+
+        return {
+            success: true,
+            data: user,
+        };
+
+        
+    } catch (error: any) {
+        return {
+            success: false,
+            message: error.message,
+        }
+        
+    }
 }

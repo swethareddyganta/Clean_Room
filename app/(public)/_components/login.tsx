@@ -79,7 +79,7 @@ function LoginForm() {
     <div className='w-full'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
-          <h1 className="text-gray-700 font-bold text-xl"> Login Your Account </h1>
+          <h1 className="text-gray-700 font-bold! text-xl"> Login Your Account </h1>
           <hr className='border-gray-300' />
 
           <FormField
@@ -104,7 +104,7 @@ function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <input className='border border-gray-500 rounded-md p-2' placeholder="Enter Password" {...field} />
+                  <input type='password' className='border border-gray-500 rounded-md p-2' placeholder="Enter Password" {...field} />
                 </FormControl>
 
                 <FormMessage />
