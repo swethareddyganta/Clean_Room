@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
-import { cn } from "../lib/utils"
+import { cn } from "../../lib/utils"
 
 // Fix for default markers in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl

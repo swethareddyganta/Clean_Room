@@ -1,6 +1,6 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { Suspense } from "react";
 import {
   Sheet,
   SheetContent,
@@ -25,7 +25,7 @@ import {
   X
 } from "lucide-react";
 
-export default function Home() {
+function HomeContent() {
   const [openSheet, setOpenSheet] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const searchParams = useSearchParams();
@@ -381,5 +381,13 @@ export default function Home() {
         </SheetContent>
       </Sheet>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

@@ -1,14 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ProgressStepper } from "@/components/progress-stepper"
-import { FormStepOne } from "@/components/form-step-one"
-import { FormStepTwo } from "@/components/form-step-two"
-import { FormStepThree } from "@/components/form-step-three"
-import { ArrantHeader } from "@/components/arrant-header"
-import { pressureDropData, type standardsData } from "@/lib/standards-data"
-import { classAirChargesData } from "@/lib/class-air-charges-data"
-import { useToast } from "@/components/ui/use-toast"
+import { ProgressStepper } from "../components/progress-stepper"
+import { FormStepOne } from "../components/form-step-one"
+import { FormStepTwo } from "../components/form-step-two"
+import { FormStepThree } from "../components/form-step-three"
+import { ArrantHeader } from "../components/arrant-header"
+import { pressureDropData, type standardsData } from "../lib/standards-data"
+import { classAirChargesData } from "../lib/class-air-charges-data"
+import { useToast } from "../components/ui/use-toast"
 
 export type PressureDropItem = {
   initialValue: string
@@ -298,7 +298,7 @@ export default function ModernForm() {
         <ProgressStepper currentStep={step} formData={formData} onStepClick={handleStepClick} />
         <div className="mt-10 rounded-xl border border-gray-200/80 bg-white shadow-sm">
           {step === 1 && <FormStepOne formData={formData} updateFormData={updateFormData} onNext={handleNext} />}
-          {step === 2 && <FormStepTwo formData={formData} updateFormData={updateFormData} onBack={handleBack} />}
+          {step === 2 && <FormStepTwo formData={formData} updateFormData={updateFormData} onBack={handleBack} onNext={handleNext} />}
           {step === 3 && <FormStepThree formData={formData} updateFormData={updateFormData} onBack={handleBack} />}
         </div>
       </div>
