@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { ProgressStepper } from "../components/progress-stepper"
 import { FormStepOne } from "../components/form-step-one"
 import { FormStepTwo } from "../components/form-step-two"
-import { FormStepThree } from "../components/form-step-three"
+import FormStepThree from "../components/form-step-three"
+import FormCompletion from "../components/form-completion"
 import { ArrantHeader } from "../components/arrant-header"
 import { pressureDropData, type standardsData } from "../lib/standards-data"
 import { classAirChargesData } from "../lib/class-air-charges-data"
@@ -54,6 +55,8 @@ export type FormData = {
 export default function ModernForm() {
   const { toast } = useToast()
   const [step, setStep] = useState(1)
+  const [calculations, setCalculations] = useState<any>(null)
+  const [isCompleted, setIsCompleted] = useState(false)
   
   // Handle URL parameters after component mounts
   useEffect(() => {
@@ -299,7 +302,36 @@ export default function ModernForm() {
         <div className="mt-10 rounded-xl border border-gray-200/80 bg-white shadow-sm">
           {step === 1 && <FormStepOne formData={formData} updateFormData={updateFormData} onNext={handleNext} />}
           {step === 2 && <FormStepTwo formData={formData} updateFormData={updateFormData} onBack={handleBack} onNext={handleNext} />}
-          {step === 3 && <FormStepThree formData={formData} updateFormData={updateFormData} onBack={handleBack} />}
+          {step === 3 && !isCompleted && (
+            <FormStepThree 
+              formData={formData} 
+              updateFormData={updateFormData} 
+              onBack={handleBack} 
+              onComplete={(calcResults) => {
+                setCalculations(calcResults)
+                setIsCompleted(true)
+                toast({
+                  title: "Form Completed!",
+                  description: "Your clean room specification has been submitted successfully.",
+                })
+              }} 
+            />
+          )}
+          {isCompleted && (
+            <FormCompletion 
+              formData={formData}
+              calculations={calculations}
+              onViewDashboard={() => {
+                // Navigate to dashboard or show submissions
+                window.location.href = '/user/dashboard'
+              }}
+              onNewForm={() => {
+                setStep(1)
+                setIsCompleted(false)
+                setCalculations(null)
+              }}
+            />
+          )}
         </div>
       </div>
     </main>

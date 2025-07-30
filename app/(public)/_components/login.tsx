@@ -15,7 +15,7 @@ import {
 import Link from 'next/link'
 import Cookies from "js-cookie"
 import { useRouter } from 'next/navigation'
-import { loginUser } from '@/actions/users'
+import { loginUser } from '@/actions/users-mysql'
 import toast from 'react-hot-toast'
 import { Input } from "../../../forms/components/ui/input"
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'

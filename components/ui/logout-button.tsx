@@ -5,7 +5,7 @@ import { Button } from './button'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import toast from 'react-hot-toast'
-import { logoutUser } from '@/actions/users'
+import { logoutUser } from '@/actions/users-mysql'
 import { LogOut } from 'lucide-react'
 
 interface LogoutButtonProps {

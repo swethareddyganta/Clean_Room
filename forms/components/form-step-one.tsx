@@ -58,7 +58,7 @@ export const FormStepOne: FC<Props> = ({ formData, updateFormData, onNext }) => 
       errors.push("Project / Product Name")
     }
 
-    if (!formData.location?.trim()) {
+    if (!formData.location?.trim() || !formData.locationData) {
       errors.push("Location Selection")
     }
 

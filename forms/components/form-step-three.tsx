@@ -1,67 +1,48 @@
 "use client"
 
-import type React from "react"
-import { useState, useMemo, useEffect } from "react"
-import type { FC } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "./ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
+import { Badge } from "./ui/badge"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
-import { Badge } from "./ui/badge"
-import { ArrowLeft, Download, Calculator, Plus, Trash2 } from "lucide-react"
-import type { FormData } from "../app/page"
-import { HVACCalculator, type RoomData, type CalculationResults } from "../lib/hvac-calculations"
+import { CheckCircle, FileText, Download, Share2, Database, Plus, Trash2, Calculator } from "lucide-react"
 import { sampleRoomData } from "../lib/sample-hvac-data"
+import { HVACCalculator, type RoomData, type CalculationResults } from "../lib/hvac-calculations"
 import { useToast } from "./ui/use-toast"
+import type { FormData } from "../app/page"
 
 interface Props {
   formData: FormData
   updateFormData: (field: keyof FormData, value: any) => void
   onBack: () => void
+  onComplete?: (calculations?: any) => void
 }
 
-const FormSection: FC<{ title: string; children: React.ReactNode; stepNumber?: number }> = ({
-  title,
-  children,
-  stepNumber,
-}) => (
-  <div className="border-b border-gray-200/80 p-6 sm:p-8">
-    <h3 className="mb-6 text-lg font-semibold text-gray-800">
-      {stepNumber && (
-        <span className="mr-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700">
-          {stepNumber}
-        </span>
-      )}
-      {title}
-    </h3>
-    <div className={stepNumber ? "pl-10" : ""}>{children}</div>
-  </div>
-)
-
-export const FormStepThree: FC<Props> = ({ formData, updateFormData, onBack }) => {
+export default function FormStepThree({ formData, updateFormData, onBack, onComplete }: Props) {
   const { toast } = useToast()
   const [rooms, setRooms] = useState<Partial<RoomData>[]>([])
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [calculations, setCalculations] = useState<CalculationResults | null>(null)
+  const [isCalculating, setIsCalculating] = useState(false)
 
-  // Set loaded state after component mounts to avoid hydration issues
+  // Initialize with sample data
   useEffect(() => {
-    setIsLoaded(true)
-  }, [])
+    if (rooms.length === 0) {
+      setRooms([...sampleRoomData])
+    }
+  }, [rooms.length])
 
-  const [calculationResults, setCalculationResults] = useState<CalculationResults | null>(null)
-
-  const handleAddRoom = () => {
-    const newRoom = {
+  const addRoom = () => {
+    const newRoom: Partial<RoomData> = {
       roomName: `Room ${rooms.length + 1}`,
       length: 0,
       width: 0,
       height: 9,
-      standard: "ISO 8",
-      classification: "Gene/Entry",
+      standard: formData.standard,
+      classification: formData.classification,
       noOfAirChanges: 40,
-      occupancy: 0,
+      occupancy: 1,
       equipmentLoadKW: 0,
       lightingLoadWSqft: 1.75,
       freshAirPercentage: 10,
@@ -76,145 +57,182 @@ export const FormStepThree: FC<Props> = ({ formData, updateFormData, onBack }) =
       grainsBeforeCoil: 502.5390781,
       grainsAfterCoil: 51.89502281,
       deltaGrains: 450.6440553,
-      finalFiltration: "100K",
       staticPressure: 24,
+      finalFiltration: "100K",
+      plenumHEPA: "Gene/Entry",
+      terminalHEPA100K: "Gene/Entry",
+      terminalHEPA1K: "Gene/Entry",
     }
-    
     setRooms([...rooms, newRoom])
-    toast({
-      title: "Room Added",
-      description: `Added ${newRoom.roomName} to the configuration.`,
-    })
   }
 
-  const handleRemoveRoom = (index: number) => {
-    const roomToRemove = rooms[index]
-    setRooms(rooms.filter((_, i) => i !== index))
-    toast({
-      title: "Room Removed",
-      description: `Removed ${roomToRemove.roomName} from the configuration.`,
-    })
+  const removeRoom = (index: number) => {
+    const newRooms = rooms.filter((_, i) => i !== index)
+    setRooms(newRooms)
   }
 
-  const handleRoomChange = (index: number, field: keyof RoomData, value: any) => {
-    const updatedRooms = [...rooms]
-    ;(updatedRooms[index] as any)[field] = value
-    setRooms(updatedRooms)
+  const updateRoom = (index: number, field: keyof RoomData, value: any) => {
+    const newRooms = [...rooms]
+    newRooms[index] = { ...newRooms[index], [field]: value }
+    setRooms(newRooms)
   }
 
-  const handleCalculate = () => {
-    if (rooms.length === 0) {
+  const calculateHVAC = async () => {
+    setIsCalculating(true)
+    try {
+      // Create HVAC calculator with current rooms
+      const calculator = new HVACCalculator(rooms)
+      const results = calculator.calculateAll()
+      setCalculations(results)
+      
       toast({
+        title: "Calculations Complete",
+        description: `Calculated ${results.roomBreakdown.length} rooms with total area of ${results.totalArea.toFixed(2)} sq m.`,
+      })
+    } catch (error) {
+      console.error('HVAC calculation error:', error)
+      toast({
+        title: "Calculation Error",
+        description: "Failed to calculate HVAC requirements. Please check your room data.",
         variant: "destructive",
-        title: "No Rooms Configured",
-        description: "Please add at least one room before calculating.",
+      })
+    } finally {
+      setIsCalculating(false)
+    }
+  }
+
+  const handleSubmit = async () => {
+    try {
+      // Include room data in form submission
+      const submissionData = {
+        ...formData,
+        rooms: rooms,
+        calculations: calculations
+      }
+
+      const response = await fetch('/api/forms/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      })
+
+      const result = await response.json()
+
+              if (result.success) {
+          toast({
+            title: "Success!",
+            description: "Your clean room specification has been submitted successfully.",
+          })
+          if (onComplete) {
+            onComplete(calculations)
+          }
+        } else {
+        toast({
+          title: "Error",
+          description: result.error || "Failed to submit form. Please try again.",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      toast({
+        title: "Error",
+        description: "Failed to submit form. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const generateReport = () => {
+    if (!calculations) {
+      toast({
+        title: "No Calculations",
+        description: "Please run HVAC calculations first.",
+        variant: "destructive",
       })
       return
     }
-    
-    const calculator = new HVACCalculator(rooms)
-    const results = calculator.calculateAll()
-    setCalculationResults(results)
-    
-    toast({
-      title: "Calculations Complete",
-      description: `Successfully calculated HVAC data for ${rooms.length} room(s).`,
-    })
-  }
 
-  const handleExportCSV = () => {
-    if (!calculationResults) {
-      toast({
-        variant: "destructive",
-        title: "No Data to Export",
-        description: "Please calculate HVAC data before exporting.",
-      })
-      return
+    const report = {
+      title: "Clean Room HVAC Specification Report",
+      customer: formData.customerName,
+      project: formData.projectName,
+      location: formData.location,
+      specifications: {
+        standard: formData.standard,
+        classification: formData.classification,
+        system: formData.system,
+        temperature: `${formData.minTemp}°C - ${formData.maxTemp}°C`,
+        humidity: `${formData.minRh}% - ${formData.maxRh}%`,
+        airChanges: formData.airChanges,
+      },
+      calculations: {
+        totalArea: calculations.totalArea,
+        totalVolume: calculations.totalVolume,
+        totalCFM: calculations.totalCFM,
+        totalACLoad: calculations.totalACLoad,
+        totalChilledWater: calculations.totalChilledWater,
+        totalPowerConsumption: calculations.totalPowerConsumption,
+      },
+      rooms: calculations.roomBreakdown,
+      timestamp: new Date().toISOString(),
     }
 
-    const calculator = new HVACCalculator(rooms)
-    const csvContent = calculator.exportToCSV()
-    const blob = new Blob([csvContent], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
+    const blob = new Blob([JSON.stringify(report, null, 2)], {
+      type: "application/json",
+    })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
     a.href = url
-    a.download = 'hvac-calculations.csv'
+    a.download = `clean-room-hvac-spec-${formData.uniqueId}.json`
+    document.body.appendChild(a)
     a.click()
-    window.URL.revokeObjectURL(url)
-    
-    toast({
-      title: "Export Successful",
-      description: "HVAC calculations exported to CSV file.",
-    })
-  }
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    // Validate that at least one room is configured
-    if (rooms.length === 0) {
-      toast({
-        variant: "destructive",
-        title: "No Rooms Configured",
-        description: "Please add at least one room for HVAC calculations.",
-      })
-      return
-    }
-    
-    // Validate that all rooms have required fields
-    const requiredRoomFields = ['roomName', 'length', 'width', 'height', 'standard']
-    const invalidRooms = rooms.filter(room => {
-      return requiredRoomFields.some(field => !room[field as keyof RoomData])
-    })
-    
-    if (invalidRooms.length > 0) {
-      toast({
-        variant: "destructive",
-        title: "Incomplete Room Data",
-        description: "Please fill in all required fields for all rooms.",
-      })
-      return
-    }
-    
-    console.log("HVAC Form Submitted:", { rooms, calculationResults })
     toast({
-      title: "Form Submitted Successfully",
-      description: "HVAC calculations completed! Check the console for the data.",
+      title: "Report Generated",
+      description: "Your HVAC specification report has been downloaded.",
     })
-  }
-
-  // Don't render until data is loaded to avoid hydration mismatch
-  if (!isLoaded) {
-    return <div className="p-8 text-center">Loading...</div>
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <FormSection title="Room Configuration" stepNumber={7}>
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h4 className="text-md font-medium">Room Details</h4>
-            <div className="flex gap-2">
-              <Button type="button" onClick={handleCalculate} variant="outline" size="sm">
-                <Calculator className="mr-2 h-4 w-4" />
-                Calculate
-              </Button>
-              <Button type="button" onClick={handleAddRoom} variant="outline" size="sm">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Room
-              </Button>
-            </div>
-          </div>
+    <div className="space-y-6">
+      <div className="text-center">
+        <Calculator className="mx-auto h-16 w-16 text-blue-500 mb-4" />
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Room Specifications & HVAC Calculations
+        </h2>
+        <p className="text-gray-600">
+          Add rooms and calculate HVAC requirements for your clean room facility.
+        </p>
+      </div>
 
+      {/* Room Management */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <Database className="h-5 w-5" />
+              Room Specifications
+            </span>
+            <Button onClick={addRoom} size="sm">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Room
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="space-y-4">
             {rooms.map((room, index) => (
-              <Card key={index} className="p-4">
-                <CardHeader className="pb-3">
+              <Card key={index} className="border-2">
+                <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">Room {index + 1}</CardTitle>
                     <Button
-                      type="button"
-                      onClick={() => handleRemoveRoom(index)}
+                      onClick={() => removeRoom(index)}
                       variant="destructive"
                       size="sm"
                     >
@@ -223,138 +241,94 @@ export const FormStepThree: FC<Props> = ({ formData, updateFormData, onBack }) =
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
-                      <Label>Room Name</Label>
+                      <Label htmlFor={`room-name-${index}`}>Room Name</Label>
                       <Input
-                        value={room.roomName || ""}
-                        onChange={(e) => handleRoomChange(index, "roomName", e.target.value)}
-                        className="mt-1"
+                        id={`room-name-${index}`}
+                        value={room.roomName || ''}
+                        onChange={(e) => updateRoom(index, 'roomName', e.target.value)}
+                        placeholder="e.g., Milling Room"
                       />
                     </div>
                     <div>
-                      <Label>Length (m)</Label>
+                      <Label htmlFor={`room-length-${index}`}>Length (m)</Label>
                       <Input
+                        id={`room-length-${index}`}
                         type="number"
-                        value={room.length || ""}
-                        onChange={(e) => handleRoomChange(index, "length", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
+                        value={room.length || ''}
+                        onChange={(e) => updateRoom(index, 'length', parseFloat(e.target.value) || 0)}
+                        placeholder="8"
                       />
                     </div>
                     <div>
-                      <Label>Width (m)</Label>
+                      <Label htmlFor={`room-width-${index}`}>Width (m)</Label>
                       <Input
+                        id={`room-width-${index}`}
                         type="number"
-                        value={room.width || ""}
-                        onChange={(e) => handleRoomChange(index, "width", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
+                        value={room.width || ''}
+                        onChange={(e) => updateRoom(index, 'width', parseFloat(e.target.value) || 0)}
+                        placeholder="9"
                       />
                     </div>
                     <div>
-                      <Label>Height (ft)</Label>
+                      <Label htmlFor={`room-height-${index}`}>Height (ft)</Label>
                       <Input
+                        id={`room-height-${index}`}
                         type="number"
-                        value={room.height || ""}
-                        onChange={(e) => handleRoomChange(index, "height", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
+                        value={room.height || ''}
+                        onChange={(e) => updateRoom(index, 'height', parseFloat(e.target.value) || 0)}
+                        placeholder="9"
                       />
                     </div>
                     <div>
-                      <Label>Standard</Label>
-                      <Select
-                        value={room.standard || ""}
-                        onValueChange={(value) => handleRoomChange(index, "standard", value)}
-                      >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="ISO 8">ISO 8</SelectItem>
-                          <SelectItem value="ISO 7">ISO 7</SelectItem>
-                          <SelectItem value="ISO 6">ISO 6</SelectItem>
-                          <SelectItem value="ISO 5">ISO 5</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label>Air Changes/Hour</Label>
+                      <Label htmlFor={`room-occupancy-${index}`}>Occupancy</Label>
                       <Input
+                        id={`room-occupancy-${index}`}
                         type="number"
-                        value={room.noOfAirChanges || ""}
-                        onChange={(e) => handleRoomChange(index, "noOfAirChanges", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
+                        value={room.occupancy || ''}
+                        onChange={(e) => updateRoom(index, 'occupancy', parseInt(e.target.value) || 0)}
+                        placeholder="2"
                       />
                     </div>
                     <div>
-                      <Label>Occupancy</Label>
+                      <Label htmlFor={`room-equipment-${index}`}>Equipment Load (kW)</Label>
                       <Input
+                        id={`room-equipment-${index}`}
                         type="number"
-                        value={room.occupancy || ""}
-                        onChange={(e) => handleRoomChange(index, "occupancy", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
+                        value={room.equipmentLoadKW || ''}
+                        onChange={(e) => updateRoom(index, 'equipmentLoadKW', parseFloat(e.target.value) || 0)}
+                        placeholder="3"
                       />
                     </div>
                     <div>
-                      <Label>Equipment Load (kW)</Label>
+                      <Label htmlFor={`room-air-changes-${index}`}>Air Changes/Hour</Label>
                       <Input
+                        id={`room-air-changes-${index}`}
                         type="number"
-                        value={room.equipmentLoadKW || ""}
-                        onChange={(e) => handleRoomChange(index, "equipmentLoadKW", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
+                        value={room.noOfAirChanges || ''}
+                        onChange={(e) => updateRoom(index, 'noOfAirChanges', parseInt(e.target.value) || 0)}
+                        placeholder="40"
                       />
                     </div>
                     <div>
-                      <Label>Lighting Load (W/sqft)</Label>
+                      <Label htmlFor={`room-temp-${index}`}>Temperature (°C)</Label>
                       <Input
+                        id={`room-temp-${index}`}
                         type="number"
-                        value={room.lightingLoadWSqft || ""}
-                        onChange={(e) => handleRoomChange(index, "lightingLoadWSqft", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
+                        value={room.inTempC || ''}
+                        onChange={(e) => updateRoom(index, 'inTempC', parseFloat(e.target.value) || 0)}
+                        placeholder="24"
                       />
                     </div>
                     <div>
-                      <Label>Fresh Air (%)</Label>
+                      <Label htmlFor={`room-rh-${index}`}>Required RH (%)</Label>
                       <Input
+                        id={`room-rh-${index}`}
                         type="number"
-                        value={room.freshAirPercentage || ""}
-                        onChange={(e) => handleRoomChange(index, "freshAirPercentage", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label>Exhaust Air (CFM)</Label>
-                      <Input
-                        type="number"
-                        value={room.exhaustAirCFM || ""}
-                        onChange={(e) => handleRoomChange(index, "exhaustAirCFM", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label>Inside Temp (°C)</Label>
-                      <Input
-                        type="number"
-                        value={room.inTempC || ""}
-                        onChange={(e) => handleRoomChange(index, "inTempC", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label>Required RH (%)</Label>
-                      <Input
-                        type="number"
-                        value={room.requiredRH || ""}
-                        onChange={(e) => handleRoomChange(index, "requiredRH", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label>Outside Temp (°F)</Label>
-                      <Input
-                        type="number"
-                        value={room.outTempF || ""}
-                        onChange={(e) => handleRoomChange(index, "outTempF", parseFloat(e.target.value) || 0)}
-                        className="mt-1"
+                        value={room.requiredRH || ''}
+                        onChange={(e) => updateRoom(index, 'requiredRH', parseFloat(e.target.value) || 0)}
+                        placeholder="40"
                       />
                     </div>
                   </div>
@@ -362,99 +336,140 @@ export const FormStepThree: FC<Props> = ({ formData, updateFormData, onBack }) =
               </Card>
             ))}
           </div>
-        </div>
-      </FormSection>
+        </CardContent>
+      </Card>
 
-      {calculationResults && (
-        <FormSection title="Calculation Results" stepNumber={8}>
-          <div className="space-y-6">
-            {/* Summary Cards */}
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <Card>
-                <CardContent className="p-4">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {calculationResults.totalArea.toFixed(1)}
-                  </div>
-                  <div className="text-sm text-gray-600">Total Area (m²)</div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <div className="text-2xl font-bold text-green-600">
-                    {calculationResults.totalCFM.toFixed(0)}
-                  </div>
-                  <div className="text-sm text-gray-600">Total CFM</div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <div className="text-2xl font-bold text-orange-600">
-                    {calculationResults.totalACLoad.toFixed(1)}
-                  </div>
-                  <div className="text-sm text-gray-600">Total AC Load (TR)</div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <div className="text-2xl font-bold text-red-600">
-                    {calculationResults.totalPowerConsumption.toFixed(1)}
-                  </div>
-                  <div className="text-sm text-gray-600">Power (kW)</div>
-                </CardContent>
-              </Card>
+      {/* Calculation Results */}
+      {calculations && (
+        <Card className="bg-green-50">
+          <CardHeader>
+            <CardTitle className="text-green-900 flex items-center gap-2">
+              <CheckCircle className="h-5 w-5" />
+              HVAC Calculation Results
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-700">{calculations.totalArea.toFixed(1)}</div>
+                <div className="text-sm text-green-600">Total Area (sq m)</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-700">{calculations.totalCFM.toFixed(0)}</div>
+                <div className="text-sm text-green-600">Total CFM</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-700">{calculations.totalACLoad.toFixed(1)}</div>
+                <div className="text-sm text-green-600">Total AC Load (TR)</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-700">{calculations.totalPowerConsumption.toFixed(1)}</div>
+                <div className="text-sm text-green-600">Power (kW)</div>
+              </div>
             </div>
-
-            {/* Results Table */}
-            <div className="rounded-lg border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Room</TableHead>
-                    <TableHead>Area (m²)</TableHead>
-                    <TableHead>CFM</TableHead>
-                    <TableHead>AC Load (TR)</TableHead>
-                    <TableHead>Chilled Water (GPM)</TableHead>
-                    <TableHead>Power (kW)</TableHead>
-                    <TableHead>Standard</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {calculationResults.roomBreakdown.map((room, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{room.roomName}</TableCell>
-                      <TableCell>{room.area.toFixed(1)}</TableCell>
-                      <TableCell>{room.ahuCFM.toFixed(0)}</TableCell>
-                      <TableCell>{room.roomACLoadTR.toFixed(1)}</TableCell>
-                      <TableCell>{room.chilledWaterGalMin.toFixed(1)}</TableCell>
-                      <TableCell>{room.powerConsumptionKWHr.toFixed(1)}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{room.standard}</Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-
-            <div className="flex justify-end gap-2">
-              <Button type="button" onClick={handleExportCSV} variant="outline">
-                <Download className="mr-2 h-4 w-4" />
-                Export CSV
-              </Button>
-            </div>
-          </div>
-        </FormSection>
+          </CardContent>
+        </Card>
       )}
 
-      <div className="flex justify-between bg-gray-50 px-6 py-4">
-        <Button onClick={onBack} variant="outline" size="lg">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Previous Step
-        </Button>
-        <Button type="submit" size="lg" className="rounded-full">
-          Submit Calculations
-        </Button>
+      {/* Action Buttons */}
+      <div className="space-y-4">
+        {/* Step 1: Calculate HVAC */}
+        <Card className="border-blue-200 bg-blue-50">
+          <CardHeader>
+            <CardTitle className="text-blue-900 flex items-center gap-2">
+              <Calculator className="h-5 w-5" />
+              Step 1: Calculate HVAC Requirements
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-blue-800 text-sm mb-4">
+              Run calculations to determine HVAC specifications for your clean room facility.
+            </p>
+            <Button 
+              onClick={calculateHVAC} 
+              disabled={isCalculating || rooms.length === 0}
+              className="w-full sm:w-auto"
+              size="lg"
+            >
+              <Calculator className="h-5 w-5 mr-2" />
+              {isCalculating ? "Calculating..." : "Calculate HVAC Requirements"}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Step 2: Download Report (only show after calculations) */}
+        {calculations && (
+          <Card className="border-green-200 bg-green-50">
+            <CardHeader>
+              <CardTitle className="text-green-900 flex items-center gap-2">
+                <Download className="h-5 w-5" />
+                Step 2: Download Detailed Report
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-green-800 text-sm mb-4">
+                Generate and download a comprehensive HVAC specification report for your records.
+              </p>
+              <Button 
+                onClick={generateReport} 
+                variant="outline"
+                className="w-full sm:w-auto"
+                size="lg"
+              >
+                <Download className="h-5 w-5 mr-2" />
+                Download HVAC Report
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Step 3: Submit Specification (only show after calculations) */}
+        {calculations && (
+          <Card className="border-purple-200 bg-purple-50">
+            <CardHeader>
+              <CardTitle className="text-purple-900 flex items-center gap-2">
+                <Share2 className="h-5 w-5" />
+                Step 3: Submit Specification
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-purple-800 text-sm mb-4">
+                Submit your complete clean room specification to the database for processing.
+              </p>
+              <Button 
+                onClick={handleSubmit} 
+                className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700"
+                size="lg"
+              >
+                <Share2 className="h-5 w-5 mr-2" />
+                Submit Clean Room Specification
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Navigation */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+          <Button onClick={onBack} variant="outline" className="flex-1 sm:flex-none">
+            ← Back to Previous Step
+          </Button>
+          
+          {calculations && (
+            <Button 
+              onClick={() => {
+                toast({
+                  title: "Form Completed!",
+                  description: "Your clean room specification has been submitted successfully. You can now view your submissions in the dashboard.",
+                })
+                if (onComplete) onComplete(calculations)
+              }} 
+              className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700"
+            >
+              ✓ Complete Form & View Dashboard
+            </Button>
+          )}
+        </div>
       </div>
-    </form>
+    </div>
   )
 } 

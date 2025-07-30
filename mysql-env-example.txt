@@ -1,0 +1,14 @@
+# MySQL Database Configuration
+MYSQL_HOST=localhost
+MYSQL_USER=root
+MYSQL_PASSWORD=your_mysql_password
+MYSQL_DATABASE=clean_room_db
+MYSQL_PORT=3306
+
+# JWT Secret (keep this secret!)
+JWT_SECRET=CLEANROOM_SECRET
+
+# Optional: MySQL SSL Configuration
+# MYSQL_SSL_CA=/path/to/ca-cert.pem
+# MYSQL_SSL_CERT=/path/to/client-cert.pem
+# MYSQL_SSL_KEY=/path/to/client-key.pem 

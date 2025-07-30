@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react"
 import { FormStepOne } from "../../../../forms/components/form-step-one"
 import { FormStepTwo } from "../../../../forms/components/form-step-two"
-import { FormStepThree } from "../../../../forms/components/form-step-three"
+import FormStepThree from "../../../../forms/components/form-step-three"
+import FormCompletion from "../../../../forms/components/form-completion"
 import { LogoutButton } from "@/components/ui/logout-button"
 import type { FormData } from "../../../../forms/app/page"
 
@@ -52,6 +53,8 @@ const initialFormData: FormData = {
 function UserDashboardPage() {
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState<FormData>(initialFormData)
+  const [calculations, setCalculations] = useState<any>(null)
+  const [isCompleted, setIsCompleted] = useState(false)
 
   const updateFormData = (field: string, value: any) => {
     setFormData((prev: FormData) => ({ ...prev, [field]: value }))
@@ -112,11 +115,31 @@ function UserDashboardPage() {
           onNext={() => setStep(3)}
         />
       )}
-      {step === 3 && (
+      {step === 3 && !isCompleted && (
         <FormStepThree
           formData={formData}
           updateFormData={updateFormData}
           onBack={() => setStep(2)}
+          onComplete={(calcResults) => {
+            setCalculations(calcResults)
+            setIsCompleted(true)
+            console.log("Form completed successfully")
+          }}
+        />
+      )}
+      {isCompleted && (
+        <FormCompletion 
+          formData={formData}
+          calculations={calculations}
+          onViewDashboard={() => {
+            // Stay on dashboard, maybe show submissions
+            console.log("View dashboard")
+          }}
+          onNewForm={() => {
+            setStep(1)
+            setIsCompleted(false)
+            setCalculations(null)
+          }}
         />
       )}
     </div>

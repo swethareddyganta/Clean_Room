@@ -98,6 +98,9 @@ function HomeContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
+              <a href="/database-viewer" className="text-sm text-gray-600 hover:text-gray-900 mr-4">
+                📊 Database Viewer
+              </a>
               <div className="flex-shrink-0 flex items-center">
                 <Building2 className="h-8 w-8 text-primary mr-2" />
                 <span className="text-xl font-bold text-gray-900">STERI Clean Air</span>
