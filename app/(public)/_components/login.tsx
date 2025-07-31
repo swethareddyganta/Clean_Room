@@ -14,15 +14,12 @@ import {
 } from "@/components/ui/form"
 import Link from 'next/link'
 import Cookies from "js-cookie"
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/components/ui/radio-group"
+
 import { useRouter } from 'next/navigation'
 import { loginUser } from '@/actions/users-mysql'
 import toast from 'react-hot-toast'
 import { Input } from "../../../forms/components/ui/input"
-import { Eye, EyeOff, Mail, Lock, User, Shield } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
 
 const formSchema = z.object({
   email: z.string().email({
@@ -31,7 +28,7 @@ const formSchema = z.object({
   password: z.string().min(6, {
     message: "Password must be at least 6 characters",
   }),
-  role: z.enum(["user", "admin"]),
+
 })
 
 function LoginForm() {
@@ -45,14 +42,13 @@ function LoginForm() {
     defaultValues: {
       email: "",
       password: "",
-      role: 'user',
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      const response: any = await loginUser(values.email, values.password, values.role);
+      const response: any = await loginUser(values.email, values.password);
       if (!response.success) {
         throw new Error(response.message);
       }
@@ -216,47 +212,7 @@ function LoginForm() {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>Account Type</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex space-x-6"
-                  >
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="user" />
-                      </FormControl>
-                      <div className="flex items-center space-x-2">
-                        <User className="h-4 w-4 text-gray-500" />
-                        <FormLabel className="font-normal cursor-pointer">
-                          User
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="admin" />
-                      </FormControl>
-                      <div className="flex items-center space-x-2">
-                        <Shield className="h-4 w-4 text-gray-500" />
-                        <FormLabel className="font-normal cursor-pointer">
-                          Administrator
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
 
           <Button type="submit" className='w-full' disabled={loading}>
             {loading ? "Signing in..." : "Sign In"}
