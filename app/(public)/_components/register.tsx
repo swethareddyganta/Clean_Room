@@ -15,7 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import toast from 'react-hot-toast'
-import { registerUser } from '@/actions/users'
+import { registerUser } from '@/actions/users-mysql'
 import { Input } from "../../../forms/components/ui/input"
 import { Eye, EyeOff, Mail, Lock, User, UserPlus, CheckCircle } from 'lucide-react'
 
