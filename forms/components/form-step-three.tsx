@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useMemo, useEffect } from "react"
+import { useState, useEffect } from "react"
 import type { FC } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
@@ -15,6 +15,7 @@ import type { FormData } from "../app/page"
 import { HVACCalculator, type RoomData, type CalculationResults } from "../lib/hvac-calculations"
 import { sampleRoomData } from "../lib/sample-hvac-data"
 import { useToast } from "./ui/use-toast"
+import { submitHVACForm } from "../app/actions/submit-form"
 
 interface Props {
   formData: FormData
@@ -148,7 +149,7 @@ export const FormStepThree: FC<Props> = ({ formData, updateFormData, onBack }) =
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     // Validate that at least one room is configured
@@ -175,12 +176,45 @@ export const FormStepThree: FC<Props> = ({ formData, updateFormData, onBack }) =
       })
       return
     }
-    
-    console.log("HVAC Form Submitted:", { rooms, calculationResults })
-    toast({
-      title: "Form Submitted Successfully",
-      description: "HVAC calculations completed! Check the console for the data.",
-    })
+
+    try {
+      // Prepare the form data for submission
+      const submissionData = {
+        ...formData,
+        // Add the rooms and calculation results to the form data
+        rooms: rooms,
+        calculationResults: calculationResults,
+      }
+
+      // Save to database
+      const result = await submitHVACForm(submissionData)
+      
+      if (!result.success) {
+        toast({
+          variant: "destructive",
+          title: "Submission Failed",
+          description: result.message || "Failed to save form data. Please try again.",
+        })
+        return
+      }
+
+      console.log("HVAC Form Submitted:", { rooms, calculationResults, submissionData })
+      toast({
+        title: "Form Submitted Successfully",
+        description: result.message || "HVAC calculations have been saved to the database!",
+      })
+
+      // Optionally redirect or show success page
+      // window.location.href = '/success' // Uncomment if you have a success page
+      
+    } catch (error) {
+      console.error("Error submitting form:", error)
+      toast({
+        variant: "destructive",
+        title: "Submission Error",
+        description: "An unexpected error occurred. Please try again.",
+      })
+    }
   }
 
   // Don't render until data is loaded to avoid hydration mismatch
