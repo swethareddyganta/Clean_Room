@@ -89,12 +89,12 @@ export function MapSelector({
   }
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative w-full", className)}>
       <MapContainer
         center={value ? [value.lat, value.lng] : [40.7128, -74.0060]} // Default to NYC
         zoom={13}
-        style={{ height, width: "100%" }}
-        className="rounded-md border border-input"
+        style={{ height, width: "100%", minHeight: "256px" }}
+        className="rounded-md border border-input w-full h-full"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

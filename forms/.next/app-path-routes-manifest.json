@@ -1,0 +1,6 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/page": "/",
+  "/env-check/page": "/env-check",
+  "/test-db/page": "/test-db"
+}

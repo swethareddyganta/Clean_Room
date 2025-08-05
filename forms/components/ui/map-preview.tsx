@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import { MapPin } from "lucide-react"
 import { cn } from "../../lib/utils"
+import "leaflet/dist/leaflet.css"
 
 interface Location {
   lat: number
@@ -19,7 +20,7 @@ interface MapPreviewProps {
 // Dynamically import map components with no SSR
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
+  { ssr: false, loading: () => <div className="h-full w-full bg-muted flex items-center justify-center">Loading map...</div> }
 )
 
 const TileLayer = dynamic(
@@ -88,6 +89,22 @@ export function MapPreview({ value, onChange }: MapPreviewProps) {
     })
   }, [])
 
+  // Force map refresh when component mounts
+  useEffect(() => {
+    if (isClient) {
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        const mapContainer = document.querySelector('.leaflet-container')
+        if (mapContainer) {
+          // Trigger a resize event to force map to recalculate dimensions
+          window.dispatchEvent(new Event('resize'))
+        }
+      }, 100)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [isClient])
+
   if (!isClient) {
     return (
       <div className="rounded-md border border-input overflow-hidden">
@@ -95,7 +112,7 @@ export function MapPreview({ value, onChange }: MapPreviewProps) {
           <MapPin className="inline h-4 w-4 mr-2" />
           Loading map...
         </div>
-        <div className="h-64 flex items-center justify-center bg-muted">
+        <div className="h-64 w-full flex items-center justify-center bg-muted">
           <p className="text-muted-foreground">Loading map...</p>
         </div>
       </div>
@@ -108,11 +125,13 @@ export function MapPreview({ value, onChange }: MapPreviewProps) {
         <MapPin className="inline h-4 w-4 mr-2" />
         Click on map to select location
       </div>
-      <div className="h-64">
+      <div className="h-64 w-full relative">
         <MapContainer
+          key={`map-${isClient ? 'loaded' : 'loading'}`}
           center={value ? [value.lat, value.lng] : [40.7128, -74.0060]}
           zoom={13}
-          style={{ height: "100%", width: "100%" }}
+          style={{ height: "100%", width: "100%", minHeight: "256px" }}
+          className="w-full h-full"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

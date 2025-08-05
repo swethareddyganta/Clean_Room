@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { ArrowLeft } from "lucide-react"
 import type { FormData, PressureDropItem } from "../app/page"
 import { standardsData, filterOptions, ahuSpecOptions } from "../lib/standards-data"
+import { getAirChangesRange, getDefaultAirChanges } from "../lib/class-air-charges-data"
 
 interface Props {
   formData: FormData
@@ -46,12 +47,42 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
     return standardsData.rows.map((row) => row[formData.standard]).filter(Boolean) as string[]
   }, [formData.standard])
 
+  // Calculate air changes options based on classification and standard
+  const airChangesRange = useMemo(() => {
+    return getAirChangesRange(formData.classification, formData.standard)
+  }, [formData.classification, formData.standard])
+
   const handleStandardChange = (value: string) => {
     const standardKey = value as keyof typeof standardsData.headers
     updateFormData("standard", standardKey)
 
     const newClassifications = standardsData.rows.map((row) => row[standardKey]).filter(Boolean) as string[]
     updateFormData("classification", newClassifications[0] || "")
+  }
+
+  const handleClassificationChange = (value: string) => {
+    updateFormData("classification", value)
+    
+    // Auto-calculate air changes based on new classification and current system
+    const defaultAirChanges = getDefaultAirChanges(value, formData.standard, formData.system)
+    updateFormData("airChanges", defaultAirChanges)
+  }
+
+  const handleSystemChange = (value: string) => {
+    updateFormData("system", value)
+    
+    // Auto-calculate air changes based on current classification and new system
+    const defaultAirChanges = getDefaultAirChanges(formData.classification, formData.standard, value)
+    updateFormData("airChanges", defaultAirChanges)
+    
+    // Reset dependent fields when system changes
+    if (value === "Air-Conditioning System") {
+      updateFormData("ventilationType", "")
+      updateFormData("acSystem", "Clean Room Air-Conditioning")
+    } else {
+      updateFormData("coolingMethod", "")
+      updateFormData("acSystem", "")
+    }
   }
 
   const handlePressureDropChange = (index: number, field: keyof PressureDropItem, value: any) => {
@@ -88,7 +119,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
             <Label>Classification *</Label>
             <Select
               value={formData.classification}
-              onValueChange={(value) => updateFormData("classification", value)}
+              onValueChange={handleClassificationChange}
               disabled={classificationOptions.length === 0}
             >
               <SelectTrigger className="mt-1">
@@ -109,17 +140,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
             <Label>System *</Label>
             <Select 
               value={formData.system} 
-              onValueChange={(value) => {
-                updateFormData("system", value)
-                // Reset dependent fields when system changes
-                if (value === "Air-Conditioning System") {
-                  updateFormData("ventilationType", "")
-                  updateFormData("acSystem", "Clean Room Air-Conditioning")
-                } else {
-                  updateFormData("coolingMethod", "")
-                  updateFormData("acSystem", "")
-                }
-              }}
+              onValueChange={handleSystemChange}
             >
               <SelectTrigger className="mt-1">
                 <SelectValue />
@@ -238,7 +259,26 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
           </div>
           <div>
             <Label>Air Changes / Hr</Label>
-            <Input value={formData.airChanges} disabled className="mt-1 bg-gray-100 font-semibold" />
+            <Select 
+              value={formData.airChanges} 
+              onValueChange={(value) => updateFormData("airChanges", value)}
+            >
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select air changes..." />
+              </SelectTrigger>
+              <SelectContent>
+                {airChangesRange.options.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {airChangesRange.options.length > 1 && (
+              <p className="text-xs text-gray-500 mt-1">
+                Range: {airChangesRange.min}-{airChangesRange.max} air changes/hr
+              </p>
+            )}
           </div>
         </div>
       </FormSection>
