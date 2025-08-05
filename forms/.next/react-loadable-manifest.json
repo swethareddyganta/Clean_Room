@@ -1,14 +1,15 @@
 {
   "components/ui/map-preview.tsx -> leaflet": {
-    "id": "components/ui/map-preview.tsx -> leaflet",
+    "id": 5752,
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_leaflet_dist_leaflet-src_js.js"
+      "static/chunks/d0deef33.45bccf931ff63787.js"
     ]
   },
   "components/ui/map-preview.tsx -> react-leaflet": {
-    "id": "components/ui/map-preview.tsx -> react-leaflet",
+    "id": 9712,
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_react-leaflet_lib_index_js.js"
+      "static/chunks/d0deef33.45bccf931ff63787.js",
+      "static/chunks/712.de6e84b56d152368.js"
     ]
   }
 }

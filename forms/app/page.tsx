@@ -8,7 +8,7 @@ import FormStepThree from "../components/form-step-three"
 import FormCompletion from "../components/form-completion"
 import { ArrantHeader } from "../components/arrant-header"
 import { pressureDropData, type standardsData } from "../lib/standards-data"
-import { classAirChargesData } from "../lib/class-air-charges-data"
+import { classAirChargesData, getDefaultAirChanges } from "../lib/class-air-charges-data"
 import { useToast } from "../components/ui/use-toast"
 
 export type PressureDropItem = {
@@ -89,8 +89,8 @@ export default function ModernForm() {
     email: "",
     otherInfo: "",
     // Step 2 Data
-    standard: "TGA",
-    classification: "3500 K",
+    standard: "ISO146444",
+    classification: "ISO 9",
     system: "Air-Conditioning System",
     acSystem: "Clean Room Air-Conditioning",
     ventilationSystem: "",
@@ -287,11 +287,8 @@ export default function ModernForm() {
     }
 
     // 5. Auto-calculate Air Changes
-    const airChangeValue =
-      classAirChargesData[formData.classification]?.[formData.standard] ??
-      classAirChargesData[formData.classification]?.EUGMP ?? // Fallback for generic classes
-      "N/A"
-    updateFormData("airChanges", airChangeValue.toString())
+    const defaultAirChanges = getDefaultAirChanges(formData.classification, formData.standard, formData.system)
+    updateFormData("airChanges", defaultAirChanges)
   }, [formData.customerName, formData.projectName, formData.filters, formData.pressureDrop, formData.system, formData.classification, formData.standard])
 
   return (
