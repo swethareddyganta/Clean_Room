@@ -94,16 +94,16 @@ export const classAirChargesData: Record<string, Record<string, string | number>
   },
   
   // EU GMP Classifications
-  "Grade D (ISO 7 at Rest & ISO 8 in Oper.)": {
+  "EU GMP - Grade D (ISO 7 at Rest & ISO 8 in Oper.)": {
     EUGMP: "40-80",
   },
-  "Grade C (ISO 7 at Rest & ISO 7 in Oper.)": {
+  "EU GMP - Grade C (ISO 7 at Rest & ISO 7 in Oper.)": {
     EUGMP: "80-120",
   },
-  "Grade B (ISO 5 at Rest & ISO 7 in Oper.)": {
+  "EU GMP - Grade B (ISO 5 at Rest & ISO 7 in Oper.)": {
     EUGMP: "120-180",
   },
-  "Grade A (ISO 5 at Rest & ISO 5 in Oper.)": {
+  "EU GMP - Grade A (ISO 5 at Rest & ISO 5 in Oper.)": {
     EUGMP: "180-240",
   },
   
