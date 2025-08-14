@@ -19,33 +19,46 @@ const initialFormData: FormData = {
   phone: "",
   email: "",
   otherInfo: "",
-  standard: "TGA",
-  classification: "3500 K",
-  system: "Air-Conditioning System",
-  acSystem: "Clean Room Air-Conditioning",
-  ventilationSystem: "",
-  coolingMethod: "Chilled Water",
-  ventilationType: "",
+  standard: "ISO146444",
+  classification: "ISO 9",
+  system: "airHeatingSystem",
+  airHeatingSystemType: "",
+  airCoolingSystemType: "",
+  ventilationSystemType: "",
+  ventilationSystemDetails: "",
+  heatingMethod: "",
+  coolingMethod: "",
   maxTemp: "", // Will be populated from all-time historical data for location
   minTemp: "", // Will be populated from all-time historical data for location
   maxRh: "60",
   minRh: "45",
-  airChanges: "N/A",
-  filters: {
-    "10 M Supply": true,
-    "10 M Exhaust": true,
-    "5 M Supply": true,
-    "1 M Supply": true,
+  requiredInsideTemp: "",
+      requiredInsideHumidity: "",
+    airChanges: "N/A",
+    filterType: "supply",
+    filters: {},
+  ahuSpecs: {
+    "Panel Thickness & Profile": "25mm Thick Panel & Al. Profile",
+    "Panel Construction": "Panels with both side 24G Precoated GI Sheet",
+    "Air Handling Construction": "Aluminium Profile VCD for Fresh Air- Supply Air & Return Air",
+    "Fire Control": "Fire Control Damper for Supply & Return Air",
+    "Variable Frequency Drive": "Not Required",
+    "Pressure Gauge": "Pressure Guage (0-25mm) for 5 Micr Filter Section",
+    "Virus Burner": "Required",
+    "Door interlocking systems for air locks and corridor areas": "Required",
+    "Humidistat": "Not Required",
+    "Thermostat": "Not Required",
+    "Flow-control Valve": "Not Required",
+    "Y-strainer": "Not Required",
+    "Purge Wall": "Not Required",
+    "Pipe Configuration": "Single Pipe",
+    "Flow Velocity - Chilled Water/Brine/DX/Hot Water": "0.5-2.5 m/s",
+    "Flow Velocity - Steam": "3 m/s - 25 m/s",
+    "BMS Monitoring": "Not Required",
+    "EMS Monitoring": "Not Required",
   },
-  ahuSpecs: [
-    "25mm Thick Panel & AL Profile",
-    "Panels with both side 24G Precoated GI Sheet",
-    "Aluminium Profile VCD for Fresh Air- Supply Air & Return Air",
-    "Fire Control Damper for Supply & Return Air",
-    "Variable Frequency Drive (VFD) - Not Required",
-    "Pressure Guage (0-25mm) for 5 Micr Filter Section",
-  ],
-  filtrationStages: "4",
+  plantRoomDistance: "50",
+  filtrationStages: "0",
   staticPressure: "145",
   pressureDrop: [], // You may want to import a default if needed
 }
@@ -91,6 +104,15 @@ function UserDashboardPage() {
     <div>
       {/* Project Title Header */}
       <div className="text-center py-6 border-b border-border mb-6 relative">
+        {/* Arrant Dynamics Logo - Top Left */}
+        <div className="absolute top-6 left-6">
+          <img 
+            src="/Arrant Logo -1.jpg" 
+            alt="Arrant Dynamics Logo" 
+            className="h-16 w-auto"
+          />
+        </div>
+        
         <h1 className="text-3xl font-bold text-primary">STERI Clean Air - HVAC Matrix</h1>
         <p className="text-muted-foreground mt-2">Arrant Dynamics, a division of Arrant Tech IND, Pvt. Ltd.</p>
         

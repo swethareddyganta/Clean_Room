@@ -270,10 +270,10 @@ export function getDefaultAirChanges(classification: string, standard: string, s
     return "ULPA"
   }
   
-  if (systemType === "Air-Conditioning System") {
-    // For air-conditioning system, use the highest value
+  if (systemType === "airHeatingSystem" || systemType === "airCoolingSystem") {
+    // For air-heating and air-cooling systems, use the highest value
     return range.max.toString()
-  } else if (systemType === "Ventilation System") {
+  } else if (systemType === "ventilationSystem") {
     // For ventilation system, use the lowest value
     return range.min.toString()
   }

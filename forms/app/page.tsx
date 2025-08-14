@@ -7,7 +7,7 @@ import { FormStepTwo } from "../components/form-step-two"
 import FormStepThree from "../components/form-step-three"
 import FormCompletion from "../components/form-completion"
 import { ArrantHeader } from "../components/arrant-header"
-import { pressureDropData, type standardsData } from "../lib/standards-data"
+import { pressureDropData, type standardsData, filterOptions } from "../lib/standards-data"
 import { classAirChargesData, getDefaultAirChanges } from "../lib/class-air-charges-data"
 import { useToast } from "../components/ui/use-toast"
 
@@ -36,17 +36,23 @@ export type FormData = {
   standard: keyof (typeof standardsData)["headers"]
   classification: string
   system: string
-  acSystem: string
-  ventilationSystem: string
+  airHeatingSystemType: string
+  airCoolingSystemType: string
+  ventilationSystemType: string
+  ventilationSystemDetails: string
+  heatingMethod: string
   coolingMethod: string
-  ventilationType: string
   maxTemp: string
   minTemp: string
   maxRh: string
   minRh: string
+  requiredInsideTemp: string
+  requiredInsideHumidity: string
   airChanges: string // New field
+  filterType: "supply" | "exhaust"
   filters: Record<string, boolean>
-  ahuSpecs: string[]
+  ahuSpecs: Record<string, string>
+  plantRoomDistance: string
   filtrationStages: string
   staticPressure: string
   pressureDrop: PressureDropItem[]
@@ -91,33 +97,46 @@ export default function ModernForm() {
     // Step 2 Data
     standard: "ISO146444",
     classification: "ISO 9",
-    system: "Air-Conditioning System",
-    acSystem: "Clean Room Air-Conditioning",
-    ventilationSystem: "",
-    coolingMethod: "Chilled Water",
-    ventilationType: "",
+    system: "airHeatingSystem",
+    airHeatingSystemType: "",
+    airCoolingSystemType: "",
+    ventilationSystemType: "",
+    ventilationSystemDetails: "",
+    heatingMethod: "",
+    coolingMethod: "",
     maxTemp: "", // Will be populated from all-time historical data for location
     minTemp: "", // Will be populated from all-time historical data for location
     maxRh: "60",
     minRh: "45",
+    requiredInsideTemp: "",
+    requiredInsideHumidity: "",
     airChanges: "N/A", // Initial value
-    filters: {
-      "10 M Supply": true,
-      "10 M Exhaust": true,
-      "5 M Supply": true,
-      "1 M Supply": true,
+    filterType: "supply",
+    filters: {},
+    ahuSpecs: {
+      "Panel Thickness & Profile": "25mm Thick Panel & Al. Profile",
+      "Panel Construction": "Panels with both side 24G Precoated GI Sheet",
+      "Air Handling Construction": "Aluminium Profile VCD for Fresh Air- Supply Air &  Return Air",
+      "Fire Control": "Fire Control Damper for Supply & Return Air",
+      "Variable Frequency Drive": "Not Required",
+      "Pressure Gauge": "Pressure Guage (0-25mm) for 5 Micr Filter Section",
+      "Virus Burner": "Required",
+      "Door interlocking systems for air locks and corridor areas": "Required",
+      "Humidistat": "Not Required",
+      "Thermostat": "Not Required",
+      "Flow-control Valve": "Not Required",
+      "Y-strainer": "Not Required",
+      "Purge Wall": "Not Required",
+      "Pipe Configuration": "Single Pipe",
+      "Flow Velocity - Chilled Water/Brine/DX/Hot Water": "0.5-2.5 m/s",
+                "Flow Velocity - Steam": "3 m/s - 25 m/s",
+      "BMS Monitoring": "Not Required",
+      "EMS Monitoring": "Not Required",
     },
-    ahuSpecs: [
-      "25mm Thick Panel & AL Profile",
-      "Panels with both side 24G Precoated GI Sheet",
-      "Aluminium Profile VCD for Fresh Air- Supply Air & Return Air",
-      "Fire Control Damper for Supply & Return Air",
-      "Variable Frequency Drive (VFD) - Not Required",
-      "Pressure Guage (0-25mm) for 5 Micr Filter Section",
-    ],
-    filtrationStages: "4",
+      plantRoomDistance: "50",
+    filtrationStages: "0",
     staticPressure: "145",
-    pressureDrop: pressureDropData,
+  pressureDrop: pressureDropData,
   })
 
   const validateStep = (stepNumber: number): { isValid: boolean; missingFields: string[] } => {
@@ -137,7 +156,7 @@ export default function ModernForm() {
         missingFields.push('location')
       }
     } else if (stepNumber === 2) {
-      const step2Fields = ['standard', 'classification', 'system', 'maxTemp', 'minTemp', 'maxRh', 'minRh']
+      const step2Fields = ['standard', 'classification', 'system', 'maxTemp', 'minTemp', 'maxRh', 'minRh', 'requiredInsideTemp', 'requiredInsideHumidity']
       step2Fields.forEach(field => {
         const value = formData[field as keyof FormData]
         if (!value || (typeof value === 'string' && value.trim() === '')) {
@@ -146,11 +165,14 @@ export default function ModernForm() {
       })
       
       // Additional validation for conditional fields
-      if (formData.system === "Air-Conditioning System") {
-        if (!formData.acSystem || formData.acSystem.trim() === '') missingFields.push('acSystem')
+      if (formData.system === "airHeatingSystem") {
+        if (!formData.airHeatingSystemType || formData.airHeatingSystemType.trim() === '') missingFields.push('airHeatingSystemType')
+        if (!formData.heatingMethod || formData.heatingMethod.trim() === '') missingFields.push('heatingMethod')
+      } else if (formData.system === "airCoolingSystem") {
+        if (!formData.airCoolingSystemType || formData.airCoolingSystemType.trim() === '') missingFields.push('airCoolingSystemType')
         if (!formData.coolingMethod || formData.coolingMethod.trim() === '') missingFields.push('coolingMethod')
-      } else if (formData.system === "Ventilation System") {
-        if (!formData.ventilationType || formData.ventilationType.trim() === '') missingFields.push('ventilationType')
+      } else if (formData.system === "ventilationSystem") {
+        if (!formData.ventilationSystemType || formData.ventilationSystemType.trim() === '') missingFields.push('ventilationSystemType')
       }
     }
     
@@ -178,9 +200,11 @@ export default function ModernForm() {
             'minTemp': 'Minimum Temperature',
             'maxRh': 'Maximum Relative Humidity',
             'minRh': 'Minimum Relative Humidity',
-            'acSystem': 'AC System Type',
-            'coolingMethod': 'Cooling Method',
-            'ventilationType': 'Ventilation Type'
+            'airHeatingSystemType': 'Air-Heating System Type',
+            'airCoolingSystemType': 'Air-Cooling System Type',
+            'ventilationSystemType': 'Ventilation System Type',
+            'heatingMethod': 'Heating Method',
+            'coolingMethod': 'Cooling Method'
           }
           return fieldMap[field] || field
         })
@@ -266,9 +290,7 @@ export default function ModernForm() {
       updateFormData("uniqueId", uniqueId)
     }
 
-    // 2. Auto-calculate filtration stages
-    const selectedFiltersCount = Object.values(formData.filters).filter(Boolean).length
-    updateFormData("filtrationStages", selectedFiltersCount.toString())
+
 
     // 3. Auto-calculate static pressure
     const totalPressure = formData.pressureDrop
@@ -280,16 +302,79 @@ export default function ModernForm() {
     updateFormData("staticPressure", totalPressure.toString())
 
     // 4. Conditional logic for systems
-    if (formData.system === "Air-Conditioning System") {
-      if (formData.ventilationSystem !== "") {
-        updateFormData("ventilationSystem", "")
+    if (formData.system === "airHeatingSystem") {
+      if (formData.airCoolingSystemType !== "") {
+        updateFormData("airCoolingSystemType", "")
+      }
+      if (formData.ventilationSystemType !== "") {
+        updateFormData("ventilationSystemType", "")
+      }
+    } else if (formData.system === "airCoolingSystem") {
+      if (formData.airHeatingSystemType !== "") {
+        updateFormData("airHeatingSystemType", "")
+      }
+      if (formData.ventilationSystemType !== "") {
+        updateFormData("ventilationSystemType", "")
+      }
+      if (formData.coolingMethod !== "") {
+        updateFormData("coolingMethod", "")
+      }
+      // Reset AHU specs to default values
+      updateFormData("ahuSpecs", {
+        "Panel Thickness & Profile": "25mm Thick Panel & Al. Profile",
+        "Panel Construction": "Panels with both side 24G Precoated GI Sheet",
+        "Air Handling Construction": "Aluminium Profile VCD for Fresh Air- Supply Air &  Return Air",
+        "Fire Control": "Fire Control Damper for Supply & Return Air",
+        "Variable Frequency Drive": "Not Required",
+        "Pressure Gauge": "Pressure Guage (0-25mm) for 5 Micr Filter Section",
+        "Virus Burner": "Required",
+        "Door interlocking systems for air locks and corridor areas": "Required",
+        "Humidistat": "Not Required",
+        "Thermostat": "Not Required",
+        "Flow-control Valve": "Not Required",
+        "Y-strainer": "Not Required",
+        "Purge Wall": "Not Required",
+        "Pipe Configuration": "Single Pipe",
+        "Flow Velocity - Chilled Water/Brine/DX/Hot Water": "0.5-2.5 m/s",
+        "Flow Velocity - Steam": "3 m/s - 25 m/s",
+        "BMS Monitoring": "Not Required",
+        "EMS Monitoring": "Not Required",
+      })
+    } else if (formData.system === "ventilationSystem") {
+      if (formData.airHeatingSystemType !== "") {
+        updateFormData("airHeatingSystemType", "")
+      }
+      if (formData.airCoolingSystemType !== "") {
+        updateFormData("airCoolingSystemType", "")
+      }
+      if (formData.ventilationSystemDetails !== "") {
+        updateFormData("ventilationSystemDetails", "")
       }
     }
 
     // 5. Auto-calculate Air Changes
     const defaultAirChanges = getDefaultAirChanges(formData.classification, formData.standard, formData.system)
     updateFormData("airChanges", defaultAirChanges)
+
+    // 6. Auto-calculate filtration stages based on individual filter selections
+    const calculateFiltrationStages = (filters: Record<string, boolean>) => {
+      // Count each selected filter as one stage
+      const selectedFiltersCount = Object.values(filters).filter(Boolean).length
+      return selectedFiltersCount
+    }
+    
+    // Always calculate filtration stages (even if 0)
+    const activeStages = calculateFiltrationStages(formData.filters)
+    console.log('Calculating filtration stages:', { filters: formData.filters, activeStages, current: formData.filtrationStages })
+    
+    // Force update if different
+    if (formData.filtrationStages !== activeStages.toString()) {
+      console.log('Updating filtration stages from', formData.filtrationStages, 'to', activeStages.toString())
+      updateFormData("filtrationStages", activeStages.toString())
+    }
   }, [formData.customerName, formData.projectName, formData.filters, formData.pressureDrop, formData.system, formData.classification, formData.standard])
+
+
 
   return (
     <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
