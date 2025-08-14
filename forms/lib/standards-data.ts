@@ -19,7 +19,7 @@ export const standardsData = {
       FDA209E: "Class100K",
       GMP: "Grade D (ISO 8 at Rest & Not Defined)",
       JISB9920: "JIS Class 9",
-      EUGMP: "Grade D (ISO 7 at Rest & ISO 8 in Oper.)",
+      EUGMP: "EU GMP - Grade D (ISO 7 at Rest & ISO 8 in Oper.)",
       TGA: "3500",
       BS5295: "K",
       GERMANYVD: "6",
@@ -33,7 +33,7 @@ export const standardsData = {
       FDA209E: "Class10K",
       GMP: "Grade C (ISO 7 at Rest & ISO 8 in Oper.)",
       JISB9920: "JIS Class 8",
-      EUGMP: "Grade C (ISO 7 at Rest & ISO 7 in Oper.)",
+      EUGMP: "EU GMP - Grade C (ISO 7 at Rest & ISO 7 in Oper.)",
       TGA: "350",
       BS5295: "J",
       GERMANYVD: "5",
@@ -47,7 +47,7 @@ export const standardsData = {
       FDA209E: "Class1K",
       GMP: "Grade B (ISO 5 at Rest & ISO 7 in Oper.)",
       JISB9920: "JIS Class 7",
-      EUGMP: "Grade B (ISO 5 at Rest & ISO 7 in Oper.)",
+      EUGMP: "EU GMP - Grade B (ISO 5 at Rest & ISO 7 in Oper.)",
       TGA: "35",
       BS5295: "G or H",
       GERMANYVD: "4",
@@ -61,7 +61,7 @@ export const standardsData = {
       FDA209E: "Class 100",
       GMP: "Grade A (ISO 5 at Rest & ISO 5 in Oper.)",
       JISB9920: "JIS Class 6",
-      EUGMP: "Grade A (ISO 5 at Rest & ISO 5 in Oper.)",
+      EUGMP: "EU GMP - Grade A (ISO 5 at Rest & ISO 5 in Oper.)",
       TGA: "3.5",
       BS5295: "E or F",
       GERMANYVD: "3",
@@ -144,26 +144,146 @@ export const standardsData = {
 }
 
 export const filterOptions = {
-  column1: ["20 M Supply", "20 M Exhaust", "10 M Supply", "10 M Exhaust", "5 M Supply", "5 M Exhaust", "1 M Supply"],
-  column2: [
-    "1 M Exhaust",
-    "0.3 M HEPA 95% Supply",
-    "0.3 M HEPA 95% Exhaust",
-    "0.3 M HEPA 99.97% Supply",
-    "0.3 M HEPA 99.97% Exhaust",
-    "0.12 M ULPA 99.995% Supply",
-    "0.12 M ULPA 99.995% Exhaust",
-  ],
+  // Supply filters
+  supply: {
+    // 1. Fresh-air filters
+    freshAirFilters: {
+      title: "1. Fresh-air filters",
+      options: ["20 M Supply"]
+    },
+    // 2. Return-air filter
+    returnAirFilters: {
+      title: "2. Return-air filter",
+      options: ["10 M Supply"]
+    },
+    // 3. Fine-filter
+    fineFilters: {
+      title: "3. Fine-filter",
+      options: ["5 M Supply", "1 M Supply"]
+    },
+    // 4. Super fine filter
+    superFineFilters: {
+      title: "4. Super fine filter",
+      options: ["0.3 M HEPA 95% Supply"]
+    },
+    // 5. Terminal filters - supply, exhaust/return
+    terminalFilters: {
+      title: "5. Terminal filters - supply, exhaust/return",
+      options: [
+        "0.3 M HEPA 99.97% Supply",
+        "0.12 M ULPA 99.995% Supply"
+      ]
+    }
+  },
+  // Exhaust filters
+  exhaust: {
+    // 1. Fresh-air filters
+    freshAirFilters: {
+      title: "1. Fresh-air filters",
+      options: ["20 M Exhaust"]
+    },
+    // 2. Return-air filter
+    returnAirFilters: {
+      title: "2. Return-air filter",
+      options: ["10 M Exhaust"]
+    },
+    // 3. Fine-filter
+    fineFilters: {
+      title: "3. Fine-filter",
+      options: ["5 M Exhaust", "1 M Exhaust"]
+    },
+    // 4. Super fine filter
+    superFineFilters: {
+      title: "4. Super fine filter",
+      options: ["0.3 M HEPA 95% Exhaust"]
+    },
+    // 5. Terminal filters - supply, exhaust/return
+    terminalFilters: {
+      title: "5. Terminal filters - supply, exhaust/return",
+      options: [
+        "0.3 M HEPA 99.97% Exhaust",
+        "0.12 M ULPA 99.995% Exhaust"
+      ]
+    }
+  }
 }
 
-export const ahuSpecOptions = [
-  "25mm Thick Panel & AL Profile",
-  "Panels with both side 24G Precoated GI Sheet",
-  "Aluminium Profile VCD for Fresh Air- Supply Air & Return Air",
-  "Fire Control Damper for Supply & Return Air",
-  "Variable Frequency Drive (VFD) - Not Required",
-  "Pressure Guage (0-25mm) for 5 Micr Filter Section",
-]
+export const ahuSpecOptions = {
+  "Panel Thickness & Profile": [
+    "25mm Thick Panel & Al. Profile",
+    "45mm Thick Panel & Al. Profile",
+  ],
+  "Panel Construction": [
+    "Panels with both side 24G Precoated GI Sheet",
+    "Panels with One side 24G Precoated GI & Other side Plain GI Sheet",
+  ],
+  "Air Handling Construction": [
+    "Aluminium Profile VCD for Fresh Air- Supply Air &  Return Air",
+    "Normal GI Construction VCD for Fresh Air- Supply Air &  Return Air",
+  ],
+  "Fire Control": [
+    "Fire Control Damper for Supply Air",
+    "Fire Control Damper for Return Air",
+    "Fire Control Damper for Supply & Return Air",
+  ],
+  "Variable Frequency Drive": [
+    "Required",
+    "Not Required",
+  ],
+  "Pressure Gauge": [
+    "Pressure Guage (0-25mm) for 10 Micr Filter Section",
+    "Pressure Guage (0-25mm) for 5 Micr Filter Section",
+    "Pressure Guage (0-25mm) for 1 Micr Filter Section",
+    "Pressure Guage (0-100 mm) for 0.3 Micr HEPA Filter  Section",
+    "Pressure Guages For All 10, 5, 1, &  0.3(HEPA) Micr Filter Sections",
+  ],
+  "Virus Burner": [
+    "Required",
+    "Not Required",
+  ],
+  "Door interlocking systems for air locks and corridor areas": [
+    "Required",
+    "Not Required",
+  ],
+  "Humidistat": [
+    "Required",
+    "Not Required",
+  ],
+  "Thermostat": [
+    "Required",
+    "Not Required",
+  ],
+  "Flow-control Valve": [
+    "Required",
+    "Not Required",
+  ],
+  "Y-strainer": [
+    "Required",
+    "Not Required",
+  ],
+  "Purge Wall": [
+    "Required",
+    "Not Required",
+  ],
+  "Pipe Configuration": [
+    "Single Pipe",
+    "Dual Pipe",
+  ],
+  "Flow Velocity - Chilled Water/Brine/DX/Hot Water": [
+    "0.5-2.5 m/s",
+  ],
+  "Flow Velocity - Steam": [
+    "3 m/s - 25 m/s",
+  ],
+  "BMS Monitoring": [
+    "Required",
+    "Not Required",
+  ],
+  "EMS Monitoring": [
+    "Required",
+    "Not Required",
+  ],
+}
 
 // Data derived from the user's "Bill of Design" CSV file.
 // Default selections are set to produce the correct total of 145.

@@ -463,7 +463,7 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
                 })
                 if (onComplete) onComplete(calculations)
               }} 
-              className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700"
+              className="flex-1 sm:flex-none"
             >
               ✓ Complete Form & View Dashboard
             </Button>

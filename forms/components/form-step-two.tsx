@@ -76,12 +76,32 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
     updateFormData("airChanges", defaultAirChanges)
     
     // Reset dependent fields when system changes
-    if (value === "Air-Conditioning System") {
-      updateFormData("ventilationType", "")
-      updateFormData("acSystem", "Clean Room Air-Conditioning")
-    } else {
+    if (value === "airHeatingSystem") {
+      updateFormData("airCoolingSystemType", "")
+      updateFormData("ventilationSystemType", "")
+      updateFormData("airHeatingSystemType", "")
+      updateFormData("heatingMethod", "")
+    } else if (value === "airCoolingSystem") {
+      updateFormData("airHeatingSystemType", "")
+      updateFormData("ventilationSystemType", "")
+      updateFormData("airCoolingSystemType", "")
       updateFormData("coolingMethod", "")
-      updateFormData("acSystem", "")
+      // Reset AHU specs to default values
+      updateFormData("ahuSpecs", {
+        "Panel Thickness & Profile": "25mm Thick Panel & Al. Profile",
+        "Panel Construction": "Panels with both side 24G Precoated GI Sheet",
+        "Air Handling Construction": "Aluminium Profile VCD for Fresh Air- Supply Air &  Return Air",
+        "Fire Control": "Fire Control Damper for Supply & Return Air",
+        "Variable Frequency Drive": "Not Required",
+        "Pressure Gauge": "Pressure Guage (0-25mm) for 5 Micr Filter Section",
+        "Virus Burner": "Required",
+        "Door interlocking systems for air locks and corridor areas": "Required",
+      })
+    } else if (value === "ventilationSystem") {
+      updateFormData("airHeatingSystemType", "")
+      updateFormData("airCoolingSystemType", "")
+      updateFormData("ventilationSystemType", "")
+      updateFormData("ventilationSystemDetails", "")
     }
   }
 
@@ -146,75 +166,116 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Air-Conditioning System">Air-Conditioning System</SelectItem>
-                <SelectItem value="Ventilation System">Ventilation System</SelectItem>
+                <SelectItem value="airHeatingSystem">Air-Heating System</SelectItem>
+                <SelectItem value="airCoolingSystem">Air-Cooling System</SelectItem>
+                <SelectItem value="ventilationSystem">Ventilation System</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Conditional Fields based on System Selection */}
-          {formData.system === "Air-Conditioning System" && (
+          {formData.system === "airHeatingSystem" && (
             <>
               <div>
-                <Label>Air-Conditioning System Type *</Label>
-                <Select value={formData.acSystem} onValueChange={(value) => updateFormData("acSystem", value)}>
+                <Label>Air-Heating System Type *</Label>
+                <Select value={formData.airHeatingSystemType} onValueChange={(value) => updateFormData("airHeatingSystemType", value)}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Clean Room Air-Conditioning">Clean Room Air-Conditioning</SelectItem>
-                    <SelectItem value="Comfort AC">Comfort AC</SelectItem>
+                    <SelectItem value="cleanroomAirHeatingSystem">Cleanroom Air-Heating System</SelectItem>
+                    <SelectItem value="comfortAirHeatingSystem">Comfort Air-Heating System</SelectItem>
+                    <SelectItem value="nonClassifiedAirHeatingSystem">Non-Classified Air-Heating System</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label>Cooling Method *</Label>
-                <Select value={formData.coolingMethod} onValueChange={(value) => updateFormData("coolingMethod", value)}>
+                <Label>Heating Method *</Label>
+                <Select value={formData.heatingMethod} onValueChange={(value) => updateFormData("heatingMethod", value)}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Chilled Water">Chilled Water</SelectItem>
-                    <SelectItem value="Brine">Brine</SelectItem>
-                    <SelectItem value="DX">DX</SelectItem>
+                    <SelectItem value="hotWater">Hot Water</SelectItem>
+                    <SelectItem value="steam">Steam</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </>
           )}
 
-          {formData.system === "Ventilation System" && (
+          {formData.system === "airCoolingSystem" && (
             <>
               <div>
-                <Label>Ventilation System Type *</Label>
-                <Select value={formData.ventilationType} onValueChange={(value) => updateFormData("ventilationType", value)}>
+                <Label>Air-Cooling System Type *</Label>
+                <Select value={formData.airCoolingSystemType} onValueChange={(value) => updateFormData("airCoolingSystemType", value)}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Classified ventilation supply">Classified ventilation supply</SelectItem>
-                    <SelectItem value="Non-classified ventilation supply">Non-classified ventilation supply</SelectItem>
+                    <SelectItem value="cleanroomAirCoolingSystem">Cleanroom Air-Cooling System</SelectItem>
+                    <SelectItem value="comfortAirCoolingSystem">Comfort Air-Cooling System</SelectItem>
+                    <SelectItem value="nonClassifiedAirCoolingSystem">Non-Classified Air-Cooling System</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+              {formData.airCoolingSystemType && (
+                <div>
+                  <Label>Cooling Method *</Label>
+                  <Select value={formData.coolingMethod} onValueChange={(value) => updateFormData("coolingMethod", value)}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="chilledWater">Chilled Water</SelectItem>
+                      <SelectItem value="brine">Brine</SelectItem>
+                      <SelectItem value="dx">DX</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </>
+          )}
+
+          {formData.system === "ventilationSystem" && (
+            <>
+              <div>
+                <Label>Ventilation System Type *</Label>
+                <Select value={formData.ventilationSystemType} onValueChange={(value) => updateFormData("ventilationSystemType", value)}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cleanroomVentilationSystem">Cleanroom Ventilation System</SelectItem>
+                    <SelectItem value="nonClassifiedVentilationSystem">Non-Classified Ventilation System</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {formData.ventilationSystemType && (
               <div>
                 <Label>Ventilation System Details</Label>
                 <Input
-                  value={formData.ventilationSystem}
-                  onChange={(e) => updateFormData("ventilationSystem", e.target.value)}
+                    value={formData.ventilationSystemDetails || ""}
+                    onChange={(e) => updateFormData("ventilationSystemDetails", e.target.value)}
                   className="mt-1"
                   placeholder="Enter ventilation system details..."
                 />
               </div>
+              )}
             </>
           )}
         </div>
       </FormSection>
 
-      <FormSection title="Operating Conditions" stepNumber={5}>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-5">
+      <FormSection title="Atmospheric Air-Conditions of the Selected Region" stepNumber={5}>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-7">
           <div>
             <Label>Max Temp (°C) *</Label>
+            {formData.system === "ventilationSystem" ? (
+              <div className="mt-1 p-2 bg-gray-100 border border-gray-300 rounded text-center text-gray-700 font-medium">
+                Ambient
+              </div>
+            ) : (
             <Input
               value={formData.maxTemp}
               onChange={(e) => updateFormData("maxTemp", e.target.value)}
@@ -223,10 +284,16 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
               required
               title="All-time highest temperature ever recorded for the selected location"
             />
+            )}
             <p className="text-xs text-gray-500 mt-1">All-time maximum for location</p>
           </div>
           <div>
             <Label>Min Temp (°C) *</Label>
+            {formData.system === "ventilationSystem" ? (
+              <div className="mt-1 p-2 bg-gray-100 border border-gray-300 rounded text-center text-gray-700 font-medium">
+                Ambient
+              </div>
+              ) : (
             <Input
               value={formData.minTemp}
               onChange={(e) => updateFormData("minTemp", e.target.value)}
@@ -235,10 +302,16 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
               required
               title="All-time lowest temperature ever recorded for the selected location"
             />
+            )}
             <p className="text-xs text-gray-500 mt-1">All-time minimum for location</p>
           </div>
           <div>
             <Label>Max RH% *</Label>
+            {formData.system === "ventilationSystem" ? (
+              <div className="mt-1 p-2 bg-gray-100 border border-gray-300 rounded text-center text-gray-700 font-medium">
+                Ambient
+              </div>
+            ) : (
             <Input 
               value={formData.maxRh} 
               onChange={(e) => updateFormData("maxRh", e.target.value)} 
@@ -246,9 +319,15 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
               placeholder="e.g., 60"
               required 
             />
+            )}
           </div>
           <div>
             <Label>Min RH% *</Label>
+            {formData.system === "ventilationSystem" ? (
+              <div className="mt-1 p-2 bg-gray-100 border border-gray-300 rounded text-center text-center text-gray-700 font-medium">
+                Ambient
+              </div>
+            ) : (
             <Input 
               value={formData.minRh} 
               onChange={(e) => updateFormData("minRh", e.target.value)} 
@@ -256,25 +335,64 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
               placeholder="e.g., 45"
               required 
             />
+            )}
+          </div>
+          <div>
+            <Label>Required Inside Temperature (°C)</Label>
+            {formData.system === "ventilationSystem" ? (
+              <div className="mt-1 p-2 bg-gray-100 border border-gray-300 rounded text-center text-gray-700 font-medium">
+                Ambient
+              </div>
+            ) : (
+              <Input 
+                value={formData.requiredInsideTemp || ""} 
+                onChange={(e) => updateFormData("requiredInsideTemp", e.target.value)} 
+                className="mt-1" 
+                placeholder="e.g., 22"
+                required 
+              />
+            )}
+          </div>
+          <div>
+            <Label>Required Inside Humidity (RH%)</Label>
+            {formData.system === "ventilationSystem" ? (
+              <div className="mt-1 p-2 bg-gray-100 border border-gray-300 rounded text-center text-gray-700 font-medium">
+                Ambient
+              </div>
+            ) : (
+              <Input 
+                value={formData.requiredInsideHumidity || ""} 
+                onChange={(e) => updateFormData("requiredInsideHumidity", e.target.value)} 
+                className="mt-1" 
+                placeholder="e.g., 55"
+                required 
+              />
+            )}
           </div>
           <div>
             <Label>Air Changes / Hr</Label>
-            <Select 
-              value={formData.airChanges} 
-              onValueChange={(value) => updateFormData("airChanges", value)}
-            >
-              <SelectTrigger className="mt-1">
-                <SelectValue placeholder="Select air changes..." />
-              </SelectTrigger>
-              <SelectContent>
-                {airChangesRange.options.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {airChangesRange.options.length > 1 && (
+            {formData.system === "ventilationSystem" ? (
+              <div className="mt-1 p-2 bg-gray-100 border border-gray-300 rounded text-center text-gray-700 font-medium">
+                Ambient
+              </div>
+            ) : (
+              <Select 
+                value={formData.airChanges} 
+                onValueChange={(value) => updateFormData("airChanges", value)}
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Select air changes..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {airChangesRange.options.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            )}
+            {formData.system !== "ventilationSystem" && airChangesRange.options.length > 1 && (
               <p className="text-xs text-gray-500 mt-1">
                 Range: {airChangesRange.min}-{airChangesRange.max} air changes/hr
               </p>
@@ -288,10 +406,103 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
           {/* Filtration Checkboxes */}
           <div>
             <Label className="mb-4 block font-medium">Filtration</Label>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-              <div>
-                {filterOptions.column1.map((filter) => (
-                  <div key={filter} className="mb-2 flex items-center space-x-2">
+            
+            {/* Filter Type Selection */}
+            <div className="mb-6 p-4 bg-blue-50 rounded-md border">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium text-blue-700">
+                  Filter Type Selection
+                </Label>
+                <Select 
+                  value={formData.filterType || "supply"} 
+                  onValueChange={(value) => {
+                    updateFormData("filterType", value)
+                    // Reset filters when changing filter type
+                    updateFormData("filters", {})
+                  }}
+                >
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Select filter type..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="supply">Supply</SelectItem>
+                    <SelectItem value="exhaust">Exhaust</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <p className="text-xs text-blue-600 mt-1">Select whether filters are for supply or exhaust air</p>
+            </div>
+            
+            <div className="space-y-6">
+              {/* 1. Fresh-air filters */}
+              <div className="rounded-md border border-gray-200 p-4">
+                <h4 className="mb-3 font-medium text-gray-800">{filterOptions[formData.filterType || "supply"].freshAirFilters.title}</h4>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                  {filterOptions[formData.filterType || "supply"].freshAirFilters.options.map((filter) => (
+                    <div key={filter} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={filter.replace(/\s+/g, "-")}
+                        checked={!!formData.filters[filter]}
+                        onCheckedChange={(checked) =>
+                          updateFormData("filters", { ...formData.filters, [filter]: checked })
+                        }
+                      />
+                      <Label htmlFor={filter.replace(/\s+/g, "-")} className="text-sm font-normal">
+                        {filter}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 2. Return-air filter */}
+              <div className="rounded-md border border-gray-200 p-4">
+                <h4 className="mb-3 font-medium text-gray-800">{filterOptions[formData.filterType || "supply"].returnAirFilters.title}</h4>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                  {filterOptions[formData.filterType || "supply"].returnAirFilters.options.map((filter) => (
+                    <div key={filter} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={filter.replace(/\s+/g, "-")}
+                        checked={!!formData.filters[filter]}
+                        onCheckedChange={(checked) =>
+                          updateFormData("filters", { ...formData.filters, [filter]: checked })
+                        }
+                      />
+                      <Label htmlFor={filter.replace(/\s+/g, "-")} className="text-sm font-normal">
+                        {filter}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 3. Fine-filter */}
+              <div className="rounded-md border border-gray-200 p-4">
+                <h4 className="mb-3 font-medium text-gray-800">{filterOptions[formData.filterType || "supply"].fineFilters.title}</h4>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                  {filterOptions[formData.filterType || "supply"].fineFilters.options.map((filter) => (
+                    <div key={filter} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={filter.replace(/\s+/g, "-")}
+                        checked={!!formData.filters[filter]}
+                        onCheckedChange={(checked) =>
+                          updateFormData("filters", { ...formData.filters, [filter]: checked })
+                        }
+                      />
+                      <Label htmlFor={filter.replace(/\s+/g, "-")} className="text-sm font-normal">
+                        {filter}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 4. Super fine filter */}
+              <div className="rounded-md border border-gray-200 p-4">
+                <h4 className="mb-3 font-medium text-gray-800">{filterOptions[formData.filterType || "supply"].superFineFilters.title}</h4>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                  {filterOptions[formData.filterType || "supply"].superFineFilters.options.map((filter) => (
+                    <div key={filter} className="flex items-center space-x-2">
                     <Checkbox
                       id={filter.replace(/\s+/g, "-")}
                       checked={!!formData.filters[filter]}
@@ -305,9 +516,14 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
                   </div>
                 ))}
               </div>
-              <div>
-                {filterOptions.column2.map((filter) => (
-                  <div key={filter} className="mb-2 flex items-center space-x-2">
+              </div>
+
+              {/* 5. Terminal filters */}
+              <div className="rounded-md border border-gray-200 p-4">
+                <h4 className="mb-3 font-medium text-gray-800">{filterOptions[formData.filterType || "supply"].terminalFilters.title}</h4>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                  {filterOptions[formData.filterType || "supply"].terminalFilters.options.map((filter) => (
+                    <div key={filter} className="flex items-center space-x-2">
                     <Checkbox
                       id={filter.replace(/\s+/g, "-")}
                       checked={!!formData.filters[filter]}
@@ -320,30 +536,109 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
                     </Label>
                   </div>
                 ))}
+                </div>
               </div>
             </div>
           </div>
 
+
+
           {/* AHU Specs */}
           <div>
             <Label className="mb-4 block font-medium">AHU Construction Specifications</Label>
-            <div className="space-y-3 rounded-md border bg-white p-4 shadow-sm">
-              {ahuSpecOptions.map((spec) => (
-                <div key={spec} className="flex items-center space-x-3">
-                  <Checkbox
-                    id={spec.replace(/\s+/g, "-")}
-                    checked={formData.ahuSpecs.includes(spec)}
-                    onCheckedChange={(checked) => {
-                      const currentSpecs = formData.ahuSpecs
-                      const newSpecs = checked ? [...currentSpecs, spec] : currentSpecs.filter((s) => s !== spec)
+            
+            {/* Plant Room Distance */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-md border">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium text-gray-700">
+                  Plant Room Distance
+                </Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="number"
+                    min="30"
+                    max="100"
+                    value={formData.plantRoomDistance || "50"}
+                    onChange={(e) => updateFormData("plantRoomDistance", e.target.value)}
+                    className="w-32 text-center"
+                    placeholder="50"
+                  />
+                  <span className="text-sm text-gray-500">meters</span>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Range: 30-100 meters (Default: 50m)</p>
+            </div>
+            
+            <div className="space-y-4 rounded-md border bg-white p-4 shadow-sm">
+              {/* Basic AHU Specifications - Always visible */}
+              {Object.entries(ahuSpecOptions).filter(([category]) => 
+                !["Humidistat", "Thermostat", "Flow-control Valve", "Y-strainer", "Purge Wall", "Pipe Configuration", "Flow Velocity - Chilled Water/Brine/DX/Hot Water", "Flow Velocity - Steam"].includes(category)
+              ).map(([category, options]) => (
+                <div key={category} className="flex items-center justify-between">
+                  <Label className="text-sm font-normal text-gray-700 w-1/2">
+                    {category}
+                  </Label>
+                  <Select 
+                    value={formData.ahuSpecs[category] || ""} 
+                    onValueChange={(value) => {
+                      const newSpecs = { ...formData.ahuSpecs, [category]: value }
                       updateFormData("ahuSpecs", newSpecs)
                     }}
-                  />
-                  <Label htmlFor={spec.replace(/\s+/g, "-")} className="font-normal text-gray-700">
-                    {spec}
-                  </Label>
+                  >
+                    <SelectTrigger className="w-64">
+                      <SelectValue>
+                        {formData.ahuSpecs[category] || "Select specification..."}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {options.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               ))}
+
+              {/* Additional AHU Specifications - Only visible for Air-Cooling and Air-Heating systems */}
+              {(formData.system === "airCoolingSystem" || formData.system === "airHeatingSystem") && (
+                <>
+                  <div className="border-t border-gray-200 pt-4 mt-4">
+                    <h4 className="text-sm font-medium text-gray-800 mb-3">Additional Specifications for {formData.system === "airCoolingSystem" ? "Air-Cooling" : "Air-Heating"} System</h4>
+                  </div>
+                  
+                  {Object.entries(ahuSpecOptions).filter(([category]) => 
+                    ["Humidistat", "Thermostat", "Flow-control Valve", "Y-strainer", "Purge Wall", "Pipe Configuration", "Flow Velocity - Chilled Water/Brine/DX/Hot Water", "Flow Velocity - Steam"].includes(category)
+                  ).map(([category, options]) => (
+                    <div key={category} className="flex items-center justify-between">
+                      <Label className="text-sm font-normal text-gray-700 w-1/2">
+                        {category}
+                      </Label>
+                      <Select 
+                        value={formData.ahuSpecs[category] || ""} 
+                        onValueChange={(value) => {
+                          const newSpecs = { ...formData.ahuSpecs, [category]: value }
+                          updateFormData("ahuSpecs", newSpecs)
+                        }}
+                      >
+                        <SelectTrigger className="w-64">
+                          <SelectValue>
+                            {formData.ahuSpecs[category] || "Select specification..."}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -361,59 +656,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
         </div>
       </FormSection>
 
-      <FormSection title="Pressure Drop Calculation">
-        <div className="mb-4 rounded-md bg-amber-50 p-3 text-sm text-amber-800">
-          <p className="font-medium">Pressure Drop Configuration</p>
-          <p className="text-amber-700">Select the pressure drop items that apply to your system. The total static pressure will be calculated automatically based on your selections.</p>
-        </div>
-        <div className="overflow-x-auto rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-16">Value</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Pressure Drop</TableHead>
-                <TableHead>Guage Selected</TableHead>
-                <TableHead className="text-center">Select</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {formData.pressureDrop.map((item, index) => (
-                <TableRow key={item.code}>
-                  <TableCell>
-                    <Input
-                      value={item.initialValue}
-                      onChange={(e) => handlePressureDropChange(index, "initialValue", e.target.value)}
-                      className="h-8 w-16"
-                    />
-                  </TableCell>
-                  <TableCell className="text-xs">{item.description}</TableCell>
-                  <TableCell>
-                    <Input
-                      value={item.pressureDrop}
-                      onChange={(e) => handlePressureDropChange(index, "pressureDrop", e.target.value)}
-                      className="h-8 w-24"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      value={item.guageSelected}
-                      onChange={(e) => handlePressureDropChange(index, "guageSelected", e.target.value)}
-                      className="h-8 w-24"
-                    />
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Checkbox
-                      checked={item.selected}
-                      onCheckedChange={(checked) => handlePressureDropChange(index, "selected", checked)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </FormSection>
+
 
       <div className="p-6 pt-0 sm:p-8 sm:pt-0">
         <div className="rounded-md bg-blue-50 p-4">
@@ -428,7 +671,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
         <Button type="button" variant="outline" onClick={onBack} size="lg" className="rounded-full bg-transparent">
           <ArrowLeft className="mr-2 h-4 w-4" /> Back
         </Button>
-        <Button type="button" onClick={handleNext} size="lg" className="rounded-full bg-green-600 hover:bg-green-700">
+        <Button type="button" onClick={handleNext} size="lg" className="rounded-full">
           Next Step
         </Button>
       </div>

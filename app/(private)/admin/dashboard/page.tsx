@@ -6,6 +6,15 @@ function page() {
     <div>
       {/* Project Title Header */}
       <div className="text-center py-6 border-b border-border mb-6 relative">
+        {/* Arrant Dynamics Logo - Top Left */}
+        <div className="absolute top-6 left-6">
+          <img 
+            src="/Arrant Logo -1.jpg" 
+            alt="Arrant Dynamics Logo" 
+            className="h-16 w-auto"
+          />
+        </div>
+        
         <h1 className="text-3xl font-bold text-primary">STERI Clean Air - HVAC Matrix</h1>
         <p className="text-muted-foreground mt-2">Arrant Dynamics, a division of Arrant Tech IND, Pvt. Ltd.</p>
         <p className="text-sm text-muted-foreground mt-1">Administrator Dashboard</p>

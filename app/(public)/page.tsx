@@ -11,7 +11,6 @@ import RegisterForm from "./_components/register";
 import LoginForm from "./_components/login";
 import { useSearchParams } from "next/navigation";
 import { 
-  Building2, 
   Shield, 
   Users, 
   Award, 
@@ -33,7 +32,7 @@ function HomeContent() {
 
   const features = [
     {
-      icon: <Building2 className="h-8 w-8 text-primary" />,
+      icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-primary" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path><path d="M10 6h4"></path><path d="M10 10h4"></path><path d="M10 14h4"></path><path d="M10 18h4"></path></svg>,
       title: "Clean Room Design",
       description: "Advanced HVAC calculations for pharmaceutical, semiconductor, and biotechnology facilities."
     },
@@ -98,11 +97,12 @@ function HomeContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <a href="/database-viewer" className="text-sm text-gray-600 hover:text-gray-900 mr-4">
-                📊 Database Viewer
-              </a>
               <div className="flex-shrink-0 flex items-center">
-                <Building2 className="h-8 w-8 text-primary mr-2" />
+                <img 
+                  src="/Arrant%20Logo%20-1.jpg" 
+                  alt="Arrant Dynamics Logo" 
+                  className="h-16 w-24 mr-4 rounded-sm"
+                />
                 <span className="text-xl font-bold text-gray-900">STERI Clean Air</span>
               </div>
             </div>
@@ -332,7 +332,7 @@ function HomeContent() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-2">
               <div className="flex items-center mb-4">
-                <Building2 className="h-8 w-8 text-primary mr-2" />
+                <img src="/Arrant%20Logo%20-1.jpg" alt="Arrant Dynamics Logo" className="h-16 w-24 mr-4" />
                 <span className="text-xl font-bold text-white">STERI Clean Air</span>
               </div>
               <p className="text-gray-400 mb-4 max-w-md">
@@ -373,7 +373,7 @@ function HomeContent() {
           <SheetHeader>
             <SheetTitle className="text-center">
               <div className="flex items-center justify-center mb-4">
-                <Building2 className="h-6 w-6 text-primary mr-2" />
+                <img src="/Arrant%20Logo%20-1.jpg" alt="Arrant Dynamics Logo" className="h-14 w-20 mr-4" />
                 STERI Clean Air
               </div>
             </SheetTitle>
