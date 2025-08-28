@@ -637,6 +637,30 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
                       </Select>
                     </div>
                   ))}
+                  {(formData.system === "airHeatingSystem" || formData.system === "airCoolingSystem") && (
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-normal text-gray-700 w-1/2">
+                        Treated fresh-air unit
+                      </Label>
+                      <Select 
+                        value={formData.ahuSpecs["Treated fresh-air unit"] || ""} 
+                        onValueChange={(value) => {
+                          const newSpecs = { ...formData.ahuSpecs, ["Treated fresh-air unit"]: value }
+                          updateFormData("ahuSpecs", newSpecs)
+                        }}
+                      >
+                        <SelectTrigger className="w-64">
+                          <SelectValue>
+                            {formData.ahuSpecs["Treated fresh-air unit"] || "Select specification..."}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Required">Required</SelectItem>
+                          <SelectItem value="Not-required">Not-required</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
                 </>
               )}
             </div>

@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise'
+import fs from 'fs'
 
 // Only run on server side
 if (typeof window !== 'undefined') {
@@ -10,29 +11,37 @@ console.log('🔍 Server-side MySQL env check:', {
   MYSQL_HOST: process.env.MYSQL_HOST ? '✅ Set' : '❌ Missing',
   MYSQL_USER: process.env.MYSQL_USER ? '✅ Set' : '❌ Missing',
   MYSQL_PASSWORD: process.env.MYSQL_PASSWORD ? '✅ Set' : '❌ Missing',
-  MYSQL_DATABASE: process.env.MYSQL_DATABASE ? '✅ Set' : '❌ Missing'
+  MYSQL_DATABASE: process.env.MYSQL_DATABASE ? '✅ Set' : '❌ Missing',
+  MYSQL_SOCKET: process.env.MYSQL_SOCKET ? '✅ Set' : '❌ Missing',
 })
 
-const mysqlConfig = {
-  host: process.env.MYSQL_HOST || 'localhost',
+const resolvedHost = (process.env.MYSQL_HOST || '').trim() || '127.0.0.1'
+const isLocalHost = resolvedHost === 'localhost' || resolvedHost === '127.0.0.1'
+const socketFromEnv = process.env.MYSQL_SOCKET
+
+// Build base config
+const mysqlConfig: any = {
   user: process.env.MYSQL_USER || 'root',
   password: process.env.MYSQL_PASSWORD || '',
   database: process.env.MYSQL_DATABASE || 'clean_room_db',
-  port: parseInt(process.env.MYSQL_PORT || '3306'),
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
   timezone: '+00:00',
-  // For local connections, use socket instead of TCP
-  ...(process.env.MYSQL_HOST === 'localhost' && {
-    socketPath: '/tmp/mysql.sock'
-  }),
-  // SSL configuration for remote connections
-  ...(process.env.MYSQL_HOST && process.env.MYSQL_HOST !== 'localhost' && {
-    ssl: {
-      rejectUnauthorized: false,
-    }
-  })
+  connectTimeout: 10_000,
+  enableKeepAlive: true,
+}
+
+// Prefer explicit socket if provided and exists
+if (socketFromEnv && fs.existsSync(socketFromEnv)) {
+  mysqlConfig.socketPath = socketFromEnv
+} else {
+  // Otherwise use TCP; normalize localhost to 127.0.0.1 to avoid IPv6 or socket quirks
+  mysqlConfig.host = resolvedHost === 'localhost' ? '127.0.0.1' : resolvedHost
+  mysqlConfig.port = parseInt(process.env.MYSQL_PORT || '3306', 10)
+  if (!isLocalHost) {
+    mysqlConfig.ssl = { rejectUnauthorized: false }
+  }
 }
 
 console.log('🔧 MySQL Config:', {
@@ -40,7 +49,7 @@ console.log('🔧 MySQL Config:', {
   user: mysqlConfig.user,
   database: mysqlConfig.database,
   port: mysqlConfig.port,
-  socketPath: mysqlConfig.socketPath
+  socketPath: mysqlConfig.socketPath,
 })
 
 // Create connection pool
@@ -71,6 +80,13 @@ export async function executeQuery(sql: string, params: any[] = []) {
     return { data: rows, error: null }
   } catch (error) {
     console.error('❌ Query execution failed:', error)
+    // Helpful hint for EADDRNOTAVAIL
+    if ((error as any)?.code === 'EADDRNOTAVAIL') {
+      console.error('💡 Hint: EADDRNOTAVAIL often means the MySQL host is unreachable or invalid. Try:')
+      console.error('   - Use MYSQL_HOST=127.0.0.1 for local DB (not localhost)')
+      console.error('   - Ensure the DB is listening on the specified interface and port')
+      console.error('   - If using a socket, set MYSQL_SOCKET to the correct path')
+    }
     return { 
       data: null, 
       error: error instanceof Error ? error.message : 'Unknown error',
