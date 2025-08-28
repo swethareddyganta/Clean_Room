@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "./ui/button"
+import { Checkbox } from "./ui/checkbox"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/badge"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { CheckCircle, FileText, Download, Share2, Database, Plus, Trash2, Calculator } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { sampleRoomData } from "../lib/sample-hvac-data"
 import { HVACCalculator, type RoomData, type CalculationResults } from "../lib/hvac-calculations"
 import { useToast } from "./ui/use-toast"
@@ -22,14 +24,29 @@ interface Props {
 
 export default function FormStepThree({ formData, updateFormData, onBack, onComplete }: Props) {
   const { toast } = useToast()
+  const router = useRouter()
   const [rooms, setRooms] = useState<Partial<RoomData>[]>([])
   const [calculations, setCalculations] = useState<CalculationResults | null>(null)
   const [isCalculating, setIsCalculating] = useState(false)
+  const [unitSystem, setUnitSystem] = useState<'metric' | 'imperial'>('metric')
+  const OUTPUT_OPTIONS = [
+    "BOQ",
+    "BOD",
+    "Budget Estimation",
+    "Analysis Report",
+    "Feasibility Report",
+    "Cap X (Capital Expenditure)",
+    "Op X (Operational Expenditure)",
+    "Data Visualization",
+  ]
+  const OUTPUT_UNIT_PRICE = 10
+  const [selectedOutputs, setSelectedOutputs] = useState<string[]>([])
+  const [outputUnits, setOutputUnits] = useState<'metric' | 'imperial'>('metric')
 
   // Initialize with sample data
   useEffect(() => {
     if (rooms.length === 0) {
-      setRooms([...sampleRoomData])
+      setRooms([sampleRoomData[0]])
     }
   }, [rooms.length])
 
@@ -101,6 +118,20 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
     }
   }
 
+  const handleOutputSelect = async (outputType: string) => {
+    try {
+      if (!calculations) {
+        await calculateHVAC()
+      }
+      toast({
+        title: outputType,
+        description: `Preparing ${outputType}...`,
+      })
+    } catch (error) {
+      // Already handled in calculateHVAC
+    }
+  }
+
   const handleSubmit = async () => {
     try {
       // Include room data in form submission
@@ -143,6 +174,40 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
         variant: "destructive",
       })
     }
+  }
+
+  const toggleOutputSelection = (label: string, checked: boolean) => {
+    setSelectedOutputs((prev) => {
+      const set = new Set(prev)
+      if (checked) {
+        set.add(label)
+      } else {
+        set.delete(label)
+      }
+      return Array.from(set)
+    })
+  }
+
+  const proceedToPayment = async () => {
+    if (selectedOutputs.length === 0) {
+      toast({
+        title: "No outputs selected",
+        description: "Please select at least one output to continue.",
+        variant: "destructive",
+      })
+      return
+    }
+    // Ensure calculations are available before proceeding
+    if (!calculations) {
+      await calculateHVAC()
+    }
+    const totalPrice = selectedOutputs.length * OUTPUT_UNIT_PRICE
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedOutputs', JSON.stringify(selectedOutputs))
+      localStorage.setItem('outputsTotalPrice', JSON.stringify(totalPrice))
+      localStorage.setItem('outputUnits', outputUnits)
+    }
+    router.push('/payment')
   }
 
   const generateReport = () => {
@@ -218,10 +283,26 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
               <Database className="h-5 w-5" />
               Room Specifications
             </span>
-            <Button onClick={addRoom} size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Room
-            </Button>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Label className="text-sm">Input Units</Label>
+                <div className="flex gap-1">
+                  <Button type="button" size="sm" variant={unitSystem === 'metric' ? 'default' : 'outline'} onClick={() => setUnitSystem('metric')}>Metric</Button>
+                  <Button type="button" size="sm" variant={unitSystem === 'imperial' ? 'default' : 'outline'} onClick={() => setUnitSystem('imperial')}>Imperial</Button>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-sm">Output Units</Label>
+                <div className="flex gap-1">
+                  <Button type="button" size="sm" variant={outputUnits === 'metric' ? 'default' : 'outline'} onClick={() => setOutputUnits('metric')}>Metric</Button>
+                  <Button type="button" size="sm" variant={outputUnits === 'imperial' ? 'default' : 'outline'} onClick={() => setOutputUnits('imperial')}>Imperial</Button>
+                </div>
+              </div>
+              <Button onClick={addRoom} size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Room
+              </Button>
+            </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -252,33 +333,45 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`room-length-${index}`}>Length (m)</Label>
+                      <Label htmlFor={`room-length-${index}`}>Length ({unitSystem === 'metric' ? 'm' : 'ft'})</Label>
                       <Input
                         id={`room-length-${index}`}
                         type="number"
                         value={room.length || ''}
-                        onChange={(e) => updateRoom(index, 'length', parseFloat(e.target.value) || 0)}
-                        placeholder="8"
+                        onChange={(e) => {
+                          const v = parseFloat(e.target.value) || 0
+                          const meters = unitSystem === 'imperial' ? v * 0.3048 : v
+                          updateRoom(index, 'length', meters)
+                        }}
+                        placeholder={unitSystem === 'metric' ? '8' : '26.2'}
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`room-width-${index}`}>Width (m)</Label>
+                      <Label htmlFor={`room-width-${index}`}>Width ({unitSystem === 'metric' ? 'm' : 'ft'})</Label>
                       <Input
                         id={`room-width-${index}`}
                         type="number"
                         value={room.width || ''}
-                        onChange={(e) => updateRoom(index, 'width', parseFloat(e.target.value) || 0)}
-                        placeholder="9"
+                        onChange={(e) => {
+                          const v = parseFloat(e.target.value) || 0
+                          const meters = unitSystem === 'imperial' ? v * 0.3048 : v
+                          updateRoom(index, 'width', meters)
+                        }}
+                        placeholder={unitSystem === 'metric' ? '9' : '29.5'}
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`room-height-${index}`}>Height (ft)</Label>
+                      <Label htmlFor={`room-height-${index}`}>Height ({unitSystem === 'metric' ? 'm' : 'ft'})</Label>
                       <Input
                         id={`room-height-${index}`}
                         type="number"
                         value={room.height || ''}
-                        onChange={(e) => updateRoom(index, 'height', parseFloat(e.target.value) || 0)}
-                        placeholder="9"
+                        onChange={(e) => {
+                          const v = parseFloat(e.target.value) || 0
+                          const feet = unitSystem === 'metric' ? v * 3.28084 : v
+                          updateRoom(index, 'height', feet)
+                        }}
+                        placeholder={unitSystem === 'metric' ? '3' : '10'}
                       />
                     </div>
                     <div>
@@ -292,17 +385,7 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`room-equipment-${index}`}>Equipment Load (kW)</Label>
-                      <Input
-                        id={`room-equipment-${index}`}
-                        type="number"
-                        value={room.equipmentLoadKW || ''}
-                        onChange={(e) => updateRoom(index, 'equipmentLoadKW', parseFloat(e.target.value) || 0)}
-                        placeholder="3"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor={`room-air-changes-${index}`}>Air Changes/Hour</Label>
+                      <Label htmlFor={`room-air-changes-${index}`}>No. of infiltrations per hour</Label>
                       <Input
                         id={`room-air-changes-${index}`}
                         type="number"
@@ -312,23 +395,41 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`room-temp-${index}`}>Temperature (°C)</Label>
+                      <Label htmlFor={`room-fresh-air-${index}`}>Fresh air (%)</Label>
                       <Input
-                        id={`room-temp-${index}`}
+                        id={`room-fresh-air-${index}`}
                         type="number"
-                        value={room.inTempC || ''}
-                        onChange={(e) => updateRoom(index, 'inTempC', parseFloat(e.target.value) || 0)}
-                        placeholder="24"
+                        value={room.freshAirPercentage || ''}
+                        onChange={(e) => updateRoom(index, 'freshAirPercentage', parseFloat(e.target.value) || 0)}
+                        placeholder="10"
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`room-rh-${index}`}>Required RH (%)</Label>
+                      <Label htmlFor={`room-exhaust-air-${index}`}>Exhaust air ({unitSystem === 'metric' ? 'm³/s' : 'CFM'})</Label>
                       <Input
-                        id={`room-rh-${index}`}
+                        id={`room-exhaust-air-${index}`}
                         type="number"
-                        value={room.requiredRH || ''}
-                        onChange={(e) => updateRoom(index, 'requiredRH', parseFloat(e.target.value) || 0)}
-                        placeholder="40"
+                        value={room.exhaustAirCFM || ''}
+                        onChange={(e) => {
+                          const v = parseFloat(e.target.value) || 0
+                          const cfm = unitSystem === 'metric' ? v * 2118.88 : v
+                          updateRoom(index, 'exhaustAirCFM', cfm)
+                        }}
+                        placeholder={unitSystem === 'metric' ? '0.3' : '635'}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`room-lighting-${index}`}>{unitSystem === 'metric' ? 'Lightning load in W/m²' : 'Lightning load in WPSF'}</Label>
+                      <Input
+                        id={`room-lighting-${index}`}
+                        type="number"
+                        value={room.lightingLoadWSqft || ''}
+                        onChange={(e) => {
+                          const v = parseFloat(e.target.value) || 0
+                          const wPerSqft = unitSystem === 'metric' ? v / 10.7639 : v
+                          updateRoom(index, 'lightingLoadWSqft', wPerSqft)
+                        }}
+                        placeholder={unitSystem === 'metric' ? '18.8' : '1.75'}
                       />
                     </div>
                   </div>
@@ -373,80 +474,58 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
 
       {/* Action Buttons */}
       <div className="space-y-4">
-        {/* Step 1: Calculate HVAC */}
         <Card className="border-blue-200 bg-blue-50">
           <CardHeader>
             <CardTitle className="text-blue-900 flex items-center gap-2">
               <Calculator className="h-5 w-5" />
-              Step 1: Calculate HVAC Requirements
+              Outputs
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-blue-800 text-sm mb-4">
-              Run calculations to determine HVAC specifications for your clean room facility.
+              After entering the room details, choose the outputs you’d like to generate.
             </p>
-            <Button 
-              onClick={calculateHVAC} 
-              disabled={isCalculating || rooms.length === 0}
-              className="w-full sm:w-auto"
-              size="lg"
-            >
-              <Calculator className="h-5 w-5 mr-2" />
-              {isCalculating ? "Calculating..." : "Calculate HVAC Requirements"}
-            </Button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {OUTPUT_OPTIONS.map((label) => {
+                const checked = selectedOutputs.includes(label)
+                return (
+                  <div key={label} className="flex items-center space-x-3 rounded-md border bg-white p-3">
+                    <Checkbox id={`out-${label}`} checked={checked} onCheckedChange={(c) => toggleOutputSelection(label, Boolean(c))} />
+                    <Label htmlFor={`out-${label}`} className="flex-1 cursor-pointer">
+                      {label}
+                    </Label>
+                    <span className="text-sm text-gray-600">${OUTPUT_UNIT_PRICE}</span>
+                  </div>
+                )
+              })}
+            </div>
+            <div className="mt-4 flex items-center gap-3">
+              <Label className="text-sm">Download units</Label>
+              <Select value={outputUnits} onValueChange={(v) => setOutputUnits(v as 'metric' | 'imperial')}>
+                <SelectTrigger className="h-9 w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="metric">Metric (SI)</SelectItem>
+                  <SelectItem value="imperial">Imperial (US)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="mt-4 flex items-center justify-between">
+              <div className="text-sm text-gray-700">
+                Selected: <span className="font-semibold">{selectedOutputs.length}</span>
+              </div>
+              <div className="text-base font-semibold text-blue-900">
+                Total: ${selectedOutputs.length * OUTPUT_UNIT_PRICE}
+              </div>
+            </div>
+            <div className="mt-4">
+              <Button onClick={proceedToPayment} disabled={rooms.length === 0} className="w-full sm:w-auto" size="lg">
+                Proceed to Payment
+              </Button>
+            </div>
           </CardContent>
         </Card>
-
-        {/* Step 2: Download Report (only show after calculations) */}
-        {calculations && (
-          <Card className="border-green-200 bg-green-50">
-            <CardHeader>
-              <CardTitle className="text-green-900 flex items-center gap-2">
-                <Download className="h-5 w-5" />
-                Step 2: Download Detailed Report
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-green-800 text-sm mb-4">
-                Generate and download a comprehensive HVAC specification report for your records.
-              </p>
-              <Button 
-                onClick={generateReport} 
-                variant="outline"
-                className="w-full sm:w-auto"
-                size="lg"
-              >
-                <Download className="h-5 w-5 mr-2" />
-                Download HVAC Report
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 3: Submit Specification (only show after calculations) */}
-        {calculations && (
-          <Card className="border-purple-200 bg-purple-50">
-            <CardHeader>
-              <CardTitle className="text-purple-900 flex items-center gap-2">
-                <Share2 className="h-5 w-5" />
-                Step 3: Submit Specification
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-purple-800 text-sm mb-4">
-                Submit your complete clean room specification to the database for processing.
-              </p>
-              <Button 
-                onClick={handleSubmit} 
-                className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700"
-                size="lg"
-              >
-                <Share2 className="h-5 w-5 mr-2" />
-                Submit Clean Room Specification
-              </Button>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
