@@ -3,8 +3,10 @@
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/badge"
-import { CheckCircle, FileText, Database, Download, Share2, ArrowRight, Home } from "lucide-react"
+import { CheckCircle, FileText, Database, Download, Share2, ArrowRight, Home, LogOut, User } from "lucide-react"
 import { useToast } from "./ui/use-toast"
+import { useRouter } from "next/navigation"
+import Cookies from 'js-cookie'
 import type { FormData } from "../app/page"
 
 interface Props {
@@ -16,6 +18,30 @@ interface Props {
 
 export default function FormCompletion({ formData, calculations, onViewDashboard, onNewForm }: Props) {
   const { toast } = useToast()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    try {
+      // Clear cookies
+      Cookies.remove('token')
+      Cookies.remove('role')
+      
+      // Show success message
+      toast({
+        title: "Logged out successfully",
+        description: "You have been logged out of your account.",
+      })
+      
+      // Redirect to home page
+      router.push('/')
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred during logout.",
+        variant: "destructive",
+      })
+    }
+  }
 
   const generateFinalReport = () => {
     const report = {
@@ -130,7 +156,7 @@ export default function FormCompletion({ formData, calculations, onViewDashboard
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Button 
                 onClick={generateFinalReport} 
                 variant="outline"
@@ -156,15 +182,39 @@ export default function FormCompletion({ formData, calculations, onViewDashboard
                 <FileText className="h-6 w-6" />
                 <span>Create New Specification</span>
               </Button>
+            </div>
+            
+            {/* Navigation and Account Actions */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Navigation & Account</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Button 
+                  onClick={() => router.push('/user/dashboard')}
+                  variant="outline"
+                  className="flex flex-col items-center gap-2 h-auto py-4"
+                >
+                  <User className="h-6 w-6" />
+                  <span>Go to Dashboard</span>
+                </Button>
 
-              <Button 
-                onClick={() => window.location.href = '/'}
-                variant="outline"
-                className="flex flex-col items-center gap-2 h-auto py-4"
-              >
-                <Home className="h-6 w-6" />
-                <span>Go to Home</span>
-              </Button>
+                <Button 
+                  onClick={() => router.push('/')}
+                  variant="outline"
+                  className="flex flex-col items-center gap-2 h-auto py-4"
+                >
+                  <Home className="h-6 w-6" />
+                  <span>Go to Home</span>
+                </Button>
+
+                <Button 
+                  onClick={handleLogout}
+                  variant="destructive"
+                  className="flex flex-col items-center gap-2 h-auto py-4"
+                >
+                  <LogOut className="h-6 w-6" />
+                  <span>Logout</span>
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -269,12 +269,22 @@ export const ahuSpecOptions = {
     "Single Pipe",
     "Dual Pipe",
   ],
-  "Flow Velocity - Chilled Water/Brine/DX/Hot Water": [
-    "0.5-2.5 m/s",
-  ],
-  "Flow Velocity - Steam": [
-    "3 m/s - 25 m/s",
-  ],
+  "Flow Velocity - Chilled Water/Brine/DX/Hot Water": {
+    type: "range",
+    min: 0.5,
+    max: 2.5,
+    step: 0.1,
+    unit: "m/s",
+    default: 1.5
+  },
+  "Flow Velocity - Steam": {
+    type: "range",
+    min: 3,
+    max: 25,
+    step: 0.5,
+    unit: "m/s",
+    default: 14
+  },
   "BMS Monitoring": [
     "Required",
     "Not Required",

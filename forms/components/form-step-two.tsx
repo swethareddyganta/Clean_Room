@@ -10,6 +10,7 @@ import { Label } from "./ui/label"
 import { Checkbox } from "./ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+import { RangeInput } from "./ui/range-input"
 import { ArrowLeft } from "lucide-react"
 import type { FormData, PressureDropItem } from "../app/page"
 import { standardsData, filterOptions, ahuSpecOptions } from "../lib/standards-data"
@@ -573,33 +574,37 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
               {/* Basic AHU Specifications - Always visible */}
               {Object.entries(ahuSpecOptions).filter(([category]) => 
                 !["Humidistat", "Thermostat", "Flow-control Valve", "Y-strainer", "Purge Wall", "Pipe Configuration", "Flow Velocity - Chilled Water/Brine/DX/Hot Water", "Flow Velocity - Steam"].includes(category)
-              ).map(([category, options]) => (
-                <div key={category} className="flex items-center justify-between">
-                  <Label className="text-sm font-normal text-gray-700 w-1/2">
-                    {category}
-                  </Label>
-                  <Select 
-                    value={formData.ahuSpecs[category] || ""} 
-                    onValueChange={(value) => {
-                      const newSpecs = { ...formData.ahuSpecs, [category]: value }
-                      updateFormData("ahuSpecs", newSpecs)
-                    }}
-                  >
-                    <SelectTrigger className="w-64">
-                      <SelectValue>
-                        {formData.ahuSpecs[category] || "Select specification..."}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {options.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              ))}
+              ).map(([category, options]) => {
+                // Basic AHU specifications should only be regular dropdowns
+                const dropdownOptions = options as string[]
+                return (
+                  <div key={category} className="flex items-center justify-between">
+                    <Label className="text-sm font-normal text-gray-700 w-1/2">
+                      {category}
+                    </Label>
+                    <Select 
+                      value={formData.ahuSpecs[category] || ""} 
+                      onValueChange={(value) => {
+                        const newSpecs = { ...formData.ahuSpecs, [category]: value }
+                        updateFormData("ahuSpecs", newSpecs)
+                      }}
+                    >
+                      <SelectTrigger className="w-64">
+                        <SelectValue>
+                          {formData.ahuSpecs[category] || "Select specification..."}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {dropdownOptions.map((option: string) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )
+              })}
 
               {/* Additional AHU Specifications - Only visible for Air-Cooling and Air-Heating systems */}
               {(formData.system === "airCoolingSystem" || formData.system === "airHeatingSystem") && (
@@ -610,33 +615,58 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
                   
                   {Object.entries(ahuSpecOptions).filter(([category]) => 
                     ["Humidistat", "Thermostat", "Flow-control Valve", "Y-strainer", "Purge Wall", "Pipe Configuration", "Flow Velocity - Chilled Water/Brine/DX/Hot Water", "Flow Velocity - Steam"].includes(category)
-                  ).map(([category, options]) => (
-                    <div key={category} className="flex items-center justify-between">
-                      <Label className="text-sm font-normal text-gray-700 w-1/2">
-                        {category}
-                      </Label>
-                      <Select 
-                        value={formData.ahuSpecs[category] || ""} 
-                        onValueChange={(value) => {
-                          const newSpecs = { ...formData.ahuSpecs, [category]: value }
-                          updateFormData("ahuSpecs", newSpecs)
-                        }}
-                      >
-                        <SelectTrigger className="w-64">
-                          <SelectValue>
-                            {formData.ahuSpecs[category] || "Select specification..."}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {options.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  ))}
+                  ).map(([category, options]) => {
+                    // Check if this is a range input
+                    if (typeof options === 'object' && 'type' in options && options.type === 'range') {
+                      const rangeOptions = options as { type: string; min: number; max: number; step: number; unit: string; default: number }
+                      return (
+                        <RangeInput
+                          key={category}
+                          label={category}
+                          value={formData.ahuSpecs[category] || rangeOptions.default.toString()}
+                          onChange={(value) => {
+                            const newSpecs = { ...formData.ahuSpecs, [category]: value }
+                            updateFormData("ahuSpecs", newSpecs)
+                          }}
+                          min={rangeOptions.min}
+                          max={rangeOptions.max}
+                          step={rangeOptions.step}
+                          unit={rangeOptions.unit}
+                          className="w-full"
+                        />
+                      )
+                    }
+                    
+                    // Regular dropdown for other options
+                    const dropdownOptions = options as string[]
+                    return (
+                      <div key={category} className="flex items-center justify-between">
+                        <Label className="text-sm font-normal text-gray-700 w-1/2">
+                          {category}
+                        </Label>
+                        <Select 
+                          value={formData.ahuSpecs[category] || ""} 
+                          onValueChange={(value) => {
+                            const newSpecs = { ...formData.ahuSpecs, [category]: value }
+                            updateFormData("ahuSpecs", newSpecs)
+                          }}
+                        >
+                          <SelectTrigger className="w-64">
+                            <SelectValue>
+                              {formData.ahuSpecs[category] || "Select specification..."}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {dropdownOptions.map((option: string) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )
+                  })}
                   {(formData.system === "airHeatingSystem" || formData.system === "airCoolingSystem") && (
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-normal text-gray-700 w-1/2">
