@@ -201,6 +201,49 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
     if (!calculations) {
       await calculateHVAC()
     }
+    
+    // Start BOD calculation if BOD is selected
+    if (selectedOutputs.includes('BOD')) {
+      try {
+        toast({
+          title: "Starting BOD Calculation",
+          description: "BOD calculation is being processed in the background.",
+        })
+        
+        const response = await fetch('/api/bod/calculate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            formData,
+            roomData: rooms,
+            calculationId: `BOD_${Date.now()}`
+          }),
+        })
+        
+        if (response.ok) {
+          const result = await response.json()
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('bodCalculationId', result.data.id || '')
+          }
+          toast({
+            title: "BOD Calculation Started",
+            description: "BOD calculation is processing. You can check status after payment.",
+          })
+        } else {
+          console.error('BOD calculation failed to start')
+        }
+      } catch (error) {
+        console.error('Error starting BOD calculation:', error)
+        toast({
+          title: "BOD Calculation Error",
+          description: "Failed to start BOD calculation. Please try again.",
+          variant: "destructive",
+        })
+      }
+    }
+    
     const totalPrice = selectedOutputs.length * OUTPUT_UNIT_PRICE
     if (typeof window !== 'undefined') {
       localStorage.setItem('selectedOutputs', JSON.stringify(selectedOutputs))

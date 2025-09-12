@@ -1,17 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { saveFormSubmission } from '../../../lib/database'
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.json()
     
-    // For now, just log the data and return success
-    // In a real application, you would save this to a database
     console.log('Form submission received:', formData)
     
+    // Save to database using the dual database system
+    const result = await saveFormSubmission(formData)
+    
+    if (result.error) {
+      console.error('Error saving form submission:', result.error)
+      return NextResponse.json({
+        success: false,
+        error: result.error.message || 'Failed to save form submission'
+      }, { status: 500 })
+    }
+
     return NextResponse.json({
       success: true,
-      data: formData,
-      message: 'Form submitted successfully'
+      data: result.data,
+      message: 'Form submitted successfully to both databases'
     })
 
   } catch (error) {
