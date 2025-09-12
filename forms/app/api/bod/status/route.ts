@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { bodService } from '../../../lib/bod-service'
+import { bodService } from '../../../../lib/bod-service'
 
 export async function GET(request: NextRequest) {
   try {
@@ -56,31 +56,34 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
     
-    const existingCalculation = bodCalculations.get(id)
+    // Get existing calculation from BOD service
+    const existingCalculation = bodService.getCalculation(id)
     
     if (existingCalculation) {
-      // Update existing calculation
-      existingCalculation.status = status || existingCalculation.status
-      existingCalculation.progress = progress !== undefined ? progress : existingCalculation.progress
-      existingCalculation.result = result || existingCalculation.result
-      existingCalculation.error = error || existingCalculation.error
-      
-      if (status === 'completed' || status === 'failed') {
-        existingCalculation.completedAt = new Date()
-      }
-      
-      bodCalculations.set(id, existingCalculation)
-    } else {
-      // Create new calculation
-      bodCalculations.set(id, {
-        id,
-        status: status || 'pending',
-        progress: progress || 0,
-        result,
-        error,
-        createdAt: new Date(),
-        completedAt: status === 'completed' || status === 'failed' ? new Date() : undefined
+      // Update existing calculation using the service
+      bodService.updateCalculation(id, {
+        status: status || existingCalculation.status,
+        progress: progress !== undefined ? progress : existingCalculation.progress,
+        result: result || existingCalculation.result,
+        error: error || existingCalculation.error
       })
+    } else {
+      // Create new calculation using the service
+      bodService.startCalculation({
+        formData: {},
+        roomData: [],
+        calculationId: id
+      })
+      
+      // Update with provided data
+      if (status || progress !== undefined || result || error) {
+        bodService.updateCalculation(id, {
+          status: status || 'pending',
+          progress: progress || 0,
+          result,
+          error
+        })
+      }
     }
     
     return NextResponse.json({
@@ -99,13 +102,11 @@ export async function POST(request: NextRequest) {
 
 // Helper function to create a new BOD calculation
 export function createBODCalculation(id: string) {
-  bodCalculations.set(id, {
-    id,
-    status: 'pending',
-    progress: 0,
-    createdAt: new Date()
+  return bodService.startCalculation({
+    formData: {},
+    roomData: [],
+    calculationId: id
   })
-  return id
 }
 
 // Helper function to update BOD calculation status
@@ -115,18 +116,10 @@ export function updateBODCalculation(id: string, updates: {
   result?: any
   error?: string
 }) {
-  const calculation = bodCalculations.get(id)
-  if (calculation) {
-    Object.assign(calculation, updates)
-    if (updates.status === 'completed' || updates.status === 'failed') {
-      calculation.completedAt = new Date()
-    }
-    bodCalculations.set(id, calculation)
-  }
-  return calculation
+  return bodService.updateCalculation(id, updates)
 }
 
 // Helper function to get all BOD calculations (for admin purposes)
 export function getAllBODCalculations() {
-  return Array.from(bodCalculations.values())
+  return bodService.getAllCalculations()
 }

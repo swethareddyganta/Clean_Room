@@ -1,7 +1,11 @@
 {
+  "/api/bod/calculate/route": "/api/bod/calculate",
+  "/api/bod/download/route": "/api/bod/download",
+  "/api/bod/status/route": "/api/bod/status",
   "/api/forms/submit/route": "/api/forms/submit",
   "/_not-found/page": "/_not-found",
   "/page": "/",
-  "/env-check/page": "/env-check",
-  "/test-db/page": "/test-db"
+  "/payment/page": "/payment",
+  "/test-db/page": "/test-db",
+  "/env-check/page": "/env-check"
 }

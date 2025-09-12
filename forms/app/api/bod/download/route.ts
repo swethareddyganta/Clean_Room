@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { bodService } from '../../../lib/bod-service'
+import { bodService } from '../../../../lib/bod-service'
 
 export async function GET(request: NextRequest) {
   try {
