@@ -141,7 +141,7 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
         calculations: calculations
       }
 
-      const response = await fetch('/api/forms/submit', {
+      const response = await fetch('/forms/api/forms/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -210,7 +210,7 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
           description: "BOD calculation is being processed in the background.",
         })
         
-        const response = await fetch('/api/bod/calculate', {
+        const response = await fetch('/forms/api/bod/calculate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
