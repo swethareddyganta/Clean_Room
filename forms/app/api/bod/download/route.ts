@@ -104,8 +104,9 @@ function generateCSV(result: any): string {
       rows.push(`${key},"${value.value}","${value.unit}"`)
     } else if (typeof value === 'object' && value !== null && 'method' in value) {
       // Handle motor HP object
-      rows.push(`${key},"${value.value}","${value.unit}"`)
-      rows.push(`${key} - Method,"${value.method}",-`)
+      const motorValue = value as { value?: any; unit?: any; method: any }
+      rows.push(`${key},"${motorValue.value || 'N/A'}","${motorValue.unit || '-'}"`)
+      rows.push(`${key} - Method,"${motorValue.method}",-`)
     } else {
       // Handle simple values
       const stringValue = value === null ? 'N/A' : String(value)
