@@ -30,14 +30,18 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
   const [isCalculating, setIsCalculating] = useState(false)
   const [unitSystem, setUnitSystem] = useState<'metric' | 'imperial'>('metric')
   const OUTPUT_OPTIONS = [
-    "BOQ",
-    "BOD",
+    "BOQ : Bill of Quantity",
+    "BOD : Basis of Design",
+    "BOM : Bill of Material",
+    "DQ/IQ/OQ/PQ : Design/Installation/Operational/Performance Qualifications",
+    "Maintenance Qualification",
     "Budget Estimation",
     "Analysis Report",
     "Feasibility Report",
     "Cap X (Capital Expenditure)",
     "Op X (Operational Expenditure)",
     "Data Visualization",
+    
   ]
   const OUTPUT_UNIT_PRICE = 10
   const [selectedOutputs, setSelectedOutputs] = useState<string[]>([])
@@ -425,6 +429,17 @@ export default function FormStepThree({ formData, updateFormData, onBack, onComp
                         value={room.occupancy || ''}
                         onChange={(e) => updateRoom(index, 'occupancy', parseInt(e.target.value) || 0)}
                         placeholder="2"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`room-equipment-load-${index}`}>Equipment Load (kW)</Label>
+                      <Input
+                        id={`room-equipment-load-${index}`}
+                        type="number"
+                        value={room.equipmentLoadKW || ''}
+                        onChange={(e) => updateRoom(index, 'equipmentLoadKW', parseFloat(e.target.value) || 0)}
+                        placeholder="0"
+                        step="0.1"
                       />
                     </div>
                     <div>

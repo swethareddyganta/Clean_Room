@@ -1,13 +1,13 @@
 {
-  "/api/bod/download/route": "/api/bod/download",
-  "/api/bod/status/route": "/api/bod/status",
   "/api/bod/calculate/route": "/api/bod/calculate",
   "/api/bod/debug/route": "/api/bod/debug",
-  "/api/forms/submit/route": "/api/forms/submit",
-  "/_not-found/page": "/_not-found",
   "/api/bod/test/route": "/api/bod/test",
+  "/api/bod/download/route": "/api/bod/download",
+  "/api/forms/submit/route": "/api/forms/submit",
+  "/api/bod/status/route": "/api/bod/status",
+  "/_not-found/page": "/_not-found",
   "/page": "/",
-  "/payment/page": "/payment",
   "/env-check/page": "/env-check",
+  "/payment/page": "/payment",
   "/test-db/page": "/test-db"
 }
