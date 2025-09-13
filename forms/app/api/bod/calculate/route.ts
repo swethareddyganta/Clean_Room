@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { bodService } from '../../../lib/bod-service'
+import { bodService } from '../../../../lib/bod-service'
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 // GET endpoint for testing
 export async function GET() {
   try {
-    const { calculateHVACExample } = await import('../../../lib/hvac-calculator-engine')
+    const { calculateHVACExample } = await import('../../../../lib/hvac-calculator-engine')
     const exampleResult = calculateHVACExample()
     
     return NextResponse.json({

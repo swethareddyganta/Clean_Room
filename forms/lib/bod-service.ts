@@ -163,7 +163,7 @@ export class BODService {
   }
   
   // Update calculation
-  private updateCalculation(calculationId: string, updates: Partial<BODCalculationResult>): void {
+  updateCalculation(calculationId: string, updates: Partial<BODCalculationResult>): void {
     const calculation = this.calculations.get(calculationId)
     if (calculation) {
       Object.assign(calculation, updates)

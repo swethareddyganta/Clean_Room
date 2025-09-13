@@ -1,6 +1,30 @@
 {
   "version": 4,
   "routes": {
+    "/payment": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/payment",
+      "dataRoute": "/payment.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/env-check": {
       "experimentalBypassFor": [
         {
@@ -16,30 +40,6 @@
       "initialRevalidateSeconds": false,
       "srcRoute": "/env-check",
       "dataRoute": "/env-check.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/test-db": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/test-db",
-      "dataRoute": "/test-db.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -72,13 +72,37 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
+    },
+    "/test-db": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/test-db",
+      "dataRoute": "/test-db.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
     }
   },
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "3bd5be9289790bfa7bcf8dd9ea312b4e",
-    "previewModeSigningKey": "abd8244d0f4b081ad50945d6d1f70ff3b85248aa6d472564fa669174e23d423a",
-    "previewModeEncryptionKey": "487bf320a1d94b887d83c1c3ebd2d381b190d26cdd02c94010471a05e626a1e4"
+    "previewModeId": "26083b870fc58b6359c63fcc48fece27",
+    "previewModeSigningKey": "e1d699faf266f1631dbf40edf6cda53033e444fd278001b31c458b79104a2049",
+    "previewModeEncryptionKey": "74dcd0e4e92bd710505d035ac80b25a5b8f2a1faf474e78e2750e3cb8240792e"
   }
 }
