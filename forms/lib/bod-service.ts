@@ -68,6 +68,7 @@ export class BODService {
     this.calculations.set(calculationId, calculation)
     
     // Start processing asynchronously
+    console.log('Starting BOD calculation process for ID:', calculationId)
     this.processCalculation(calculationId, request).catch(error => {
       console.error('BOD calculation error:', error)
       this.updateCalculation(calculationId, {
@@ -83,23 +84,35 @@ export class BODService {
   // Process BOD calculation
   private async processCalculation(calculationId: string, request: BODCalculationRequest): Promise<void> {
     try {
+      console.log('Processing BOD calculation for ID:', calculationId)
+      
       // Update status to processing
       this.updateCalculation(calculationId, {
         status: 'processing',
         progress: 10
       })
       
+      console.log('Updated status to processing for ID:', calculationId)
+      
       // Convert form data to HVAC inputs
+      console.log('Converting form data to HVAC inputs...')
+      console.log('Form data:', request.formData)
+      console.log('Room data:', request.roomData)
+      
       const hvacInputs = this.convertFormDataToHVACInputs(request.formData, request.roomData)
+      console.log('Converted HVAC inputs:', hvacInputs)
       
       this.updateCalculation(calculationId, {
         progress: 30
       })
       
       // Perform calculations for each room
+      console.log('Starting HVAC calculations for', hvacInputs.length, 'rooms')
       const results = []
       for (let i = 0; i < hvacInputs.length; i++) {
+        console.log(`Calculating HVAC for room ${i + 1}/${hvacInputs.length}`)
         const result = calculateHVAC(hvacInputs[i])
+        console.log(`HVAC result for room ${i + 1}:`, result)
         results.push(result)
         
         // Update progress
@@ -110,13 +123,16 @@ export class BODService {
       }
       
       // Generate summary
+      console.log('Generating summary...')
       const summary = this.generateSummary(results, request.formData)
+      console.log('Generated summary:', summary)
       
       this.updateCalculation(calculationId, {
         progress: 95
       })
       
       // Complete calculation
+      console.log('Completing BOD calculation for ID:', calculationId)
       this.updateCalculation(calculationId, {
         status: 'completed',
         progress: 100,
@@ -128,8 +144,10 @@ export class BODService {
         },
         completedAt: new Date()
       })
+      console.log('BOD calculation completed successfully for ID:', calculationId)
       
     } catch (error) {
+      console.error('Error in BOD calculation process:', error)
       throw new Error(`BOD calculation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }

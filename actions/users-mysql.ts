@@ -1,6 +1,6 @@
 'use server'
 
-import { executeQuery } from '@/lib/mysql'
+import { executeQuery, executeTransactionalQuery } from '@/lib/mysql'
 import bcrypt from "bcryptjs"
 import { IUser } from "@/interfaces"
 import jwt from "jsonwebtoken"
@@ -47,7 +47,7 @@ async function logLoginAttempt(
       failureReason || null
     ]
 
-    await executeQuery(sql, params)
+    await executeTransactionalQuery(sql, params)
   } catch (error) {
     console.error('Error logging login attempt:', error)
   }
@@ -85,7 +85,7 @@ export const registerUser = async (payload: Partial<IUser>) => {
       true
     ]
 
-    const insertResult = await executeQuery(insertSql, insertParams)
+    const insertResult = await executeTransactionalQuery(insertSql, insertParams)
     
     if (insertResult.error) {
       throw new Error((insertResult.error as any).message || 'Failed to create user')
@@ -187,7 +187,7 @@ export const loginUser = async (email: string, password: string) => {
 
     // Update last_login in user_profiles
     const updateSql = 'UPDATE user_profiles SET last_login = NOW() WHERE id = ?'
-    await executeQuery(updateSql, [user.id])
+    await executeTransactionalQuery(updateSql, [user.id])
 
     // Log successful login
     await logLoginAttempt(
