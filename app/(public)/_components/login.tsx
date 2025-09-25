@@ -35,7 +35,6 @@ function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
-  const [showForgotPassword, setShowForgotPassword] = React.useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,75 +64,10 @@ function LoginForm() {
     }
   }
 
-  const handleForgotPassword = async () => {
-    const email = form.getValues('email');
-    if (!email) {
-      toast.error("Please enter your email address first");
-      return;
-    }
-    
-    // Simulate forgot password flow
-    toast.success("Password reset instructions sent to your email");
-    setShowForgotPassword(false);
+  const handleForgotPassword = () => {
+    router.push('/forgot-password');
   };
 
-  if (showForgotPassword) {
-    return (
-      <div className='w-full'>
-        <Form {...form}>
-          <div className="space-y-6">
-            <div className="text-center">
-              <Mail className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h1 className="text-primary font-bold text-xl mb-2">Reset Your Password</h1>
-              <p className="text-sm text-gray-600">
-                Enter your email address and we'll send you instructions to reset your password.
-              </p>
-            </div>
-            <hr className='border-border' />
-            
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input 
-                        placeholder="Enter your email address" 
-                        className="pl-10"
-                        {...field} 
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex flex-col space-y-3">
-              <Button 
-                onClick={handleForgotPassword}
-                className="w-full"
-                disabled={loading}
-              >
-                {loading ? "Sending..." : "Send Reset Instructions"}
-              </Button>
-              
-              <Button 
-                variant="ghost" 
-                onClick={() => setShowForgotPassword(false)}
-                className="w-full"
-              >
-                Back to Login
-              </Button>
-            </div>
-          </div>
-        </Form>
-      </div>
-    );
-  }
 
   return (
     <div className='w-full'>
@@ -178,7 +112,7 @@ function LoginForm() {
                     type="button"
                     variant="link"
                     className="px-0 font-normal text-sm text-primary"
-                    onClick={() => setShowForgotPassword(true)}
+                    onClick={handleForgotPassword}
                   >
                     Forgot password?
                   </Button>
