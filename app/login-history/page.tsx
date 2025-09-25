@@ -345,7 +345,7 @@ export default function LoginHistoryPage() {
           <div className="p-6">
             <div className="prose prose-sm max-w-none">
               <h4>1. Create Login History Table</h4>
-              <p>Run this SQL in your Supabase SQL Editor:</p>
+              <p>Run this SQL in your MySQL database:</p>
               <pre className="bg-gray-100 p-4 rounded text-xs overflow-x-auto">
                 {`-- See login-history-schema.sql file for complete setup`}
               </pre>
@@ -353,8 +353,8 @@ export default function LoginHistoryPage() {
               <h4>2. Database Access</h4>
               <ul>
                 <li>Go to: <a href="/mysql-test" target="_blank" className="text-blue-600 hover:underline">MySQL Database Test</a></li>
-                <li>Use Table Editor to view data</li>
-                <li>Use SQL Editor to run queries</li>
+                <li>Use MySQL Workbench or command line to view data</li>
+                <li>Run SQL queries directly in your MySQL client</li>
               </ul>
             </div>
           </div>
