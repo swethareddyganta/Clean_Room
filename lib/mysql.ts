@@ -186,4 +186,83 @@ export async function executeQuery(sql: string, params: any[] = []) {
       }
     }
   }
+}
+
+// Transactional synchronization function
+export async function executeTransactionalQuery(sql: string, params: any[] = []) {
+  const useDualDB = process.env.USE_DUAL_DB === 'true'
+  
+  if (useDualDB && dualConnections) {
+    console.log('🔄 Executing transactional query on both databases:', sql.substring(0, 50) + '...')
+    
+    let localConnection = null
+    let remoteConnection = null
+    
+    try {
+      // Start transactions on both databases
+      localConnection = await dualConnections.local.pool.getConnection()
+      remoteConnection = await dualConnections.remote.pool.getConnection()
+      
+      await localConnection.beginTransaction()
+      await remoteConnection.beginTransaction()
+      
+      console.log('🔄 Transactions started on both databases')
+      
+      // Execute query on local database
+      const [localRows] = await localConnection.execute(sql, params)
+      console.log('✅ Local database query executed')
+      
+      // Execute query on remote database
+      const [remoteRows] = await remoteConnection.execute(sql, params)
+      console.log('✅ Remote database query executed')
+      
+      // Commit both transactions
+      await localConnection.commit()
+      await remoteConnection.commit()
+      
+      console.log('✅ Both transactions committed successfully')
+      
+      return { 
+        data: localRows, 
+        error: null,
+        success: true,
+        message: 'Both databases updated successfully'
+      }
+      
+    } catch (error) {
+      console.error('❌ Transactional query failed:', error)
+      
+      // Rollback both transactions
+      try {
+        if (localConnection) {
+          await localConnection.rollback()
+          console.log('🔄 Local transaction rolled back')
+        }
+        if (remoteConnection) {
+          await remoteConnection.rollback()
+          console.log('🔄 Remote transaction rolled back')
+        }
+      } catch (rollbackError) {
+        console.error('❌ Rollback failed:', rollbackError)
+      }
+      
+      return { 
+        data: null, 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        success: false,
+        message: 'Both databases rolled back due to error'
+      }
+    } finally {
+      // Release connections
+      if (localConnection) {
+        localConnection.release()
+      }
+      if (remoteConnection) {
+        remoteConnection.release()
+      }
+    }
+  } else {
+    // Single database mode (legacy)
+    return executeQuery(sql, params)
+  }
 } 
