@@ -2,8 +2,12 @@
 
 export default function EnvCheckPage() {
   const envVars = {
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_API_KEY: process.env.NEXT_PUBLIC_SUPABASE_API_KEY,
+    MYSQL_HOST: process.env.MYSQL_HOST,
+    MYSQL_USER: process.env.MYSQL_USER,
+    MYSQL_DATABASE: process.env.MYSQL_DATABASE,
+    REMOTE_MYSQL_HOST: process.env.REMOTE_MYSQL_HOST,
+    REMOTE_MYSQL_USER: process.env.REMOTE_MYSQL_USER,
+    REMOTE_MYSQL_DATABASE: process.env.REMOTE_MYSQL_DATABASE,
   }
 
   return (
@@ -14,7 +18,7 @@ export default function EnvCheckPage() {
         </h1>
         
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Client-side Environment Variables</h2>
+          <h2 className="text-xl font-semibold mb-4">MySQL Database Environment Variables</h2>
           
           <div className="space-y-3">
             {Object.entries(envVars).map(([key, value]) => (

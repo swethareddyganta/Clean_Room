@@ -75,7 +75,7 @@ export default function TestDatabasePage() {
             Database Testing & Management
           </h1>
           <p className="text-gray-600">
-            Test your Supabase database connection and view form submissions
+            Test your MySQL database connection and view form submissions
           </p>
         </div>
 
@@ -208,15 +208,15 @@ export default function TestDatabasePage() {
             <CardTitle>Database Access Instructions</CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
-            <h4>1. Supabase Dashboard (Web Interface)</h4>
+            <h4>1. MySQL Database Access</h4>
             <ul>
               <li>Go to: <a href="/mysql-test" target="_blank" className="text-blue-600 hover:underline">MySQL Database Test</a></li>
-              <li>Navigate to "Table Editor" to see your data</li>
-              <li>Use "SQL Editor" to run custom queries</li>
+              <li>Use MySQL Workbench or command line to view data</li>
+              <li>Run SQL queries directly in your MySQL client</li>
             </ul>
 
             <h4>2. Direct Database Query</h4>
-            <p>Use the SQL Editor in Supabase to run queries like:</p>
+            <p>Use MySQL client to run queries like:</p>
             <code className="block bg-gray-100 p-2 rounded text-xs">
               SELECT * FROM form_submissions ORDER BY created_at DESC;
             </code>
@@ -224,10 +224,14 @@ export default function TestDatabasePage() {
             <h4>3. Environment Check</h4>
             <p>Make sure your .env.local file contains:</p>
             <ul>
-              <li>NEXT_PUBLIC_SUPABASE_URL</li>
-              <li>NEXT_PUBLIC_SUPABASE_API_KEY</li>
-              <li>SUPABASE_URL</li>
-              <li>SUPABASE_API_KEY</li>
+              <li>MYSQL_HOST</li>
+              <li>MYSQL_USER</li>
+              <li>MYSQL_PASSWORD</li>
+              <li>MYSQL_DATABASE</li>
+              <li>REMOTE_MYSQL_HOST (for dual database mode)</li>
+              <li>REMOTE_MYSQL_USER</li>
+              <li>REMOTE_MYSQL_PASSWORD</li>
+              <li>REMOTE_MYSQL_DATABASE</li>
             </ul>
           </CardContent>
         </Card>

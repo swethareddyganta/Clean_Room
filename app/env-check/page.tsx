@@ -13,7 +13,7 @@ export default function EnvCheckPage() {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="mx-auto max-w-4xl">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Environment Variables Check
+          MySQL Environment Variables Check
         </h1>
         
         <div className="bg-white rounded-lg shadow p-6">
