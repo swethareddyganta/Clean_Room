@@ -1,0 +1,35 @@
+# Copy this to .env.local file to fix the database connection issue
+
+# Database Configuration
+# Set to false to use only remote database (recommended for now)
+USE_DUAL_DB=false
+USE_REMOTE_DB=true
+
+# Remote Database (Production) - This is working
+REMOTE_MYSQL_HOST=103.86.177.38
+REMOTE_MYSQL_USER=atsuser
+REMOTE_MYSQL_PASSWORD=Root1234!
+REMOTE_MYSQL_DATABASE=cleanroom_db
+REMOTE_MYSQL_PORT=3306
+
+# Local Database (Development) - Currently not working, so commented out
+# MYSQL_HOST=localhost
+# MYSQL_USER=root
+# MYSQL_PASSWORD=Ramana1113
+# MYSQL_DATABASE=cleanroom_db
+# MYSQL_PORT=3306
+# MYSQL_SOCKET=/tmp/mysql.sock
+
+# JWT Secret
+JWT_SECRET=CLEANROOM_SECRET
+
+# Email Configuration (for password reset)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+
+# Base URL
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+

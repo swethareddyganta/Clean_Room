@@ -1,0 +1,26 @@
+# Email Configuration for Password Reset
+# Add these variables to your .env.local file
+
+# SMTP Configuration (Gmail example)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+
+# Base URL for reset links
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# JWT Secret (should already exist)
+JWT_SECRET=your-jwt-secret
+
+# Instructions for Gmail:
+# 1. Enable 2-factor authentication on your Gmail account
+# 2. Generate an App Password: https://myaccount.google.com/apppasswords
+# 3. Use the App Password as SMTP_PASS (not your regular password)
+
+# Instructions for other email providers:
+# - Outlook/Hotmail: smtp-mail.outlook.com, port 587
+# - Yahoo: smtp.mail.yahoo.com, port 587
+# - Custom SMTP: Use your provider's settings
+

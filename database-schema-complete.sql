@@ -73,6 +73,17 @@ CREATE TABLE IF NOT EXISTS login_history (
   FOREIGN KEY (user_id) REFERENCES user_profiles(id) ON DELETE CASCADE
 );
 
+-- 4. Password Reset Tokens Table
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+  id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+  user_id VARCHAR(36) NOT NULL,
+  token VARCHAR(255) NOT NULL UNIQUE,
+  expires_at TIMESTAMP NOT NULL,
+  used BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES user_profiles(id) ON DELETE CASCADE
+);
+
 -- Create indexes for better performance
 CREATE INDEX idx_user_profiles_email ON user_profiles(email);
 CREATE INDEX idx_user_profiles_role ON user_profiles(role);
@@ -84,6 +95,9 @@ CREATE INDEX idx_login_history_user_id ON login_history(user_id);
 CREATE INDEX idx_login_history_login_time ON login_history(login_time DESC);
 CREATE INDEX idx_login_history_email ON login_history(email);
 CREATE INDEX idx_login_history_success ON login_history(success);
+CREATE INDEX idx_password_reset_tokens_token ON password_reset_tokens(token);
+CREATE INDEX idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
+CREATE INDEX idx_password_reset_tokens_expires_at ON password_reset_tokens(expires_at);
 
 -- Insert default admin user (password: 'password')
 INSERT INTO user_profiles (id, email, name, password, role) 
