@@ -1,0 +1,3558 @@
+AA10 (FA) = =Z10*L10
+depends on:
+  L10 (Fresh Air) = =#REF!
+  Z10 (Room Cfm) = =Y10*S10/60
+  depends on:
+    S10 (ACPH) = =#REF!
+    Y10 (Volume) = =X10*G10*3.28
+    depends on:
+      G10 (Height in mtrs) = =#REF!
+      X10 (Area) = =E10*F10*10.76
+      depends on:
+        E10 (Length in mtrs) = =#REF!
+        F10 (Width in mtrs) = =#REF!
+
+AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+depends on:
+  M10 (Exhaust) = =#REF!
+  N10 (T ˚C (Required inside)) = =#REF!
+  Z10 (Room Cfm) = =Y10*S10/60
+  depends on:
+    S10 (ACPH) = =#REF!
+    Y10 (Volume) = =X10*G10*3.28
+    depends on:
+      G10 (Height in mtrs) = =#REF!
+      X10 (Area) = =E10*F10*10.76
+      depends on:
+        E10 (Length in mtrs) = =#REF!
+        F10 (Width in mtrs) = =#REF!
+
+AC10 (Rem. Water vapour Kg/hr) = =IF(ISNUMBER(N10), (AA10*0.075*60/2.20462)*BP10/7000, "Ambient")
+depends on:
+  AA10 (FA) = =Z10*L10
+  depends on:
+    L10 (Fresh Air) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  BP10 (Delta W Out) = =BL10-BO10
+  depends on:
+    BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+    depends on:
+      BJ10 (Temp in C) = =P10
+      depends on:
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      BK10 (RH in %) = =Q10
+      depends on:
+        Q10 (RH(Out) in +/- 5%) = =#REF!
+    BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+    depends on:
+      BM10 (Temp in C) = =N10
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      BN10 (RH in %) = =BG10
+      depends on:
+        BG10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+  N10 (T ˚C (Required inside)) = =#REF!
+
+AD10 (Deh. Cfm) = =IF(ISNUMBER(N10), CEILING(CF10/(0.68*BP10),25), "Ambient")
+depends on:
+  BP10 (Delta W Out) = =BL10-BO10
+  depends on:
+    BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+    depends on:
+      BJ10 (Temp in C) = =P10
+      depends on:
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      BK10 (RH in %) = =Q10
+      depends on:
+        Q10 (RH(Out) in +/- 5%) = =#REF!
+    BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+    depends on:
+      BM10 (Temp in C) = =N10
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      BN10 (RH in %) = =BG10
+      depends on:
+        BG10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+  CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+  depends on:
+    CA10 (People) = =$H10*200*0.68*$BP10
+    depends on:
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+      H10 (People in Nos) = =#REF!
+    CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+    depends on:
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+      K10 (No.of Inf./Hr) = =#REF!
+    CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+      depends on:
+        M10 (Exhaust) = =#REF!
+        N10 (T ˚C (Required inside)) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+    CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+  N10 (T ˚C (Required inside)) = =#REF!
+
+AE10 (Res. Cfm) = =CEILING(MAX((Z10+AA10),AD10),25)
+depends on:
+  AA10 (FA) = =Z10*L10
+  depends on:
+    L10 (Fresh Air) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  AD10 (Deh. Cfm) = =IF(ISNUMBER(N10), CEILING(CF10/(0.68*BP10),25), "Ambient")
+  depends on:
+    BP10 (Delta W Out) = =BL10-BO10
+    depends on:
+      BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+      depends on:
+        BJ10 (Temp in C) = =P10
+        depends on:
+          P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+        BK10 (RH in %) = =Q10
+        depends on:
+          Q10 (RH(Out) in +/- 5%) = =#REF!
+      BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+      depends on:
+        BM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+        BN10 (RH in %) = =BG10
+        depends on:
+          BG10 (RH in %) = =O10
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+    CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+    depends on:
+      CA10 (People) = =$H10*200*0.68*$BP10
+      depends on:
+        BP10 (Delta W Out) = =BL10-BO10
+        depends on:
+          BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+          depends on:
+            BJ10 (Temp in C) = =P10
+            depends on:
+              P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+            BK10 (RH in %) = =Q10
+            depends on:
+              Q10 (RH(Out) in +/- 5%) = =#REF!
+          BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+          depends on:
+            BM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+            BN10 (RH in %) = =BG10
+            depends on:
+              BG10 (RH in %) = =O10
+              depends on:
+                O10 (RH(in) +/- 5%) = =#REF!
+        H10 (People in Nos) = =#REF!
+      CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+      depends on:
+        BP10 (Delta W Out) = =BL10-BO10
+        depends on:
+          BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+          depends on:
+            BJ10 (Temp in C) = =P10
+            depends on:
+              P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+            BK10 (RH in %) = =Q10
+            depends on:
+              Q10 (RH(Out) in +/- 5%) = =#REF!
+          BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+          depends on:
+            BM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+            BN10 (RH in %) = =BG10
+            depends on:
+              BG10 (RH in %) = =O10
+              depends on:
+                O10 (RH(in) +/- 5%) = =#REF!
+        K10 (No.of Inf./Hr) = =#REF!
+      CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+      depends on:
+        AA10 (FA) = =Z10*L10
+        depends on:
+          L10 (Fresh Air) = =#REF!
+          Z10 (Room Cfm) = =Y10*S10/60
+          depends on:
+            S10 (ACPH) = =#REF!
+            Y10 (Volume) = =X10*G10*3.28
+            depends on:
+              G10 (Height in mtrs) = =#REF!
+              X10 (Area) = =E10*F10*10.76
+              depends on:
+                E10 (Length in mtrs) = =#REF!
+                F10 (Width in mtrs) = =#REF!
+        AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+        depends on:
+          M10 (Exhaust) = =#REF!
+          N10 (T ˚C (Required inside)) = =#REF!
+          Z10 (Room Cfm) = =Y10*S10/60
+          depends on:
+            S10 (ACPH) = =#REF!
+            Y10 (Volume) = =X10*G10*3.28
+            depends on:
+              G10 (Height in mtrs) = =#REF!
+              X10 (Area) = =E10*F10*10.76
+              depends on:
+                E10 (Length in mtrs) = =#REF!
+                F10 (Width in mtrs) = =#REF!
+        BP10 (Delta W Out) = =BL10-BO10
+        depends on:
+          BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+          depends on:
+            BJ10 (Temp in C) = =P10
+            depends on:
+              P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+            BK10 (RH in %) = =Q10
+            depends on:
+              Q10 (RH(Out) in +/- 5%) = =#REF!
+          BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+          depends on:
+            BM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+            BN10 (RH in %) = =BG10
+            depends on:
+              BG10 (RH in %) = =O10
+              depends on:
+                O10 (RH(in) +/- 5%) = =#REF!
+      CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+      depends on:
+        AA10 (FA) = =Z10*L10
+        depends on:
+          L10 (Fresh Air) = =#REF!
+          Z10 (Room Cfm) = =Y10*S10/60
+          depends on:
+            S10 (ACPH) = =#REF!
+            Y10 (Volume) = =X10*G10*3.28
+            depends on:
+              G10 (Height in mtrs) = =#REF!
+              X10 (Area) = =E10*F10*10.76
+              depends on:
+                E10 (Length in mtrs) = =#REF!
+                F10 (Width in mtrs) = =#REF!
+        BP10 (Delta W Out) = =BL10-BO10
+        depends on:
+          BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+          depends on:
+            BJ10 (Temp in C) = =P10
+            depends on:
+              P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+            BK10 (RH in %) = =Q10
+            depends on:
+              Q10 (RH(Out) in +/- 5%) = =#REF!
+          BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+          depends on:
+            BM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+            BN10 (RH in %) = =BG10
+            depends on:
+              BG10 (RH in %) = =O10
+              depends on:
+                O10 (RH(in) +/- 5%) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+    N10 (T ˚C (Required inside)) = =#REF!
+  Z10 (Room Cfm) = =Y10*S10/60
+  depends on:
+    S10 (ACPH) = =#REF!
+    Y10 (Volume) = =X10*G10*3.28
+    depends on:
+      G10 (Height in mtrs) = =#REF!
+      X10 (Area) = =E10*F10*10.76
+      depends on:
+        E10 (Length in mtrs) = =#REF!
+        F10 (Width in mtrs) = =#REF!
+
+AF10 (Room Terminal Supply Module in Sft) = =CEILING(IF(OR($R10="ISO 6",$R10="GRADE B",$R10="1K",$R10=1000),AE10*1/175,IF(OR($R10="ISO 5",$R10="GRADE A",$R10=100),AE10*1/100,IF(OR($R10="ISO 7",$R10="GRADE C",$R10="10K",$R10=10000),$AE10*1/250,IF(OR($R10="ISO 8",$R10="GRADE D",$R10="100K",$R10=100000),$AE10*1/250,IF(OR($R10="NC",$R10="20 Micron",$R10="5 Micron",$R10="N C"),$AE10*1/350,0))))),2)
+depends on:
+  AE10 (Res. Cfm) = =CEILING(MAX((Z10+AA10),AD10),25)
+  depends on:
+    AA10 (FA) = =Z10*L10
+    depends on:
+      L10 (Fresh Air) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    AD10 (Deh. Cfm) = =IF(ISNUMBER(N10), CEILING(CF10/(0.68*BP10),25), "Ambient")
+    depends on:
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+      CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+      depends on:
+        CA10 (People) = =$H10*200*0.68*$BP10
+        depends on:
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+          H10 (People in Nos) = =#REF!
+        CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+        depends on:
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+          K10 (No.of Inf./Hr) = =#REF!
+        CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+        depends on:
+          AA10 (FA) = =Z10*L10
+          depends on:
+            L10 (Fresh Air) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+          AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+          depends on:
+            M10 (Exhaust) = =#REF!
+            N10 (T ˚C (Required inside)) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+        CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+        depends on:
+          AA10 (FA) = =Z10*L10
+          depends on:
+            L10 (Fresh Air) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+          Z10 (Room Cfm) = =Y10*S10/60
+          depends on:
+            S10 (ACPH) = =#REF!
+            Y10 (Volume) = =X10*G10*3.28
+            depends on:
+              G10 (Height in mtrs) = =#REF!
+              X10 (Area) = =E10*F10*10.76
+              depends on:
+                E10 (Length in mtrs) = =#REF!
+                F10 (Width in mtrs) = =#REF!
+      N10 (T ˚C (Required inside)) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  R10 (Class) = =#REF!
+
+AG10 (Res. Cooling Load in TR) = =IF(ISNUMBER(N10), CEILING(MAX(AI10,AJ10),0.5), "Ambient")
+depends on:
+  AI10 (Room AC load in TR) = =IF(ISNUMBER(N10), CEILING(CE10/12000,0.5), "Ambient")
+  depends on:
+    CE10 (ERSH) = =$BQ10+$BU10+$BV10+$BW10+$BX10+$BY10
+    depends on:
+      BQ10 (Wall) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$BB10*0.45
+      depends on:
+        BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+          P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+        E10 (Length in mtrs) = =#REF!
+        F10 (Width in mtrs) = =#REF!
+        G10 (Height in mtrs) = =#REF!
+      BU10 (People) = =$H10*285*1.08*$BB10
+      depends on:
+        BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+          P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+        H10 (People in Nos) = =#REF!
+      BV10 (Eqpt. Load) = =$I10*1000*3.412
+      depends on:
+        I10 (Eqpt. Load in KW) = =#REF!
+      BW10 (Lighting) = =$J10*$X10*3.412
+      depends on:
+        J10 (Lighting in W/Sft) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+      BX10 (Inf./Hr  375 Cfm door 3'x7'-30sec) = =$K10*1.08*375*$BA10
+      depends on:
+        BA10 (Delta T(AHU)) = =-CONVERT(N10,"C","F")+CONVERT((N10+8),"C","F")
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+        K10 (No.of Inf./Hr) = =#REF!
+      BY10 (Fresh Air) = =($AA10+$AB10)*1.08*$BB10
+      depends on:
+        AA10 (FA) = =Z10*L10
+        depends on:
+          L10 (Fresh Air) = =#REF!
+          Z10 (Room Cfm) = =Y10*S10/60
+          depends on:
+            S10 (ACPH) = =#REF!
+            Y10 (Volume) = =X10*G10*3.28
+            depends on:
+              G10 (Height in mtrs) = =#REF!
+              X10 (Area) = =E10*F10*10.76
+              depends on:
+                E10 (Length in mtrs) = =#REF!
+                F10 (Width in mtrs) = =#REF!
+        AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+        depends on:
+          M10 (Exhaust) = =#REF!
+          N10 (T ˚C (Required inside)) = =#REF!
+          Z10 (Room Cfm) = =Y10*S10/60
+          depends on:
+            S10 (ACPH) = =#REF!
+            Y10 (Volume) = =X10*G10*3.28
+            depends on:
+              G10 (Height in mtrs) = =#REF!
+              X10 (Area) = =E10*F10*10.76
+              depends on:
+                E10 (Length in mtrs) = =#REF!
+                F10 (Width in mtrs) = =#REF!
+        BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+          P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+    N10 (T ˚C (Required inside)) = =#REF!
+  AJ10 (Cfm AC load in TR) = =IF(ISNUMBER(N10),CEILING(AE10/(IF(AH10="C",400,300)),0.5), "Ambient")
+  depends on:
+    AE10 (Res. Cfm) = =CEILING(MAX((Z10+AA10),AD10),25)
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      AD10 (Deh. Cfm) = =IF(ISNUMBER(N10), CEILING(CF10/(0.68*BP10),25), "Ambient")
+      depends on:
+        BP10 (Delta W Out) = =BL10-BO10
+        depends on:
+          BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+          depends on:
+            BJ10 (Temp in C) = =P10
+            depends on:
+              P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+            BK10 (RH in %) = =Q10
+            depends on:
+              Q10 (RH(Out) in +/- 5%) = =#REF!
+          BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+          depends on:
+            BM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+            BN10 (RH in %) = =BG10
+            depends on:
+              BG10 (RH in %) = =O10
+              depends on:
+                O10 (RH(in) +/- 5%) = =#REF!
+        CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+        depends on:
+          CA10 (People) = =$H10*200*0.68*$BP10
+          depends on:
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+            H10 (People in Nos) = =#REF!
+          CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+          depends on:
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+            K10 (No.of Inf./Hr) = =#REF!
+          CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+          depends on:
+            AA10 (FA) = =Z10*L10
+            depends on:
+              L10 (Fresh Air) = =#REF!
+              Z10 (Room Cfm) = =Y10*S10/60
+              depends on:
+                S10 (ACPH) = =#REF!
+                Y10 (Volume) = =X10*G10*3.28
+                depends on:
+                  G10 (Height in mtrs) = =#REF!
+                  X10 (Area) = =E10*F10*10.76
+                  depends on:
+                    E10 (Length in mtrs) = =#REF!
+                    F10 (Width in mtrs) = =#REF!
+            AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+            depends on:
+              M10 (Exhaust) = =#REF!
+              N10 (T ˚C (Required inside)) = =#REF!
+              Z10 (Room Cfm) = =Y10*S10/60
+              depends on:
+                S10 (ACPH) = =#REF!
+                Y10 (Volume) = =X10*G10*3.28
+                depends on:
+                  G10 (Height in mtrs) = =#REF!
+                  X10 (Area) = =E10*F10*10.76
+                  depends on:
+                    E10 (Length in mtrs) = =#REF!
+                    F10 (Width in mtrs) = =#REF!
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+          CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+          depends on:
+            AA10 (FA) = =Z10*L10
+            depends on:
+              L10 (Fresh Air) = =#REF!
+              Z10 (Room Cfm) = =Y10*S10/60
+              depends on:
+                S10 (ACPH) = =#REF!
+                Y10 (Volume) = =X10*G10*3.28
+                depends on:
+                  G10 (Height in mtrs) = =#REF!
+                  X10 (Area) = =E10*F10*10.76
+                  depends on:
+                    E10 (Length in mtrs) = =#REF!
+                    F10 (Width in mtrs) = =#REF!
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+        N10 (T ˚C (Required inside)) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    AH10 (Chilled Water (C) OR  DX (D)) = =#REF!
+    N10 (T ˚C (Required inside)) = =#REF!
+  N10 (T ˚C (Required inside)) = =#REF!
+
+AH10 (Chilled Water (C) OR  DX (D)) = =#REF!
+
+AI10 (Room AC load in TR) = =IF(ISNUMBER(N10), CEILING(CE10/12000,0.5), "Ambient")
+depends on:
+  CE10 (ERSH) = =$BQ10+$BU10+$BV10+$BW10+$BX10+$BY10
+  depends on:
+    BQ10 (Wall) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$BB10*0.45
+    depends on:
+      BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      E10 (Length in mtrs) = =#REF!
+      F10 (Width in mtrs) = =#REF!
+      G10 (Height in mtrs) = =#REF!
+    BU10 (People) = =$H10*285*1.08*$BB10
+    depends on:
+      BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      H10 (People in Nos) = =#REF!
+    BV10 (Eqpt. Load) = =$I10*1000*3.412
+    depends on:
+      I10 (Eqpt. Load in KW) = =#REF!
+    BW10 (Lighting) = =$J10*$X10*3.412
+    depends on:
+      J10 (Lighting in W/Sft) = =#REF!
+      X10 (Area) = =E10*F10*10.76
+      depends on:
+        E10 (Length in mtrs) = =#REF!
+        F10 (Width in mtrs) = =#REF!
+    BX10 (Inf./Hr  375 Cfm door 3'x7'-30sec) = =$K10*1.08*375*$BA10
+    depends on:
+      BA10 (Delta T(AHU)) = =-CONVERT(N10,"C","F")+CONVERT((N10+8),"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      K10 (No.of Inf./Hr) = =#REF!
+    BY10 (Fresh Air) = =($AA10+$AB10)*1.08*$BB10
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+      depends on:
+        M10 (Exhaust) = =#REF!
+        N10 (T ˚C (Required inside)) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+  N10 (T ˚C (Required inside)) = =#REF!
+
+AJ10 (Cfm AC load in TR) = =IF(ISNUMBER(N10),CEILING(AE10/(IF(AH10="C",400,300)),0.5), "Ambient")
+depends on:
+  AE10 (Res. Cfm) = =CEILING(MAX((Z10+AA10),AD10),25)
+  depends on:
+    AA10 (FA) = =Z10*L10
+    depends on:
+      L10 (Fresh Air) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    AD10 (Deh. Cfm) = =IF(ISNUMBER(N10), CEILING(CF10/(0.68*BP10),25), "Ambient")
+    depends on:
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+      CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+      depends on:
+        CA10 (People) = =$H10*200*0.68*$BP10
+        depends on:
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+          H10 (People in Nos) = =#REF!
+        CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+        depends on:
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+          K10 (No.of Inf./Hr) = =#REF!
+        CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+        depends on:
+          AA10 (FA) = =Z10*L10
+          depends on:
+            L10 (Fresh Air) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+          AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+          depends on:
+            M10 (Exhaust) = =#REF!
+            N10 (T ˚C (Required inside)) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+        CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+        depends on:
+          AA10 (FA) = =Z10*L10
+          depends on:
+            L10 (Fresh Air) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+          Z10 (Room Cfm) = =Y10*S10/60
+          depends on:
+            S10 (ACPH) = =#REF!
+            Y10 (Volume) = =X10*G10*3.28
+            depends on:
+              G10 (Height in mtrs) = =#REF!
+              X10 (Area) = =E10*F10*10.76
+              depends on:
+                E10 (Length in mtrs) = =#REF!
+                F10 (Width in mtrs) = =#REF!
+      N10 (T ˚C (Required inside)) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  AH10 (Chilled Water (C) OR  DX (D)) = =#REF!
+  N10 (T ˚C (Required inside)) = =#REF!
+
+AK10 (AHU Cfm) = =CEILING(SUM(AE10:AE10),250)
+depends on:
+  AE10 (Res. Cfm) = =CEILING(MAX((Z10+AA10),AD10),25)
+  depends on:
+    AA10 (FA) = =Z10*L10
+    depends on:
+      L10 (Fresh Air) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    AD10 (Deh. Cfm) = =IF(ISNUMBER(N10), CEILING(CF10/(0.68*BP10),25), "Ambient")
+    depends on:
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+      CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+      depends on:
+        CA10 (People) = =$H10*200*0.68*$BP10
+        depends on:
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+          H10 (People in Nos) = =#REF!
+        CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+        depends on:
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+          K10 (No.of Inf./Hr) = =#REF!
+        CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+        depends on:
+          AA10 (FA) = =Z10*L10
+          depends on:
+            L10 (Fresh Air) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+          AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+          depends on:
+            M10 (Exhaust) = =#REF!
+            N10 (T ˚C (Required inside)) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+        CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+        depends on:
+          AA10 (FA) = =Z10*L10
+          depends on:
+            L10 (Fresh Air) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+          BP10 (Delta W Out) = =BL10-BO10
+          depends on:
+            BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+            depends on:
+              BJ10 (Temp in C) = =P10
+              depends on:
+                P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+              BK10 (RH in %) = =Q10
+              depends on:
+                Q10 (RH(Out) in +/- 5%) = =#REF!
+            BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+            depends on:
+              BM10 (Temp in C) = =N10
+              depends on:
+                N10 (T ˚C (Required inside)) = =#REF!
+              BN10 (RH in %) = =BG10
+              depends on:
+                BG10 (RH in %) = =O10
+                depends on:
+                  O10 (RH(in) +/- 5%) = =#REF!
+          Z10 (Room Cfm) = =Y10*S10/60
+          depends on:
+            S10 (ACPH) = =#REF!
+            Y10 (Volume) = =X10*G10*3.28
+            depends on:
+              G10 (Height in mtrs) = =#REF!
+              X10 (Area) = =E10*F10*10.76
+              depends on:
+                E10 (Length in mtrs) = =#REF!
+                F10 (Width in mtrs) = =#REF!
+      N10 (T ˚C (Required inside)) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+
+AM10 (Static Pressure) = =IF(
+  ISNUMBER(N10),
+  _xlfn.SWITCH(TRIM(UPPER(AR10)),
+    "4", 150,
+    "3", 125,
+    "2", 110,
+    "1", 100,
+    125
+  ),
+  IF(
+    ISTEXT(N10),
+    _xlfn.SWITCH(TRIM(UPPER(AR10)),
+      "5", 135,
+      "4", 110,
+      "3", 90,
+      "2", 75,
+      "1", 65,
+      100)
+  )
+)
+depends on:
+  AR10 (No. Of Stages of Filtr.) = =IF(ISNUMBER(N10),
+  _xlfn.SWITCH(TRIM(UPPER(R10)),
+    "ISO 9",3,"ISO 8",4,"GRADE D",4,"CLASS 100,000",4,"CLASS 100K",4,
+    "ISO 7",3,"GRADE C",3,"CLASS 10,000",3,"CLASS 10K",3,
+    "ISO 6",3,"CLASS 1,000",3,"CLASS 1K",3,
+    "ISO 5",4,"GRADE A",4,"GRADE B",3,"CLASS 100",4,
+    "ISO 4",4,"ISO 3",4,"ISO 2",4,"ISO 1",4,
+    "NCV20",1,"NCV-10",2,"NCV-5",3,"NCV-1",4,
+    "NCAC-10",1,"NCAC-5",2,"NCAC-1",3,
+    3),
+  IF(ISTEXT(N10),
+    _xlfn.SWITCH(TRIM(UPPER(R10)),
+      "ISO 9",3,"ISO 8",5,"GRADE D",5,"CLASS 100,000",5,"CLASS 100K",5,
+      "ISO 7",4,"GRADE C",4,"CLASS 10,000",4,"CLASS 10K",4,
+      "ISO 6",4,"CLASS 1,000",4,"CLASS 1K",4,
+      "ISO 5",5,"GRADE A",5,"GRADE B",4,"CLASS 100",5,
+      "ISO 4",5,"ISO 3",5,"ISO 2",5,"ISO 1",5,
+      "NCV20",1,"NCV-10",2,"NCV-5",3,"NCV-1",4,
+      "NCAC-10",1,"NCAC-5",2,"NCAC-1",3,
+      3)
+  )
+)
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    NCV20  [input value]
+    R10 (Class) = =#REF!
+  N10 (T ˚C (Required inside)) = =#REF!
+
+AN10 (Blower Model BDB) = =IF(AK10<=1300,200,IF(AK10<=1600,225,IF(AK10<=2100,250,IF(AK10<=2700,280,IF(AK10<=3450,315,IF(AK10<=4250,355,IF(AK10<=5250,400,IF(AK10<=6750,450,IF(AK10<=8500,500,IF(AK10<=10750,560,IF(AK10<=13500,630,IF(AK10<=17000,710,IF(AK10<=21500,800,IF(AK10<=27000,900,IF(AK10<=34000,1000,IF(AK10<=43000,1120,IF(AK10<=49000,1200,IF(AK10<=68000,1450,"Refer"))))))))))))))))))
+depends on:
+  AK10 (AHU Cfm) = =CEILING(SUM(AE10:AE10),250)
+  depends on:
+    AE10 (Res. Cfm) = =CEILING(MAX((Z10+AA10),AD10),25)
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      AD10 (Deh. Cfm) = =IF(ISNUMBER(N10), CEILING(CF10/(0.68*BP10),25), "Ambient")
+      depends on:
+        BP10 (Delta W Out) = =BL10-BO10
+        depends on:
+          BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+          depends on:
+            BJ10 (Temp in C) = =P10
+            depends on:
+              P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+            BK10 (RH in %) = =Q10
+            depends on:
+              Q10 (RH(Out) in +/- 5%) = =#REF!
+          BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+          depends on:
+            BM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+            BN10 (RH in %) = =BG10
+            depends on:
+              BG10 (RH in %) = =O10
+              depends on:
+                O10 (RH(in) +/- 5%) = =#REF!
+        CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+        depends on:
+          CA10 (People) = =$H10*200*0.68*$BP10
+          depends on:
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+            H10 (People in Nos) = =#REF!
+          CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+          depends on:
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+            K10 (No.of Inf./Hr) = =#REF!
+          CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+          depends on:
+            AA10 (FA) = =Z10*L10
+            depends on:
+              L10 (Fresh Air) = =#REF!
+              Z10 (Room Cfm) = =Y10*S10/60
+              depends on:
+                S10 (ACPH) = =#REF!
+                Y10 (Volume) = =X10*G10*3.28
+                depends on:
+                  G10 (Height in mtrs) = =#REF!
+                  X10 (Area) = =E10*F10*10.76
+                  depends on:
+                    E10 (Length in mtrs) = =#REF!
+                    F10 (Width in mtrs) = =#REF!
+            AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+            depends on:
+              M10 (Exhaust) = =#REF!
+              N10 (T ˚C (Required inside)) = =#REF!
+              Z10 (Room Cfm) = =Y10*S10/60
+              depends on:
+                S10 (ACPH) = =#REF!
+                Y10 (Volume) = =X10*G10*3.28
+                depends on:
+                  G10 (Height in mtrs) = =#REF!
+                  X10 (Area) = =E10*F10*10.76
+                  depends on:
+                    E10 (Length in mtrs) = =#REF!
+                    F10 (Width in mtrs) = =#REF!
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+          CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+          depends on:
+            AA10 (FA) = =Z10*L10
+            depends on:
+              L10 (Fresh Air) = =#REF!
+              Z10 (Room Cfm) = =Y10*S10/60
+              depends on:
+                S10 (ACPH) = =#REF!
+                Y10 (Volume) = =X10*G10*3.28
+                depends on:
+                  G10 (Height in mtrs) = =#REF!
+                  X10 (Area) = =E10*F10*10.76
+                  depends on:
+                    E10 (Length in mtrs) = =#REF!
+                    F10 (Width in mtrs) = =#REF!
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+        N10 (T ˚C (Required inside)) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+
+AO10 (Motor Selected in Hp) = =IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=1,1,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=1.5,1.5,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=2,2,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=3,3,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=5,5,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=7.5,7.5,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=10,10,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=12.5,12.5,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=15,15,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=20,20,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=25,25,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=30,30,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=40,40,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=50,50,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=60,60,IF(AK10*AM10/(6356*0.7*0.9*1.1*25.4)<=75,75,"Refer"))))))))))))))))
+depends on:
+  AK10 (AHU Cfm) = =CEILING(SUM(AE10:AE10),250)
+  depends on:
+    AE10 (Res. Cfm) = =CEILING(MAX((Z10+AA10),AD10),25)
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      AD10 (Deh. Cfm) = =IF(ISNUMBER(N10), CEILING(CF10/(0.68*BP10),25), "Ambient")
+      depends on:
+        BP10 (Delta W Out) = =BL10-BO10
+        depends on:
+          BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+          depends on:
+            BJ10 (Temp in C) = =P10
+            depends on:
+              P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+            BK10 (RH in %) = =Q10
+            depends on:
+              Q10 (RH(Out) in +/- 5%) = =#REF!
+          BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+          depends on:
+            BM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+            BN10 (RH in %) = =BG10
+            depends on:
+              BG10 (RH in %) = =O10
+              depends on:
+                O10 (RH(in) +/- 5%) = =#REF!
+        CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+        depends on:
+          CA10 (People) = =$H10*200*0.68*$BP10
+          depends on:
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+            H10 (People in Nos) = =#REF!
+          CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+          depends on:
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+            K10 (No.of Inf./Hr) = =#REF!
+          CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+          depends on:
+            AA10 (FA) = =Z10*L10
+            depends on:
+              L10 (Fresh Air) = =#REF!
+              Z10 (Room Cfm) = =Y10*S10/60
+              depends on:
+                S10 (ACPH) = =#REF!
+                Y10 (Volume) = =X10*G10*3.28
+                depends on:
+                  G10 (Height in mtrs) = =#REF!
+                  X10 (Area) = =E10*F10*10.76
+                  depends on:
+                    E10 (Length in mtrs) = =#REF!
+                    F10 (Width in mtrs) = =#REF!
+            AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+            depends on:
+              M10 (Exhaust) = =#REF!
+              N10 (T ˚C (Required inside)) = =#REF!
+              Z10 (Room Cfm) = =Y10*S10/60
+              depends on:
+                S10 (ACPH) = =#REF!
+                Y10 (Volume) = =X10*G10*3.28
+                depends on:
+                  G10 (Height in mtrs) = =#REF!
+                  X10 (Area) = =E10*F10*10.76
+                  depends on:
+                    E10 (Length in mtrs) = =#REF!
+                    F10 (Width in mtrs) = =#REF!
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+          CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+          depends on:
+            AA10 (FA) = =Z10*L10
+            depends on:
+              L10 (Fresh Air) = =#REF!
+              Z10 (Room Cfm) = =Y10*S10/60
+              depends on:
+                S10 (ACPH) = =#REF!
+                Y10 (Volume) = =X10*G10*3.28
+                depends on:
+                  G10 (Height in mtrs) = =#REF!
+                  X10 (Area) = =E10*F10*10.76
+                  depends on:
+                    E10 (Length in mtrs) = =#REF!
+                    F10 (Width in mtrs) = =#REF!
+            BP10 (Delta W Out) = =BL10-BO10
+            depends on:
+              BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+              depends on:
+                BJ10 (Temp in C) = =P10
+                depends on:
+                  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+                BK10 (RH in %) = =Q10
+                depends on:
+                  Q10 (RH(Out) in +/- 5%) = =#REF!
+              BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+              depends on:
+                BM10 (Temp in C) = =N10
+                depends on:
+                  N10 (T ˚C (Required inside)) = =#REF!
+                BN10 (RH in %) = =BG10
+                depends on:
+                  BG10 (RH in %) = =O10
+                  depends on:
+                    O10 (RH(in) +/- 5%) = =#REF!
+            Z10 (Room Cfm) = =Y10*S10/60
+            depends on:
+              S10 (ACPH) = =#REF!
+              Y10 (Volume) = =X10*G10*3.28
+              depends on:
+                G10 (Height in mtrs) = =#REF!
+                X10 (Area) = =E10*F10*10.76
+                depends on:
+                  E10 (Length in mtrs) = =#REF!
+                  F10 (Width in mtrs) = =#REF!
+        N10 (T ˚C (Required inside)) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+  AM10 (Static Pressure) = =IF(
+  ISNUMBER(N10),
+  _xlfn.SWITCH(TRIM(UPPER(AR10)),
+    "4", 150,
+    "3", 125,
+    "2", 110,
+    "1", 100,
+    125
+  ),
+  IF(
+    ISTEXT(N10),
+    _xlfn.SWITCH(TRIM(UPPER(AR10)),
+      "5", 135,
+      "4", 110,
+      "3", 90,
+      "2", 75,
+      "1", 65,
+      100)
+  )
+)
+  depends on:
+    AR10 (No. Of Stages of Filtr.) = =IF(ISNUMBER(N10),
+  _xlfn.SWITCH(TRIM(UPPER(R10)),
+    "ISO 9",3,"ISO 8",4,"GRADE D",4,"CLASS 100,000",4,"CLASS 100K",4,
+    "ISO 7",3,"GRADE C",3,"CLASS 10,000",3,"CLASS 10K",3,
+    "ISO 6",3,"CLASS 1,000",3,"CLASS 1K",3,
+    "ISO 5",4,"GRADE A",4,"GRADE B",3,"CLASS 100",4,
+    "ISO 4",4,"ISO 3",4,"ISO 2",4,"ISO 1",4,
+    "NCV20",1,"NCV-10",2,"NCV-5",3,"NCV-1",4,
+    "NCAC-10",1,"NCAC-5",2,"NCAC-1",3,
+    3),
+  IF(ISTEXT(N10),
+    _xlfn.SWITCH(TRIM(UPPER(R10)),
+      "ISO 9",3,"ISO 8",5,"GRADE D",5,"CLASS 100,000",5,"CLASS 100K",5,
+      "ISO 7",4,"GRADE C",4,"CLASS 10,000",4,"CLASS 10K",4,
+      "ISO 6",4,"CLASS 1,000",4,"CLASS 1K",4,
+      "ISO 5",5,"GRADE A",5,"GRADE B",4,"CLASS 100",5,
+      "ISO 4",5,"ISO 3",5,"ISO 2",5,"ISO 1",5,
+      "NCV20",1,"NCV-10",2,"NCV-5",3,"NCV-1",4,
+      "NCAC-10",1,"NCAC-5",2,"NCAC-1",3,
+      3)
+  )
+)
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+      NCV20  [input value]
+      R10 (Class) = =#REF!
+    N10 (T ˚C (Required inside)) = =#REF!
+
+AP10 (No. of Rows of Cooling Coil) = =IF(AND(AQ10=0, N10="Amb"), "Amb",IF((#REF!-250)*(#REF!-150)*10.76/(1000*1000) >= MAX(#REF!,#REF!), 4,IF((#REF!-250)*(#REF!-150)*10.76*1.5/(1000*1000) >= MAX(#REF!,#REF!), 6,IF((#REF!-250)*(#REF!-150)*10.76*2/(1000*1000) >= MAX(#REF!,#REF!), 8, 0))
+ )
+)
+depends on:
+  AQ10 (AHU Cooling Load in TR) = =#REF!
+  N10 (T ˚C (Required inside)) = =#REF!
+
+AQ10 (AHU Cooling Load in TR) = =#REF!
+
+AR10 (No. Of Stages of Filtr.) = =IF(ISNUMBER(N10),
+  _xlfn.SWITCH(TRIM(UPPER(R10)),
+    "ISO 9",3,"ISO 8",4,"GRADE D",4,"CLASS 100,000",4,"CLASS 100K",4,
+    "ISO 7",3,"GRADE C",3,"CLASS 10,000",3,"CLASS 10K",3,
+    "ISO 6",3,"CLASS 1,000",3,"CLASS 1K",3,
+    "ISO 5",4,"GRADE A",4,"GRADE B",3,"CLASS 100",4,
+    "ISO 4",4,"ISO 3",4,"ISO 2",4,"ISO 1",4,
+    "NCV20",1,"NCV-10",2,"NCV-5",3,"NCV-1",4,
+    "NCAC-10",1,"NCAC-5",2,"NCAC-1",3,
+    3),
+  IF(ISTEXT(N10),
+    _xlfn.SWITCH(TRIM(UPPER(R10)),
+      "ISO 9",3,"ISO 8",5,"GRADE D",5,"CLASS 100,000",5,"CLASS 100K",5,
+      "ISO 7",4,"GRADE C",4,"CLASS 10,000",4,"CLASS 10K",4,
+      "ISO 6",4,"CLASS 1,000",4,"CLASS 1K",4,
+      "ISO 5",5,"GRADE A",5,"GRADE B",4,"CLASS 100",5,
+      "ISO 4",5,"ISO 3",5,"ISO 2",5,"ISO 1",5,
+      "NCV20",1,"NCV-10",2,"NCV-5",3,"NCV-1",4,
+      "NCAC-10",1,"NCAC-5",2,"NCAC-1",3,
+      3)
+  )
+)
+depends on:
+  N10 (T ˚C (Required inside)) = =#REF!
+  NCV20  [input value]
+  R10 (Class) = =#REF!
+
+AS10 (Chilled water in GPM) = =MAX(#REF!,#REF!)*24/6
+
+AT10 (Chilled water in L/s) = =AS10*0.06309
+depends on:
+  AS10 (Chilled water in GPM) = =MAX(#REF!,#REF!)*24/6
+
+AV10 (Pipe Size in mm) = =SQRT((4*AS10*0.00006309)/(3.14*AU10))*1000
+depends on:
+  AS10 (Chilled water in GPM) = =MAX(#REF!,#REF!)*24/6
+  AU10 (Flow Velocity in m/s) = 2  [input value]
+
+BA10 (Delta T(AHU)) = =-CONVERT(N10,"C","F")+CONVERT((N10+8),"C","F")
+depends on:
+  N10 (T ˚C (Required inside)) = =#REF!
+
+BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+depends on:
+  N10 (T ˚C (Required inside)) = =#REF!
+  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+
+BC10 (Temp in C) = =N10+8
+depends on:
+  N10 (T ˚C (Required inside)) = =#REF!
+
+BD10 (RH in %) = =BG10+35
+depends on:
+  BG10 (RH in %) = =O10
+  depends on:
+    O10 (RH(in) +/- 5%) = =#REF!
+
+BE10 (W Return) = =0.622*7000*(BD10/100)*(6.1078*10^((7.5*BC10)/(237.3+BC10)))/(1013.25-(6.1078*10^((7.5*BC10)/(237.3+BC10)))*BD10/100)
+depends on:
+  BC10 (Temp in C) = =N10+8
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+  BD10 (RH in %) = =BG10+35
+  depends on:
+    BG10 (RH in %) = =O10
+    depends on:
+      O10 (RH(in) +/- 5%) = =#REF!
+
+BF10 (Temp in C) = =N10
+depends on:
+  N10 (T ˚C (Required inside)) = =#REF!
+
+BG10 (RH in %) = =O10
+depends on:
+  O10 (RH(in) +/- 5%) = =#REF!
+
+BH10 (W in) = =0.622*7000*(BG10/100)*(6.1078*10^((7.5*BF10)/(237.3+BF10)))/(1013.25-(6.1078*10^((7.5*BF10)/(237.3+BF10)))*BG10/100)
+depends on:
+  BF10 (Temp in C) = =N10
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+  BG10 (RH in %) = =O10
+  depends on:
+    O10 (RH(in) +/- 5%) = =#REF!
+
+BI10 (Delta W AHU) = =BE10-BH10
+depends on:
+  BE10 (W Return) = =0.622*7000*(BD10/100)*(6.1078*10^((7.5*BC10)/(237.3+BC10)))/(1013.25-(6.1078*10^((7.5*BC10)/(237.3+BC10)))*BD10/100)
+  depends on:
+    BC10 (Temp in C) = =N10+8
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+    BD10 (RH in %) = =BG10+35
+    depends on:
+      BG10 (RH in %) = =O10
+      depends on:
+        O10 (RH(in) +/- 5%) = =#REF!
+  BH10 (W in) = =0.622*7000*(BG10/100)*(6.1078*10^((7.5*BF10)/(237.3+BF10)))/(1013.25-(6.1078*10^((7.5*BF10)/(237.3+BF10)))*BG10/100)
+  depends on:
+    BF10 (Temp in C) = =N10
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+    BG10 (RH in %) = =O10
+    depends on:
+      O10 (RH(in) +/- 5%) = =#REF!
+
+BJ10 (Temp in C) = =P10
+depends on:
+  P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+
+BK10 (RH in %) = =Q10
+depends on:
+  Q10 (RH(Out) in +/- 5%) = =#REF!
+
+BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+depends on:
+  BJ10 (Temp in C) = =P10
+  depends on:
+    P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+  BK10 (RH in %) = =Q10
+  depends on:
+    Q10 (RH(Out) in +/- 5%) = =#REF!
+
+BM10 (Temp in C) = =N10
+depends on:
+  N10 (T ˚C (Required inside)) = =#REF!
+
+BN10 (RH in %) = =BG10
+depends on:
+  BG10 (RH in %) = =O10
+  depends on:
+    O10 (RH(in) +/- 5%) = =#REF!
+
+BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+depends on:
+  BM10 (Temp in C) = =N10
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+  BN10 (RH in %) = =BG10
+  depends on:
+    BG10 (RH in %) = =O10
+    depends on:
+      O10 (RH(in) +/- 5%) = =#REF!
+
+BP10 (Delta W Out) = =BL10-BO10
+depends on:
+  BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+  depends on:
+    BJ10 (Temp in C) = =P10
+    depends on:
+      P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+    BK10 (RH in %) = =Q10
+    depends on:
+      Q10 (RH(Out) in +/- 5%) = =#REF!
+  BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+  depends on:
+    BM10 (Temp in C) = =N10
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+    BN10 (RH in %) = =BG10
+    depends on:
+      BG10 (RH in %) = =O10
+      depends on:
+        O10 (RH(in) +/- 5%) = =#REF!
+
+BQ10 (Wall) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$BB10*0.45
+depends on:
+  BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+  E10 (Length in mtrs) = =#REF!
+  F10 (Width in mtrs) = =#REF!
+  G10 (Height in mtrs) = =#REF!
+
+BR10 (Partition) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$BA10*0.45
+depends on:
+  BA10 (Delta T(AHU)) = =-CONVERT(N10,"C","F")+CONVERT((N10+8),"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+  E10 (Length in mtrs) = =#REF!
+  F10 (Width in mtrs) = =#REF!
+  G10 (Height in mtrs) = =#REF!
+
+BS10 (Roof) = =($E10*$F10*10.76)*$BA10*0.45
+depends on:
+  BA10 (Delta T(AHU)) = =-CONVERT(N10,"C","F")+CONVERT((N10+8),"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+  E10 (Length in mtrs) = =#REF!
+  F10 (Width in mtrs) = =#REF!
+
+BT10 (Floor) = =($E10*$F10*10.76)*$BB10*0.45
+depends on:
+  BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+  E10 (Length in mtrs) = =#REF!
+  F10 (Width in mtrs) = =#REF!
+
+BU10 (People) = =$H10*285*1.08*$BB10
+depends on:
+  BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+  H10 (People in Nos) = =#REF!
+
+BV10 (Eqpt. Load) = =$I10*1000*3.412
+depends on:
+  I10 (Eqpt. Load in KW) = =#REF!
+
+BW10 (Lighting) = =$J10*$X10*3.412
+depends on:
+  J10 (Lighting in W/Sft) = =#REF!
+  X10 (Area) = =E10*F10*10.76
+  depends on:
+    E10 (Length in mtrs) = =#REF!
+    F10 (Width in mtrs) = =#REF!
+
+BX10 (Inf./Hr  375 Cfm door 3'x7'-30sec) = =$K10*1.08*375*$BA10
+depends on:
+  BA10 (Delta T(AHU)) = =-CONVERT(N10,"C","F")+CONVERT((N10+8),"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+  K10 (No.of Inf./Hr) = =#REF!
+
+BY10 (Fresh Air) = =($AA10+$AB10)*1.08*$BB10
+depends on:
+  AA10 (FA) = =Z10*L10
+  depends on:
+    L10 (Fresh Air) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+  depends on:
+    M10 (Exhaust) = =#REF!
+    N10 (T ˚C (Required inside)) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+
+C10 (S.No.) = =#REF!
+
+CA10 (People) = =$H10*200*0.68*$BP10
+depends on:
+  BP10 (Delta W Out) = =BL10-BO10
+  depends on:
+    BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+    depends on:
+      BJ10 (Temp in C) = =P10
+      depends on:
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      BK10 (RH in %) = =Q10
+      depends on:
+        Q10 (RH(Out) in +/- 5%) = =#REF!
+    BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+    depends on:
+      BM10 (Temp in C) = =N10
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      BN10 (RH in %) = =BG10
+      depends on:
+        BG10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+  H10 (People in Nos) = =#REF!
+
+CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+depends on:
+  BP10 (Delta W Out) = =BL10-BO10
+  depends on:
+    BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+    depends on:
+      BJ10 (Temp in C) = =P10
+      depends on:
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      BK10 (RH in %) = =Q10
+      depends on:
+        Q10 (RH(Out) in +/- 5%) = =#REF!
+    BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+    depends on:
+      BM10 (Temp in C) = =N10
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      BN10 (RH in %) = =BG10
+      depends on:
+        BG10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+  K10 (No.of Inf./Hr) = =#REF!
+
+CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+depends on:
+  AA10 (FA) = =Z10*L10
+  depends on:
+    L10 (Fresh Air) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+  depends on:
+    M10 (Exhaust) = =#REF!
+    N10 (T ˚C (Required inside)) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  BP10 (Delta W Out) = =BL10-BO10
+  depends on:
+    BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+    depends on:
+      BJ10 (Temp in C) = =P10
+      depends on:
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      BK10 (RH in %) = =Q10
+      depends on:
+        Q10 (RH(Out) in +/- 5%) = =#REF!
+    BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+    depends on:
+      BM10 (Temp in C) = =N10
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      BN10 (RH in %) = =BG10
+      depends on:
+        BG10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+
+CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+depends on:
+  AA10 (FA) = =Z10*L10
+  depends on:
+    L10 (Fresh Air) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  BP10 (Delta W Out) = =BL10-BO10
+  depends on:
+    BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+    depends on:
+      BJ10 (Temp in C) = =P10
+      depends on:
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      BK10 (RH in %) = =Q10
+      depends on:
+        Q10 (RH(Out) in +/- 5%) = =#REF!
+    BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+    depends on:
+      BM10 (Temp in C) = =N10
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      BN10 (RH in %) = =BG10
+      depends on:
+        BG10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+  Z10 (Room Cfm) = =Y10*S10/60
+  depends on:
+    S10 (ACPH) = =#REF!
+    Y10 (Volume) = =X10*G10*3.28
+    depends on:
+      G10 (Height in mtrs) = =#REF!
+      X10 (Area) = =E10*F10*10.76
+      depends on:
+        E10 (Length in mtrs) = =#REF!
+        F10 (Width in mtrs) = =#REF!
+
+CE10 (ERSH) = =$BQ10+$BU10+$BV10+$BW10+$BX10+$BY10
+depends on:
+  BQ10 (Wall) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$BB10*0.45
+  depends on:
+    BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+      P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+    E10 (Length in mtrs) = =#REF!
+    F10 (Width in mtrs) = =#REF!
+    G10 (Height in mtrs) = =#REF!
+  BU10 (People) = =$H10*285*1.08*$BB10
+  depends on:
+    BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+      P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+    H10 (People in Nos) = =#REF!
+  BV10 (Eqpt. Load) = =$I10*1000*3.412
+  depends on:
+    I10 (Eqpt. Load in KW) = =#REF!
+  BW10 (Lighting) = =$J10*$X10*3.412
+  depends on:
+    J10 (Lighting in W/Sft) = =#REF!
+    X10 (Area) = =E10*F10*10.76
+    depends on:
+      E10 (Length in mtrs) = =#REF!
+      F10 (Width in mtrs) = =#REF!
+  BX10 (Inf./Hr  375 Cfm door 3'x7'-30sec) = =$K10*1.08*375*$BA10
+  depends on:
+    BA10 (Delta T(AHU)) = =-CONVERT(N10,"C","F")+CONVERT((N10+8),"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+    K10 (No.of Inf./Hr) = =#REF!
+  BY10 (Fresh Air) = =($AA10+$AB10)*1.08*$BB10
+  depends on:
+    AA10 (FA) = =Z10*L10
+    depends on:
+      L10 (Fresh Air) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+    depends on:
+      M10 (Exhaust) = =#REF!
+      N10 (T ˚C (Required inside)) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+      P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+
+CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+depends on:
+  CA10 (People) = =$H10*200*0.68*$BP10
+  depends on:
+    BP10 (Delta W Out) = =BL10-BO10
+    depends on:
+      BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+      depends on:
+        BJ10 (Temp in C) = =P10
+        depends on:
+          P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+        BK10 (RH in %) = =Q10
+        depends on:
+          Q10 (RH(Out) in +/- 5%) = =#REF!
+      BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+      depends on:
+        BM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+        BN10 (RH in %) = =BG10
+        depends on:
+          BG10 (RH in %) = =O10
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+    H10 (People in Nos) = =#REF!
+  CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+  depends on:
+    BP10 (Delta W Out) = =BL10-BO10
+    depends on:
+      BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+      depends on:
+        BJ10 (Temp in C) = =P10
+        depends on:
+          P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+        BK10 (RH in %) = =Q10
+        depends on:
+          Q10 (RH(Out) in +/- 5%) = =#REF!
+      BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+      depends on:
+        BM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+        BN10 (RH in %) = =BG10
+        depends on:
+          BG10 (RH in %) = =O10
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+    K10 (No.of Inf./Hr) = =#REF!
+  CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+  depends on:
+    AA10 (FA) = =Z10*L10
+    depends on:
+      L10 (Fresh Air) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+    depends on:
+      M10 (Exhaust) = =#REF!
+      N10 (T ˚C (Required inside)) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    BP10 (Delta W Out) = =BL10-BO10
+    depends on:
+      BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+      depends on:
+        BJ10 (Temp in C) = =P10
+        depends on:
+          P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+        BK10 (RH in %) = =Q10
+        depends on:
+          Q10 (RH(Out) in +/- 5%) = =#REF!
+      BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+      depends on:
+        BM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+        BN10 (RH in %) = =BG10
+        depends on:
+          BG10 (RH in %) = =O10
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+  CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+  depends on:
+    AA10 (FA) = =Z10*L10
+    depends on:
+      L10 (Fresh Air) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    BP10 (Delta W Out) = =BL10-BO10
+    depends on:
+      BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+      depends on:
+        BJ10 (Temp in C) = =P10
+        depends on:
+          P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+        BK10 (RH in %) = =Q10
+        depends on:
+          Q10 (RH(Out) in +/- 5%) = =#REF!
+      BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+      depends on:
+        BM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+        BN10 (RH in %) = =BG10
+        depends on:
+          BG10 (RH in %) = =O10
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+
+CG10 (ERTH) = =$CE10+$CF10
+depends on:
+  CE10 (ERSH) = =$BQ10+$BU10+$BV10+$BW10+$BX10+$BY10
+  depends on:
+    BQ10 (Wall) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$BB10*0.45
+    depends on:
+      BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      E10 (Length in mtrs) = =#REF!
+      F10 (Width in mtrs) = =#REF!
+      G10 (Height in mtrs) = =#REF!
+    BU10 (People) = =$H10*285*1.08*$BB10
+    depends on:
+      BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+      H10 (People in Nos) = =#REF!
+    BV10 (Eqpt. Load) = =$I10*1000*3.412
+    depends on:
+      I10 (Eqpt. Load in KW) = =#REF!
+    BW10 (Lighting) = =$J10*$X10*3.412
+    depends on:
+      J10 (Lighting in W/Sft) = =#REF!
+      X10 (Area) = =E10*F10*10.76
+      depends on:
+        E10 (Length in mtrs) = =#REF!
+        F10 (Width in mtrs) = =#REF!
+    BX10 (Inf./Hr  375 Cfm door 3'x7'-30sec) = =$K10*1.08*375*$BA10
+    depends on:
+      BA10 (Delta T(AHU)) = =-CONVERT(N10,"C","F")+CONVERT((N10+8),"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      K10 (No.of Inf./Hr) = =#REF!
+    BY10 (Fresh Air) = =($AA10+$AB10)*1.08*$BB10
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+      depends on:
+        M10 (Exhaust) = =#REF!
+        N10 (T ˚C (Required inside)) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      BB10 (Delta T Out) = =CONVERT(P10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+  CF10 (ERLH) = =$CA10+$CB10+$CC10+$CD10
+  depends on:
+    CA10 (People) = =$H10*200*0.68*$BP10
+    depends on:
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+      H10 (People in Nos) = =#REF!
+    CB10 (Inf./Hr) = =$K10*375*0.68*$BP10
+    depends on:
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+      K10 (No.of Inf./Hr) = =#REF!
+    CC10 (Fresh Air) = =($AA10+$AB10)*0.68*$BP10
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+      depends on:
+        M10 (Exhaust) = =#REF!
+        N10 (T ˚C (Required inside)) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+    CD10 (Return Air) = =($Z10-$AA10)*0.68*$BP10
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      BP10 (Delta W Out) = =BL10-BO10
+      depends on:
+        BL10 (W out) = =0.622*7000*(BK10/100)*(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))/(1013.25-(6.1078*10^((7.5*BJ10)/(237.3+BJ10)))*BK10/100)
+        depends on:
+          BJ10 (Temp in C) = =P10
+          depends on:
+            P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+          BK10 (RH in %) = =Q10
+          depends on:
+            Q10 (RH(Out) in +/- 5%) = =#REF!
+        BO10 (W in) = =0.622*7000*(BN10/100)*(6.1078*10^((7.5*BM10)/(237.3+BM10)))/(1013.25-(6.1078*10^((7.5*BM10)/(237.3+BM10)))*BN10/100)
+        depends on:
+          BM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          BN10 (RH in %) = =BG10
+          depends on:
+            BG10 (RH in %) = =O10
+            depends on:
+              O10 (RH(in) +/- 5%) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+
+CH10 (Delta T(AHU) Peak Min ˚F) = =CONVERT(N10,"C","F")-CONVERT((N10-8),"C","F")
+depends on:
+  N10 (T ˚C (Required inside)) = =#REF!
+
+CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+depends on:
+  N10 (T ˚C (Required inside)) = =#REF!
+  T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+
+CJ10 (Temp in C) = =CM10-8
+depends on:
+  CM10 (Temp in C) = =N10
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+
+CK10 (RH in %) = =O10+40
+depends on:
+  O10 (RH(in) +/- 5%) = =#REF!
+
+CL10 (W Return) = =0.622*7000*(CK10/100)*(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))/(1013.25-(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))*CK10/100)
+depends on:
+  CJ10 (Temp in C) = =CM10-8
+  depends on:
+    CM10 (Temp in C) = =N10
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+  CK10 (RH in %) = =O10+40
+  depends on:
+    O10 (RH(in) +/- 5%) = =#REF!
+
+CM10 (Temp in C) = =N10
+depends on:
+  N10 (T ˚C (Required inside)) = =#REF!
+
+CN10 (RH in %) = =O10
+depends on:
+  O10 (RH(in) +/- 5%) = =#REF!
+
+CO10 (W in) = =0.622*7000*(CN10/100)*(6.1078*10^((7.5*CM10)/(237.3+CM10)))/(1013.25-(6.1078*10^((7.5*CM10)/(237.3+CM10)))*CN10/100)
+depends on:
+  CM10 (Temp in C) = =N10
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+  CN10 (RH in %) = =O10
+  depends on:
+    O10 (RH(in) +/- 5%) = =#REF!
+
+CP10 (Delta W AHU) = =CL10-CO10
+depends on:
+  CL10 (W Return) = =0.622*7000*(CK10/100)*(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))/(1013.25-(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))*CK10/100)
+  depends on:
+    CJ10 (Temp in C) = =CM10-8
+    depends on:
+      CM10 (Temp in C) = =N10
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+    CK10 (RH in %) = =O10+40
+    depends on:
+      O10 (RH(in) +/- 5%) = =#REF!
+  CO10 (W in) = =0.622*7000*(CN10/100)*(6.1078*10^((7.5*CM10)/(237.3+CM10)))/(1013.25-(6.1078*10^((7.5*CM10)/(237.3+CM10)))*CN10/100)
+  depends on:
+    CM10 (Temp in C) = =N10
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+    CN10 (RH in %) = =O10
+    depends on:
+      O10 (RH(in) +/- 5%) = =#REF!
+
+CQ10 (Temp in C) = =T10
+depends on:
+  T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+
+CR10 (RH in %) = =U10
+depends on:
+  U10 (RH(Out) +/- 5%) = 100  [input value]
+
+CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+depends on:
+  CQ10 (Temp in C) = =T10
+  depends on:
+    T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+  CR10 (RH in %) = =U10
+  depends on:
+    U10 (RH(Out) +/- 5%) = 100  [input value]
+
+CT10 (Temp in C) = =CM10
+depends on:
+  CM10 (Temp in C) = =N10
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+
+CU10 (RH in %) = =O10
+depends on:
+  O10 (RH(in) +/- 5%) = =#REF!
+
+CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+depends on:
+  CT10 (Temp in C) = =CM10
+  depends on:
+    CM10 (Temp in C) = =N10
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+  CU10 (RH in %) = =O10
+  depends on:
+    O10 (RH(in) +/- 5%) = =#REF!
+
+CW10 (Delta W Out) = =CS10-CV10
+depends on:
+  CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+  depends on:
+    CQ10 (Temp in C) = =T10
+    depends on:
+      T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+    CR10 (RH in %) = =U10
+    depends on:
+      U10 (RH(Out) +/- 5%) = 100  [input value]
+  CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+  depends on:
+    CT10 (Temp in C) = =CM10
+    depends on:
+      CM10 (Temp in C) = =N10
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+    CU10 (RH in %) = =O10
+    depends on:
+      O10 (RH(in) +/- 5%) = =#REF!
+
+CX10 (Wall) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$CI10*0.45
+depends on:
+  CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+  E10 (Length in mtrs) = =#REF!
+  F10 (Width in mtrs) = =#REF!
+  G10 (Height in mtrs) = =#REF!
+
+CY10 (Partition) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$CI10*0.45
+depends on:
+  CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+  E10 (Length in mtrs) = =#REF!
+  F10 (Width in mtrs) = =#REF!
+  G10 (Height in mtrs) = =#REF!
+
+CZ10 (Roof) = =($E10*$F10*10.76)*$CH10*0.45
+depends on:
+  CH10 (Delta T(AHU) Peak Min ˚F) = =CONVERT(N10,"C","F")-CONVERT((N10-8),"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+  E10 (Length in mtrs) = =#REF!
+  F10 (Width in mtrs) = =#REF!
+
+D10 (Room Name) = =#REF!
+
+DA10 (Floor) = =($E10*$F10*10.76)*$CI10*0.45
+depends on:
+  CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+  E10 (Length in mtrs) = =#REF!
+  F10 (Width in mtrs) = =#REF!
+
+DB10 (People) = =$H10*285*1.08*$CI10
+depends on:
+  CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+  H10 (People in Nos) = =#REF!
+
+DC10 (Eqpt. Load) = =$I10*1000*3.412
+depends on:
+  I10 (Eqpt. Load in KW) = =#REF!
+
+DD10 (Lighting) = =$J10*$X10*3.412
+depends on:
+  J10 (Lighting in W/Sft) = =#REF!
+  X10 (Area) = =E10*F10*10.76
+  depends on:
+    E10 (Length in mtrs) = =#REF!
+    F10 (Width in mtrs) = =#REF!
+
+DE10 (Inf./Hr  375 Cfm door 3'x7'-30sec) = =$K10*1.08*375*$CH10
+depends on:
+  CH10 (Delta T(AHU) Peak Min ˚F) = =CONVERT(N10,"C","F")-CONVERT((N10-8),"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+  K10 (No.of Inf./Hr) = =#REF!
+
+DF10 (Fresh Air) = =($AA10+$AB10)*1.08*$CI10
+depends on:
+  AA10 (FA) = =Z10*L10
+  depends on:
+    L10 (Fresh Air) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+  depends on:
+    M10 (Exhaust) = =#REF!
+    N10 (T ˚C (Required inside)) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+  depends on:
+    N10 (T ˚C (Required inside)) = =#REF!
+    T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+
+DH10 (People) = =$H10*200*0.68*CW10
+depends on:
+  CW10 (Delta W Out) = =CS10-CV10
+  depends on:
+    CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+    depends on:
+      CQ10 (Temp in C) = =T10
+      depends on:
+        T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+      CR10 (RH in %) = =U10
+      depends on:
+        U10 (RH(Out) +/- 5%) = 100  [input value]
+    CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+    depends on:
+      CT10 (Temp in C) = =CM10
+      depends on:
+        CM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+      CU10 (RH in %) = =O10
+      depends on:
+        O10 (RH(in) +/- 5%) = =#REF!
+  H10 (People in Nos) = =#REF!
+
+DI10 (Inf./Hr) = =$K10*375*0.68*CW10
+depends on:
+  CW10 (Delta W Out) = =CS10-CV10
+  depends on:
+    CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+    depends on:
+      CQ10 (Temp in C) = =T10
+      depends on:
+        T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+      CR10 (RH in %) = =U10
+      depends on:
+        U10 (RH(Out) +/- 5%) = 100  [input value]
+    CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+    depends on:
+      CT10 (Temp in C) = =CM10
+      depends on:
+        CM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+      CU10 (RH in %) = =O10
+      depends on:
+        O10 (RH(in) +/- 5%) = =#REF!
+  K10 (No.of Inf./Hr) = =#REF!
+
+DJ10 (Fresh Air) = =(AA10+AB10)*0.68*CW10
+depends on:
+  AA10 (FA) = =Z10*L10
+  depends on:
+    L10 (Fresh Air) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+  depends on:
+    M10 (Exhaust) = =#REF!
+    N10 (T ˚C (Required inside)) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  CW10 (Delta W Out) = =CS10-CV10
+  depends on:
+    CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+    depends on:
+      CQ10 (Temp in C) = =T10
+      depends on:
+        T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+      CR10 (RH in %) = =U10
+      depends on:
+        U10 (RH(Out) +/- 5%) = 100  [input value]
+    CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+    depends on:
+      CT10 (Temp in C) = =CM10
+      depends on:
+        CM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+      CU10 (RH in %) = =O10
+      depends on:
+        O10 (RH(in) +/- 5%) = =#REF!
+
+DK10 (Return Air) = =(Z10-AA10)*0.68*CP10
+depends on:
+  AA10 (FA) = =Z10*L10
+  depends on:
+    L10 (Fresh Air) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+  CP10 (Delta W AHU) = =CL10-CO10
+  depends on:
+    CL10 (W Return) = =0.622*7000*(CK10/100)*(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))/(1013.25-(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))*CK10/100)
+    depends on:
+      CJ10 (Temp in C) = =CM10-8
+      depends on:
+        CM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+      CK10 (RH in %) = =O10+40
+      depends on:
+        O10 (RH(in) +/- 5%) = =#REF!
+    CO10 (W in) = =0.622*7000*(CN10/100)*(6.1078*10^((7.5*CM10)/(237.3+CM10)))/(1013.25-(6.1078*10^((7.5*CM10)/(237.3+CM10)))*CN10/100)
+    depends on:
+      CM10 (Temp in C) = =N10
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      CN10 (RH in %) = =O10
+      depends on:
+        O10 (RH(in) +/- 5%) = =#REF!
+  Z10 (Room Cfm) = =Y10*S10/60
+  depends on:
+    S10 (ACPH) = =#REF!
+    Y10 (Volume) = =X10*G10*3.28
+    depends on:
+      G10 (Height in mtrs) = =#REF!
+      X10 (Area) = =E10*F10*10.76
+      depends on:
+        E10 (Length in mtrs) = =#REF!
+        F10 (Width in mtrs) = =#REF!
+
+DL10 (ERSH) = =CX10+DA10+CZ10+DB10+DC10+DD10+DE10+DF10
+depends on:
+  CX10 (Wall) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$CI10*0.45
+  depends on:
+    CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+      T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+    E10 (Length in mtrs) = =#REF!
+    F10 (Width in mtrs) = =#REF!
+    G10 (Height in mtrs) = =#REF!
+  CZ10 (Roof) = =($E10*$F10*10.76)*$CH10*0.45
+  depends on:
+    CH10 (Delta T(AHU) Peak Min ˚F) = =CONVERT(N10,"C","F")-CONVERT((N10-8),"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+    E10 (Length in mtrs) = =#REF!
+    F10 (Width in mtrs) = =#REF!
+  DA10 (Floor) = =($E10*$F10*10.76)*$CI10*0.45
+  depends on:
+    CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+      T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+    E10 (Length in mtrs) = =#REF!
+    F10 (Width in mtrs) = =#REF!
+  DB10 (People) = =$H10*285*1.08*$CI10
+  depends on:
+    CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+      T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+    H10 (People in Nos) = =#REF!
+  DC10 (Eqpt. Load) = =$I10*1000*3.412
+  depends on:
+    I10 (Eqpt. Load in KW) = =#REF!
+  DD10 (Lighting) = =$J10*$X10*3.412
+  depends on:
+    J10 (Lighting in W/Sft) = =#REF!
+    X10 (Area) = =E10*F10*10.76
+    depends on:
+      E10 (Length in mtrs) = =#REF!
+      F10 (Width in mtrs) = =#REF!
+  DE10 (Inf./Hr  375 Cfm door 3'x7'-30sec) = =$K10*1.08*375*$CH10
+  depends on:
+    CH10 (Delta T(AHU) Peak Min ˚F) = =CONVERT(N10,"C","F")-CONVERT((N10-8),"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+    K10 (No.of Inf./Hr) = =#REF!
+  DF10 (Fresh Air) = =($AA10+$AB10)*1.08*$CI10
+  depends on:
+    AA10 (FA) = =Z10*L10
+    depends on:
+      L10 (Fresh Air) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+    depends on:
+      M10 (Exhaust) = =#REF!
+      N10 (T ˚C (Required inside)) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+    depends on:
+      N10 (T ˚C (Required inside)) = =#REF!
+      T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+
+DM10 (ERLH) = =DH10+DI10+DJ10+DK10
+depends on:
+  DH10 (People) = =$H10*200*0.68*CW10
+  depends on:
+    CW10 (Delta W Out) = =CS10-CV10
+    depends on:
+      CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+      depends on:
+        CQ10 (Temp in C) = =T10
+        depends on:
+          T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+        CR10 (RH in %) = =U10
+        depends on:
+          U10 (RH(Out) +/- 5%) = 100  [input value]
+      CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+      depends on:
+        CT10 (Temp in C) = =CM10
+        depends on:
+          CM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+        CU10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+    H10 (People in Nos) = =#REF!
+  DI10 (Inf./Hr) = =$K10*375*0.68*CW10
+  depends on:
+    CW10 (Delta W Out) = =CS10-CV10
+    depends on:
+      CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+      depends on:
+        CQ10 (Temp in C) = =T10
+        depends on:
+          T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+        CR10 (RH in %) = =U10
+        depends on:
+          U10 (RH(Out) +/- 5%) = 100  [input value]
+      CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+      depends on:
+        CT10 (Temp in C) = =CM10
+        depends on:
+          CM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+        CU10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+    K10 (No.of Inf./Hr) = =#REF!
+  DJ10 (Fresh Air) = =(AA10+AB10)*0.68*CW10
+  depends on:
+    AA10 (FA) = =Z10*L10
+    depends on:
+      L10 (Fresh Air) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+    depends on:
+      M10 (Exhaust) = =#REF!
+      N10 (T ˚C (Required inside)) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    CW10 (Delta W Out) = =CS10-CV10
+    depends on:
+      CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+      depends on:
+        CQ10 (Temp in C) = =T10
+        depends on:
+          T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+        CR10 (RH in %) = =U10
+        depends on:
+          U10 (RH(Out) +/- 5%) = 100  [input value]
+      CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+      depends on:
+        CT10 (Temp in C) = =CM10
+        depends on:
+          CM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+        CU10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+  DK10 (Return Air) = =(Z10-AA10)*0.68*CP10
+  depends on:
+    AA10 (FA) = =Z10*L10
+    depends on:
+      L10 (Fresh Air) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+    CP10 (Delta W AHU) = =CL10-CO10
+    depends on:
+      CL10 (W Return) = =0.622*7000*(CK10/100)*(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))/(1013.25-(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))*CK10/100)
+      depends on:
+        CJ10 (Temp in C) = =CM10-8
+        depends on:
+          CM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+        CK10 (RH in %) = =O10+40
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+      CO10 (W in) = =0.622*7000*(CN10/100)*(6.1078*10^((7.5*CM10)/(237.3+CM10)))/(1013.25-(6.1078*10^((7.5*CM10)/(237.3+CM10)))*CN10/100)
+      depends on:
+        CM10 (Temp in C) = =N10
+        depends on:
+          N10 (T ˚C (Required inside)) = =#REF!
+        CN10 (RH in %) = =O10
+        depends on:
+          O10 (RH(in) +/- 5%) = =#REF!
+    Z10 (Room Cfm) = =Y10*S10/60
+    depends on:
+      S10 (ACPH) = =#REF!
+      Y10 (Volume) = =X10*G10*3.28
+      depends on:
+        G10 (Height in mtrs) = =#REF!
+        X10 (Area) = =E10*F10*10.76
+        depends on:
+          E10 (Length in mtrs) = =#REF!
+          F10 (Width in mtrs) = =#REF!
+
+DN10 (ERTH) = =DL10+DM10
+depends on:
+  DL10 (ERSH) = =CX10+DA10+CZ10+DB10+DC10+DD10+DE10+DF10
+  depends on:
+    CX10 (Wall) = =($E10*$G10*10.76*2+$F10*$G10*2*10.76)*$CI10*0.45
+    depends on:
+      CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+      E10 (Length in mtrs) = =#REF!
+      F10 (Width in mtrs) = =#REF!
+      G10 (Height in mtrs) = =#REF!
+    CZ10 (Roof) = =($E10*$F10*10.76)*$CH10*0.45
+    depends on:
+      CH10 (Delta T(AHU) Peak Min ˚F) = =CONVERT(N10,"C","F")-CONVERT((N10-8),"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      E10 (Length in mtrs) = =#REF!
+      F10 (Width in mtrs) = =#REF!
+    DA10 (Floor) = =($E10*$F10*10.76)*$CI10*0.45
+    depends on:
+      CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+      E10 (Length in mtrs) = =#REF!
+      F10 (Width in mtrs) = =#REF!
+    DB10 (People) = =$H10*285*1.08*$CI10
+    depends on:
+      CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+      H10 (People in Nos) = =#REF!
+    DC10 (Eqpt. Load) = =$I10*1000*3.412
+    depends on:
+      I10 (Eqpt. Load in KW) = =#REF!
+    DD10 (Lighting) = =$J10*$X10*3.412
+    depends on:
+      J10 (Lighting in W/Sft) = =#REF!
+      X10 (Area) = =E10*F10*10.76
+      depends on:
+        E10 (Length in mtrs) = =#REF!
+        F10 (Width in mtrs) = =#REF!
+    DE10 (Inf./Hr  375 Cfm door 3'x7'-30sec) = =$K10*1.08*375*$CH10
+    depends on:
+      CH10 (Delta T(AHU) Peak Min ˚F) = =CONVERT(N10,"C","F")-CONVERT((N10-8),"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+      K10 (No.of Inf./Hr) = =#REF!
+    DF10 (Fresh Air) = =($AA10+$AB10)*1.08*$CI10
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+      depends on:
+        M10 (Exhaust) = =#REF!
+        N10 (T ˚C (Required inside)) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      CI10 (Delta T Out Peak Min ˚F) = =CONVERT(T10,"C","F")-CONVERT(N10,"C","F")
+      depends on:
+        N10 (T ˚C (Required inside)) = =#REF!
+        T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+  DM10 (ERLH) = =DH10+DI10+DJ10+DK10
+  depends on:
+    DH10 (People) = =$H10*200*0.68*CW10
+    depends on:
+      CW10 (Delta W Out) = =CS10-CV10
+      depends on:
+        CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+        depends on:
+          CQ10 (Temp in C) = =T10
+          depends on:
+            T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+          CR10 (RH in %) = =U10
+          depends on:
+            U10 (RH(Out) +/- 5%) = 100  [input value]
+        CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+        depends on:
+          CT10 (Temp in C) = =CM10
+          depends on:
+            CM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+          CU10 (RH in %) = =O10
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+      H10 (People in Nos) = =#REF!
+    DI10 (Inf./Hr) = =$K10*375*0.68*CW10
+    depends on:
+      CW10 (Delta W Out) = =CS10-CV10
+      depends on:
+        CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+        depends on:
+          CQ10 (Temp in C) = =T10
+          depends on:
+            T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+          CR10 (RH in %) = =U10
+          depends on:
+            U10 (RH(Out) +/- 5%) = 100  [input value]
+        CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+        depends on:
+          CT10 (Temp in C) = =CM10
+          depends on:
+            CM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+          CU10 (RH in %) = =O10
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+      K10 (No.of Inf./Hr) = =#REF!
+    DJ10 (Fresh Air) = =(AA10+AB10)*0.68*CW10
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      AB10 (EA) = =IF(N10="Amb",Z10,Z10*M10)
+      depends on:
+        M10 (Exhaust) = =#REF!
+        N10 (T ˚C (Required inside)) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      CW10 (Delta W Out) = =CS10-CV10
+      depends on:
+        CS10 (W out) = =0.622*7000*(CR10/100)*(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))/(1013.25-(6.1078*10^((7.5*CQ10)/(237.3+CQ10)))*CR10/100)
+        depends on:
+          CQ10 (Temp in C) = =T10
+          depends on:
+            T10 (Peak Min Temp.(Out) in ˚C) = 0  [input value]
+          CR10 (RH in %) = =U10
+          depends on:
+            U10 (RH(Out) +/- 5%) = 100  [input value]
+        CV10 (W in) = =0.622*7000*(CU10/100)*(6.1078*10^((7.5*CT10)/(237.3+CT10)))/(1013.25-(6.1078*10^((7.5*CT10)/(237.3+CT10)))*CU10/100)
+        depends on:
+          CT10 (Temp in C) = =CM10
+          depends on:
+            CM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+          CU10 (RH in %) = =O10
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+    DK10 (Return Air) = =(Z10-AA10)*0.68*CP10
+    depends on:
+      AA10 (FA) = =Z10*L10
+      depends on:
+        L10 (Fresh Air) = =#REF!
+        Z10 (Room Cfm) = =Y10*S10/60
+        depends on:
+          S10 (ACPH) = =#REF!
+          Y10 (Volume) = =X10*G10*3.28
+          depends on:
+            G10 (Height in mtrs) = =#REF!
+            X10 (Area) = =E10*F10*10.76
+            depends on:
+              E10 (Length in mtrs) = =#REF!
+              F10 (Width in mtrs) = =#REF!
+      CP10 (Delta W AHU) = =CL10-CO10
+      depends on:
+        CL10 (W Return) = =0.622*7000*(CK10/100)*(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))/(1013.25-(6.1078*10^((7.5*CJ10)/(237.3+CJ10)))*CK10/100)
+        depends on:
+          CJ10 (Temp in C) = =CM10-8
+          depends on:
+            CM10 (Temp in C) = =N10
+            depends on:
+              N10 (T ˚C (Required inside)) = =#REF!
+          CK10 (RH in %) = =O10+40
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+        CO10 (W in) = =0.622*7000*(CN10/100)*(6.1078*10^((7.5*CM10)/(237.3+CM10)))/(1013.25-(6.1078*10^((7.5*CM10)/(237.3+CM10)))*CN10/100)
+        depends on:
+          CM10 (Temp in C) = =N10
+          depends on:
+            N10 (T ˚C (Required inside)) = =#REF!
+          CN10 (RH in %) = =O10
+          depends on:
+            O10 (RH(in) +/- 5%) = =#REF!
+      Z10 (Room Cfm) = =Y10*S10/60
+      depends on:
+        S10 (ACPH) = =#REF!
+        Y10 (Volume) = =X10*G10*3.28
+        depends on:
+          G10 (Height in mtrs) = =#REF!
+          X10 (Area) = =E10*F10*10.76
+          depends on:
+            E10 (Length in mtrs) = =#REF!
+            F10 (Width in mtrs) = =#REF!
+
+E10 (Length in mtrs) = =#REF!
+
+F10 (Width in mtrs) = =#REF!
+
+G10 (Height in mtrs) = =#REF!
+
+H10 (People in Nos) = =#REF!
+
+I10 (Eqpt. Load in KW) = =#REF!
+
+J10 (Lighting in W/Sft) = =#REF!
+
+K10 (No.of Inf./Hr) = =#REF!
+
+L10 (Fresh Air) = =#REF!
+
+M10 (Exhaust) = =#REF!
+
+N10 (T ˚C (Required inside)) = =#REF!
+
+O10 (RH(in) +/- 5%) = =#REF!
+
+P10 (Peak Max Temp.(Out) in ˚C) = =#REF!
+
+Q10 (RH(Out) in +/- 5%) = =#REF!
+
+R10 (Class) = =#REF!
+
+S10 (ACPH) = =#REF!
+
+V10 (Class) = =R10
+depends on:
+  R10 (Class) = =#REF!
+
+W10 (ACPH) = =S10
+depends on:
+  S10 (ACPH) = =#REF!
+
+X10 (Area) = =E10*F10*10.76
+depends on:
+  E10 (Length in mtrs) = =#REF!
+  F10 (Width in mtrs) = =#REF!
+
+Y10 (Volume) = =X10*G10*3.28
+depends on:
+  G10 (Height in mtrs) = =#REF!
+  X10 (Area) = =E10*F10*10.76
+  depends on:
+    E10 (Length in mtrs) = =#REF!
+    F10 (Width in mtrs) = =#REF!
+
+Z10 (Room Cfm) = =Y10*S10/60
+depends on:
+  S10 (ACPH) = =#REF!
+  Y10 (Volume) = =X10*G10*3.28
+  depends on:
+    G10 (Height in mtrs) = =#REF!
+    X10 (Area) = =E10*F10*10.76
+    depends on:
+      E10 (Length in mtrs) = =#REF!
+      F10 (Width in mtrs) = =#REF!
