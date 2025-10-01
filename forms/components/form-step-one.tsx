@@ -9,6 +9,8 @@ import { Textarea } from "./ui/textarea"
 import { ArrowRight } from "lucide-react"
 import { PhoneInputField } from "./ui/phone-input"
 import { LocationSelector } from "./ui/location-selector"
+import { IndustrySelector } from "./ui/industry-selector"
+import { HandlingSelector } from "./ui/handling-selector"
 import { isValidEmail, isValidPhoneNumber } from "../lib/validation"
 import { useToast } from "../hooks/use-toast"
 import type { FormData } from "../app/page"
@@ -56,6 +58,14 @@ export const FormStepOne: FC<Props> = ({ formData, updateFormData, onNext }) => 
 
     if (!formData.projectName?.trim()) {
       errors.push("Project / Product Name")
+    }
+
+    if (!formData.industrySectors || formData.industrySectors.length === 0) {
+      errors.push("Industry/Segment/Sector")
+    }
+
+    if (!formData.handlingTypes || formData.handlingTypes.length === 0) {
+      errors.push("Handling")
     }
 
     if (!formData.location?.trim() || !formData.locationData) {
@@ -148,6 +158,22 @@ export const FormStepOne: FC<Props> = ({ formData, updateFormData, onNext }) => 
               onChange={(e) => updateFormData("projectName", e.target.value)}
               className="mt-1"
               required
+            />
+          </div>
+          <div className="md:col-span-2">
+            <IndustrySelector
+              value={formData.industrySectors}
+              onChange={(value) => updateFormData("industrySectors", value)}
+              label="Industry/Segment/Sector"
+              placeholder="Select industry sectors..."
+            />
+          </div>
+          <div className="md:col-span-2">
+            <HandlingSelector
+              value={formData.handlingTypes}
+              onChange={(value) => updateFormData("handlingTypes", value)}
+              label="Handling"
+              placeholder="Select handling types..."
             />
           </div>
           <div className="md:col-span-2">
