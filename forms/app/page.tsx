@@ -26,6 +26,10 @@ export type FormData = {
   customerAddress: string
   branchName: string
   projectName: string
+  industrySectors: string[]
+  handlingTypes: string[]
+  exhaustImpactPercentage: string
+  bioSafetyLevel: string
   location: string
   locationData?: { lat: number; lng: number; address?: string }
   uniqueId: string
@@ -88,6 +92,10 @@ export default function ModernForm() {
     customerAddress: "",
     branchName: "",
     projectName: "",
+    industrySectors: [],
+    handlingTypes: [],
+    exhaustImpactPercentage: "",
+    bioSafetyLevel: "",
     location: "",
     locationData: undefined,
     uniqueId: "",

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useMemo } from "react"
+import { useMemo, useEffect } from "react"
 import type { FC } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "./ui/button"
@@ -11,6 +11,7 @@ import { Checkbox } from "./ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { RangeInput } from "./ui/range-input"
+import { ExhaustImpactSelector } from "./ui/exhaust-impact-selector"
 import { ArrowLeft } from "lucide-react"
 import type { FormData, PressureDropItem } from "../app/page"
 import { standardsData, filterOptions, ahuSpecOptions } from "../lib/standards-data"
@@ -52,6 +53,43 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
   const airChangesRange = useMemo(() => {
     return getAirChangesRange(formData.classification, formData.standard)
   }, [formData.classification, formData.standard])
+
+  // Check if terminal filters should be disabled
+  const isTerminalFiltersDisabled = useMemo(() => {
+    const isVirusBurnerRequired = formData.ahuSpecs["Virus Burner"] === "Required"
+    const isBioSafetyLevel234 = ["level2", "level3", "level4"].includes(formData.bioSafetyLevel)
+    const isExhaustFilter = formData.filterType === "exhaust"
+    
+    return isVirusBurnerRequired && isBioSafetyLevel234 && isExhaustFilter
+  }, [formData.ahuSpecs["Virus Burner"], formData.bioSafetyLevel, formData.filterType])
+
+  // Auto-select exhaust filters when virus burner is required and bio-safety level 2, 3, or 4 is selected
+  useEffect(() => {
+    const isVirusBurnerRequired = formData.ahuSpecs["Virus Burner"] === "Required"
+    const isBioSafetyLevel234 = ["level2", "level3", "level4"].includes(formData.bioSafetyLevel)
+    const isExhaustFilter = formData.filterType === "exhaust"
+    
+    if (isVirusBurnerRequired && isBioSafetyLevel234 && isExhaustFilter) {
+      const requiredFilters = [
+        "20 M Exhaust",           // Fresh-air filters
+        "10 M Exhaust",           // Return-air filter
+        "5 M Exhaust",            // Fine-filter
+        "1 M Exhaust",            // Fine-filter
+        "0.3 M HEPA 95% Exhaust" // Super fine filter
+      ]
+      
+      // Check if all required filters are already selected
+      const allSelected = requiredFilters.every(filter => formData.filters[filter])
+      
+      if (!allSelected) {
+        const newFilters = { ...formData.filters }
+        requiredFilters.forEach(filter => {
+          newFilters[filter] = true
+        })
+        updateFormData("filters", newFilters)
+      }
+    }
+  }, [formData.ahuSpecs["Virus Burner"], formData.bioSafetyLevel, formData.filterType, formData.filters, updateFormData])
 
   const handleStandardChange = (value: string) => {
     const standardKey = value as keyof typeof standardsData.headers
@@ -113,6 +151,24 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
   }
 
   const handleNext = () => {
+    // Validate exhaust impact when exhaust filter is selected and specific handling types are chosen
+    const requiresExhaustImpact = formData.filterType === "exhaust" && formData.handlingTypes?.some(type => 
+      ["Flammable vapors", "Bio-safety", "Contagious"].includes(type)
+    )
+    
+    if (requiresExhaustImpact) {
+      if (!formData.exhaustImpactPercentage?.trim()) {
+        alert("Please select an exhaust impact percentage when using exhaust filters with Flammable vapors, Bio-safety, or Contagious handling types.")
+        return
+      }
+      
+      // Bio-safety level is required only if Bio-safety is selected
+      if (formData.handlingTypes?.includes("Bio-safety") && !formData.bioSafetyLevel?.trim()) {
+        alert("Please select a bio-safety level when Bio-safety handling type is selected.")
+        return
+      }
+    }
+    
     onNext();
   }
 
@@ -434,6 +490,16 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
               <p className="text-xs text-blue-600 mt-1">Select whether filters are for supply or exhaust air</p>
             </div>
             
+            {/* Exhaust Impact Section - Shows when exhaust is selected and specific handling types are chosen */}
+            <ExhaustImpactSelector
+              filterType={formData.filterType}
+              handlingTypes={formData.handlingTypes}
+              exhaustImpactPercentage={formData.exhaustImpactPercentage}
+              bioSafetyLevel={formData.bioSafetyLevel}
+              onExhaustImpactChange={(value) => updateFormData("exhaustImpactPercentage", value)}
+              onBioSafetyLevelChange={(value) => updateFormData("bioSafetyLevel", value)}
+            />
+            
             <div className="space-y-6">
               {/* 1. Fresh-air filters */}
               <div className="rounded-md border border-gray-200 p-4">
@@ -520,23 +586,32 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
               </div>
 
               {/* 5. Terminal filters */}
-              <div className="rounded-md border border-gray-200 p-4">
-                <h4 className="mb-3 font-medium text-gray-800">{filterOptions[formData.filterType || "supply"].terminalFilters.title}</h4>
+              <div className={`rounded-md border border-gray-200 p-4 ${isTerminalFiltersDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
+                <h4 className={`mb-3 font-medium text-gray-800 ${isTerminalFiltersDisabled ? 'text-gray-400' : ''}`}>
+                  {filterOptions[formData.filterType || "supply"].terminalFilters.title}
+                  {isTerminalFiltersDisabled && (
+                    <span className="ml-2 text-xs text-gray-500">(Disabled - Auto-selected filters are sufficient)</span>
+                  )}
+                </h4>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                   {filterOptions[formData.filterType || "supply"].terminalFilters.options.map((filter) => (
                     <div key={filter} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={filter.replace(/\s+/g, "-")}
-                      checked={!!formData.filters[filter]}
-                      onCheckedChange={(checked) =>
-                        updateFormData("filters", { ...formData.filters, [filter]: checked })
-                      }
-                    />
-                    <Label htmlFor={filter.replace(/\s+/g, "-")} className="text-sm font-normal">
-                      {filter}
-                    </Label>
-                  </div>
-                ))}
+                      <Checkbox
+                        id={filter.replace(/\s+/g, "-")}
+                        checked={!!formData.filters[filter]}
+                        onCheckedChange={(checked) =>
+                          updateFormData("filters", { ...formData.filters, [filter]: checked })
+                        }
+                        disabled={isTerminalFiltersDisabled}
+                      />
+                      <Label 
+                        htmlFor={filter.replace(/\s+/g, "-")} 
+                        className={`text-sm font-normal ${isTerminalFiltersDisabled ? 'text-gray-400' : ''}`}
+                      >
+                        {filter}
+                      </Label>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
