@@ -41,7 +41,7 @@ export function RangeInput({
   return (
     <div className={`space-y-2 ${className}`}>
       <Label className="text-sm font-normal text-gray-700">
-        {label}
+        <span dangerouslySetInnerHTML={{ __html: label }} />
       </Label>
       <div className="space-y-3">
         <div className="flex items-center space-x-4">
