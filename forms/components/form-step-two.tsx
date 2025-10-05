@@ -57,19 +57,22 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
   // Check if terminal filters should be disabled
   const isTerminalFiltersDisabled = useMemo(() => {
     const isVirusBurnerRequired = formData.ahuSpecs["Virus Burner"] === "Required"
-    const isBioSafetyLevel234 = ["level2", "level3", "level4"].includes(formData.bioSafetyLevel)
     const isExhaustFilter = formData.filterType === "exhaust"
+    const isBioSafetyLevel234 = ["level2", "level3", "level4"].includes(formData.bioSafetyLevel)
     
-    return isVirusBurnerRequired && isBioSafetyLevel234 && isExhaustFilter
-  }, [formData.ahuSpecs["Virus Burner"], formData.bioSafetyLevel, formData.filterType])
+    // Disable terminal filters if virus burner is required, exhaust filter is selected, 
+    // AND bio-safety level is 2, 3, or 4 (but NOT level 1)
+    return isVirusBurnerRequired && isExhaustFilter && isBioSafetyLevel234
+  }, [formData.ahuSpecs["Virus Burner"], formData.filterType, formData.bioSafetyLevel])
 
-  // Auto-select exhaust filters when virus burner is required and bio-safety level 2, 3, or 4 is selected
+  // Auto-select exhaust filters when virus burner is required (with or without bio-safety level)
   useEffect(() => {
     const isVirusBurnerRequired = formData.ahuSpecs["Virus Burner"] === "Required"
-    const isBioSafetyLevel234 = ["level2", "level3", "level4"].includes(formData.bioSafetyLevel)
     const isExhaustFilter = formData.filterType === "exhaust"
     
-    if (isVirusBurnerRequired && isBioSafetyLevel234 && isExhaustFilter) {
+    // Auto-select filters if virus burner is required and exhaust filter is selected
+    // (regardless of bio-safety level)
+    if (isVirusBurnerRequired && isExhaustFilter) {
       const requiredFilters = [
         "20 M Exhaust",           // Fresh-air filters
         "10 M Exhaust",           // Return-air filter
@@ -89,7 +92,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
         updateFormData("filters", newFilters)
       }
     }
-  }, [formData.ahuSpecs["Virus Burner"], formData.bioSafetyLevel, formData.filterType, formData.filters, updateFormData])
+  }, [formData.ahuSpecs["Virus Burner"], formData.filterType, formData.filters, updateFormData])
 
   const handleStandardChange = (value: string) => {
     const standardKey = value as keyof typeof standardsData.headers
@@ -167,6 +170,15 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
         alert("Please select a bio-safety level when Bio-safety handling type is selected.")
         return
       }
+    }
+    
+    // Validate AHU specifications - all fields are required
+    const emptyAhuSpecs = Object.entries(formData.ahuSpecs).filter(([key, value]) => !value || value.trim() === "")
+    
+    if (emptyAhuSpecs.length > 0) {
+      const missingFields = emptyAhuSpecs.map(([key]) => key).join(", ")
+      alert(`Please fill in all required AHU specifications: ${missingFields}`)
+      return
     }
     
     onNext();
@@ -655,7 +667,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
                 return (
                   <div key={category} className="flex items-center justify-between">
                     <Label className="text-sm font-normal text-gray-700 w-1/2">
-                      {category}
+                      {category} <span className="text-red-500">*</span>
                     </Label>
                     <Select 
                       value={formData.ahuSpecs[category] || ""} 
@@ -697,7 +709,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
                       return (
                         <RangeInput
                           key={category}
-                          label={category}
+                          label={`${category} <span class="text-red-500">*</span>`}
                           value={formData.ahuSpecs[category] || rangeOptions.default.toString()}
                           onChange={(value) => {
                             const newSpecs = { ...formData.ahuSpecs, [category]: value }
@@ -717,7 +729,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
                     return (
                       <div key={category} className="flex items-center justify-between">
                         <Label className="text-sm font-normal text-gray-700 w-1/2">
-                          {category}
+                          {category} <span className="text-red-500">*</span>
                         </Label>
                         <Select 
                           value={formData.ahuSpecs[category] || ""} 
@@ -745,7 +757,7 @@ export const FormStepTwo: FC<Props> = ({ formData, updateFormData, onBack, onNex
                   {(formData.system === "airHeatingSystem" || formData.system === "airCoolingSystem") && (
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-normal text-gray-700 w-1/2">
-                        Treated fresh-air unit
+                        Treated fresh-air unit <span className="text-red-500">*</span>
                       </Label>
                       <Select 
                         value={formData.ahuSpecs["Treated fresh-air unit"] || ""} 
