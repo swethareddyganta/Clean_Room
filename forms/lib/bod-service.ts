@@ -1,7 +1,7 @@
 // BOD (Bill of Design) Service
 // Integrates with the existing form system to generate BOD calculations
 
-import { calculateHVAC, HVACInputs } from './hvac-calculator-engine'
+import { computeRoom, computeZone, RoomInput, RoomResult, ZoneResult } from './hvac-calculator-excel-match'
 
 export interface BODCalculationRequest {
   formData: any // Form data from the multi-step form
@@ -30,27 +30,42 @@ export class BODService {
     return BODService.instance
   }
   
-  // Convert form data to HVAC inputs
-  private convertFormDataToHVACInputs(formData: any, roomData: any[]): HVACInputs[] {
-    return roomData.map((room, index) => ({
-      roomName: room.roomName || `Room ${index + 1}`,
-      lengthMtrs: parseFloat(room.length) || 0,
-      widthMtrs: parseFloat(room.width) || 0,
-      heightMtrs: parseFloat(room.height) || 3,
-      peopleNos: parseInt(room.occupancy) || 1,
-      eqptLoadKW: parseFloat(room.equipmentLoadKW) || 0,
-      lightingWSft: parseFloat(room.lightingLoadWSqft) || 1.75,
-      noOfInfHr: 0.5, // Default infiltration
-      freshAir: parseFloat(room.freshAirPercentage) || 10,
-      exhaust: 0, // Default exhaust
-      tInC: parseFloat(room.inTempC) || 24,
-      rhIn: parseFloat(room.requiredRH) || 40,
-      peakMaxTempOutC: parseFloat(room.outTempC) || 50,
-      rhOut: parseFloat(room.outsideRH) || 85,
-      class: room.classification || formData.classification || 'ISO 8',
-      acph: parseFloat(room.noOfAirChanges) || 40,
-      peakMinTempOutC: parseFloat(room.outTempC) - 10 || 40
-    }))
+  // Convert form data to HVAC inputs (Excel Match format)
+  private convertFormDataToHVACInputs(formData: any, roomData: any[]): RoomInput[] {
+    return roomData.map((room, index) => {
+      // Determine if inside temperature is a number or "Amb"
+      let tC_inside: number | "Amb" | "Ambient"
+      const inTemp = room.inTempC || formData.requiredInsideTemp
+      if (inTemp === null || inTemp === undefined || inTemp === "" || String(inTemp).toLowerCase() === "amb" || String(inTemp).toLowerCase() === "ambient") {
+        tC_inside = "Amb"
+      } else {
+        tC_inside = parseFloat(String(inTemp)) || "Amb"
+      }
+
+      // Determine cooling method
+      const coolingMethod = formData.coolingMethod || room.coolingMethod || "C"
+      const chilled_or_dx: "C" | "D" = (coolingMethod === "DX" || coolingMethod === "D" || String(coolingMethod).toUpperCase() === "DX") ? "D" : "C"
+
+      return {
+        roomName: room.roomName || `Room ${index + 1}`,
+        length_m: parseFloat(room.length) || 0,
+        width_m: parseFloat(room.width) || 0,
+        height_m: parseFloat(room.height) || 3,
+        people: parseInt(room.occupancy) || 1,
+        eqpt_kw: parseFloat(room.equipmentLoadKW) || 0,
+        light_w_sqft: parseFloat(room.lightingLoadWSqft) || 1.75,
+        inf_hr: parseFloat(room.infiltrationHr) || 0.5, // Default infiltration
+        fresh_air_factor: parseFloat(room.freshAirPercentage) || parseFloat(formData.freshAirPercentage) || 10,
+        exhaust_factor: parseFloat(room.exhaustAirCFM) || parseFloat(room.exhaustPercentage) || 0,
+        tC_inside,
+        rh_inside: parseFloat(room.requiredRH) || parseFloat(formData.minRh) || 40,
+        t_out_maxC: parseFloat(room.outTempC) || parseFloat(formData.maxTemp) || 50,
+        rh_out: parseFloat(room.outsideRH) || parseFloat(formData.maxRh) || 85,
+        klass: room.classification || formData.classification || 'ISO 8',
+        acph: parseFloat(room.noOfAirChanges) || parseFloat(formData.airChanges) || 40,
+        chilled_or_dx
+      }
+    })
   }
   
   // Start BOD calculation
@@ -106,25 +121,34 @@ export class BODService {
         progress: 30
       })
       
-      // Perform calculations for each room
+      // Perform calculations for each room using Excel Match calculator
       console.log('Starting HVAC calculations for', hvacInputs.length, 'rooms')
-      const results = []
+      const roomResults: RoomResult[] = []
       for (let i = 0; i < hvacInputs.length; i++) {
         console.log(`Calculating HVAC for room ${i + 1}/${hvacInputs.length}`)
-        const result = calculateHVAC(hvacInputs[i])
+        const result = computeRoom(hvacInputs[i])
         console.log(`HVAC result for room ${i + 1}:`, result)
-        results.push(result)
+        roomResults.push(result)
         
         // Update progress
-        const progress = 30 + ((i + 1) / hvacInputs.length) * 60
+        const progress = 30 + ((i + 1) / hvacInputs.length) * 50
         this.updateCalculation(calculationId, {
           progress: Math.round(progress)
         })
       }
       
+      // Calculate zone aggregation
+      console.log('Calculating zone aggregation...')
+      const zoneResult = computeZone(roomResults)
+      console.log('Zone result:', zoneResult)
+      
+      this.updateCalculation(calculationId, {
+        progress: 85
+      })
+      
       // Generate summary
       console.log('Generating summary...')
-      const summary = this.generateSummary(results, request.formData)
+      const summary = this.generateSummary(roomResults, zoneResult, request.formData)
       console.log('Generated summary:', summary)
       
       this.updateCalculation(calculationId, {
@@ -138,7 +162,8 @@ export class BODService {
         progress: 100,
         result: {
           summary,
-          roomResults: results,
+          roomResults,
+          zoneResult,
           formData: request.formData,
           generatedAt: new Date().toISOString()
         },
@@ -152,26 +177,52 @@ export class BODService {
     }
   }
   
-  // Generate summary from room results
-  private generateSummary(results: any[], formData: any): any {
-    const totalArea = results.reduce((sum, result) => sum + result.Area.value, 0)
-    const totalVolume = results.reduce((sum, result) => sum + result.Volume.value, 0)
-    const totalCFM = results.reduce((sum, result) => sum + result['AHU Cfm'].value, 0)
-    const totalTR = results.reduce((sum, result) => sum + result['AHU Cooling Load in TR'].value, 0)
-    const totalChilledWater = results.reduce((sum, result) => sum + result['Chilled water in GPM'].value, 0)
+  // Generate summary from room results and zone result
+  private generateSummary(roomResults: RoomResult[], zoneResult: ZoneResult, formData: any): any {
+    const totalArea = roomResults.reduce((sum, r) => sum + r.X_area_sqft, 0)
+    const totalVolume = roomResults.reduce((sum, r) => sum + r.Y_volume_ft3, 0)
+    const totalCFM = roomResults.reduce((sum, r) => sum + r.AE_res_cfm, 0)
+    
+    const totalTR = roomResults
+      .filter((r) => typeof r.AG_res_tr === "number")
+      .reduce((sum, r) => sum + Number(r.AG_res_tr), 0)
+    
+    const totalLatentBTU = roomResults.reduce((sum, r) => sum + r.CF_latent_btuh, 0)
+    const totalSensibleBTU = roomResults.reduce((sum, r) => sum + r.CE_sensible_btuh, 0)
+    const totalBTU = roomResults.reduce((sum, r) => sum + r.CG_total_btuh, 0)
     
     return {
       projectName: formData.projectName,
       customerName: formData.customerName,
       location: formData.location,
-      totalRooms: results.length,
-      totalArea: { value: Math.round(totalArea * 100) / 100, unit: 'm^2' },
-      totalVolume: { value: Math.round(totalVolume * 100) / 100, unit: 'm^3' },
+      totalRooms: roomResults.length,
+      totalArea: { value: Math.round(totalArea * 100) / 100, unit: 'ft²' },
+      totalVolume: { value: Math.round(totalVolume * 100) / 100, unit: 'ft³' },
       totalCFM: { value: totalCFM, unit: 'CFM' },
-      totalTR: { value: totalTR, unit: 'TR' },
-      totalChilledWater: { value: Math.round(totalChilledWater * 100) / 100, unit: 'GPM' },
-      averageCFMPerRoom: { value: Math.round(totalCFM / results.length), unit: 'CFM' },
-      averageTRPerRoom: { value: Math.round((totalTR / results.length) * 100) / 100, unit: 'TR' }
+      totalTR: { value: Math.round(totalTR * 100) / 100, unit: 'TR' },
+      totalLatentBTU: { value: Math.round(totalLatentBTU), unit: 'BTU/h' },
+      totalSensibleBTU: { value: Math.round(totalSensibleBTU), unit: 'BTU/h' },
+      totalBTU: { value: Math.round(totalBTU), unit: 'BTU/h' },
+      // Zone aggregation results
+      zone: {
+        ahuCFM: zoneResult.AK_ahu_cfm,
+        ahuSize: {
+          width: zoneResult.AL_W_mm,
+          height: zoneResult.AL_H_mm,
+          length: zoneResult.AL_L_mm,
+        },
+        blowerModel: zoneResult.AN_blower_model,
+        motorHP: zoneResult.AO_motor_hp,
+        staticPressure: zoneResult.AM_static_pa,
+        coilRows: zoneResult.AP_coil_rows,
+        maxStages: zoneResult.AR_max_stages,
+        sumAG: zoneResult.AQ_sum_ag,
+        calculatedAS: zoneResult.AS_calculated,
+        calculatedAT: zoneResult.AT_calculated,
+        calculatedAV: zoneResult.AV_calculated,
+      },
+      averageCFMPerRoom: { value: Math.round(totalCFM / roomResults.length), unit: 'CFM' },
+      averageTRPerRoom: { value: Math.round((totalTR / roomResults.length) * 100) / 100, unit: 'TR' }
     }
   }
   
